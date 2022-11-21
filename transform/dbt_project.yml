@@ -29,3 +29,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 # as tables. These settings can be overridden in the individual model files
 # using the `{{ config(...) }}` macro.
 models: {}
+
+vars:
+  ga4:
+    project: dse-product-analytics-prd-bqd
+    dataset: analytics_322878501
+    start_date: "20221101"
+    frequency: daily
