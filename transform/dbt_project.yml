@@ -33,6 +33,6 @@ models: {}
 vars:
   ga4:
     project: dse-product-analytics-prd-bqd
-    dataset: analytics_322878501
+    dataset: analytics_314711183  # Note: this is the statewide dataset, not the cagov-only
     start_date: "20221101"
     frequency: daily
