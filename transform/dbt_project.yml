@@ -36,3 +36,10 @@ vars:
     dataset: analytics_314711183
     start_date: "20221101"
     frequency: daily
+
+tests:
+  ga4:
+    staging:
+      ga4:
+        not_null_stg_ga4__event_page_view_page_location:
+          +enabled: false
