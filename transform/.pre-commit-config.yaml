@@ -16,14 +16,12 @@ repos:
     hooks:
       - id: yamllint
         args: []
-  - repo: https://github.com/tconbeer/sqlfmt
-    rev: v0.13.0
-    hooks:
-      - id: sqlfmt
-        language_version: python
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 1.4.2
     hooks:
       - id: sqlfluff-lint
+        args: ["--dialect", "bigquery"]
+        additional_dependencies: ["dbt-bigquery", "sqlfluff-templater-dbt"]
+      - id: sqlfluff-fix
         args: ["--dialect", "bigquery"]
         additional_dependencies: ["dbt-bigquery", "sqlfluff-templater-dbt"]
