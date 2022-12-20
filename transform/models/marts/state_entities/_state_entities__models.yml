@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: dim_state_entities__agencies
+    description: Agency-level state entities.
+    columns:
+      - name: name
+        description: The name of the state agency
+        tests:
+          - unique
+          - not_null
+      - name: agency_code
+        description: The numeric code of the state agency
+        tests:
+          - unique
+          - not_null
