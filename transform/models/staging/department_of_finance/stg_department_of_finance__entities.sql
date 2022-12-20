@@ -2,6 +2,7 @@
 
 with
     base_entities as (select * from {{ source("state_entities", "base_entities") }}),
+
     invalid_subagencies as (
         select *
         from base_entities
@@ -9,6 +10,7 @@ with
             contains_substr(name, "no subagency")
             and contains_substr(name, "do not use")
     ),
+
     entities as (
         select
             /*
@@ -30,7 +32,7 @@ with
             contains_substr(name, "do not use") as do_not_use,
             contains_substr(name, "abolished") as abolished,
             regexp_extract(name, r"[A-Z/]+ USE ONLY") as restricted_use,
-            name as name_raw,
+            name as name_raw
         from base_entities
     )
 
