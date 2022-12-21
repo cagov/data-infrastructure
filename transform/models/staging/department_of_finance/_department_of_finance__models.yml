@@ -1,0 +1,57 @@
+version: 2
+
+sources:
+  - name: state_entities
+    description: Dataset for state entities data modeling and reporting
+    tables:
+      - name: base_entities
+        description: Starting hierarchical entities list from Department of Finance.
+        columns:
+          - name: A
+            description: Agency code for entity
+            tests:
+              - not_null
+          - name: B
+            description: Subagency code for entity
+          - name: L1
+            description: Level beneath subagency
+          - name: L2
+            description: Level beneath L1
+          - name: L3
+            description: Level beneath L2
+            tests:
+              - unique
+          - name: name
+            description: Name of entity
+            tests:
+              - not_null
+
+models:
+  - name: stg_department_of_finance__entities
+    description: |
+      Cleaned list of state entities per department of finance.
+    columns:
+      - name: agency_code
+        description: Agency code for entity
+      - name: subagency_code
+        description: Subagency code for entity
+      - name: L1
+        description: Level beneath subagency
+      - name: L2
+        description: Level beneath L1
+      - name: L3
+        description: Level beneath L2
+      - name: parenthetical
+        description: |
+          Any text extracted from a paranthetical statement in the original text
+      - name: do_not_use
+        description: Whether any entity features "DO NOT USE" in the description
+      - name: abolished
+        description: Whether the entity features "abolished" in the description
+      - name: restricted_use
+        description: |
+          Whether the entity contains a directive like "DOF USE ONLY" or "SCO USE ONLY"
+          in the description.
+      - name: name_raw
+        description: |
+          The original name, as well as any parentheticals or directives for the entity.

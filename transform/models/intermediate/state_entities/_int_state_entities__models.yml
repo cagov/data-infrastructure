@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: int_state_entities__active
+    description: |
+      Acitve state entities from the Department of Finance list.
+      Entities which are flagged as "DO NOT USE", "abolished", or
+      for internal usage only (e.g. "DOF USE ONLY") are filtered out.
+    columns:
+      - name: agency_code
+        description: Agency code for entity
+      - name: subagency_code
+        description: Subagency code for entity
+      - name: L1
+        description: Level beneath subagency
+      - name: L2
+        description: Level beneath L1
+      - name: L3
+        description: Level beneath L2
+      - name: parenthetical
+        description: |
+          Any text extracted from a paranthetical statement in the original text
+      - name: do_not_use
+        description: Whether any entity features "DO NOT USE" in the description
+      - name: abolished
+        description: Whether the entity features "abolished" in the description
+      - name: restricted_use
+        description: |
+          Whether the entity contains a directive like "DOF USE ONLY" or "SCO USE ONLY "
+          in the description.
+      - name: name_raw
+        description: |
+          The original name, as well as any parentheticals or directives for the entity.

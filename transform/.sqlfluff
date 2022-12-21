@@ -1,0 +1,23 @@
+[sqlfluff]
+dialect = bigquery
+
+# Disable some format rules while we are using sqlfmt (which is what
+# dbt cloud integrates) to maintain consistency. If dbt cloud ever
+# drops sqlfmt for a more unified experience, let's revisit this.
+exclude_rules = L003, L018, L034, L036
+
+[sqlfluff:rules]
+max_line_length=88
+
+# Probably a controversial exclusion, so adding some justification here:
+# This disables the rule that prevents unreserved keywords from being
+# used as column aliases. The rule is intended to prevent accidental shadowing
+# of SQL keywords, which, honestly, sounds like a good idea! **However**,
+# this can result in some awkward contortions in final dataset column names,
+# which are intended for end users who shouldn't care about our query language
+# limitations. Since SQL tends to have quite a long list of keywords, the
+# restriction actually prevents some quite natural column names, preventing
+# legibility for end users (e.g., date, timestamp, name).
+[sqlfluff:rules:L029]
+quoted_identifiers_policy = none
+unquoted_identifiers_policy = none
