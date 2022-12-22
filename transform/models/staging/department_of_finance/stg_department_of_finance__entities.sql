@@ -21,6 +21,7 @@ with
             regexp_extract(
                 name, r"^(.+?)(?:(?:\s*\(.*\)\s*|\s*[-–]+\s*[A-Z/ ]+)*)$"
             ) as name,
+            coalesce(l3, l2, l1, b, a) as primary_code,
             a as agency_code,
             case
                 when b in (select b from invalid_subagencies) then null else b

@@ -31,6 +31,12 @@ models:
     description: |
       Cleaned list of state entities per department of finance.
     columns:
+      - name: name
+        description: Name of the entity
+      - name: primary_code
+        description: The most specific non-null entity code
+        tests:
+          - not_null
       - name: agency_code
         description: Agency code for entity
       - name: subagency_code
