@@ -34,6 +34,24 @@ what approaches did not work, and what tradeoffs you encountered.
 It's your job to communicate that context for reviewers to help them review your code.
 This can include comments in the GitHub UI, comments in the code base, and even self-reviews.
 
+#### Use linters and formatters
+
+Making use of code linters and formatters helps to establish a consistent style for a project
+and removes a whole whole class of common errors and disagreements.
+Even if one can take issue with specific conventions or rules,
+having them used consistently within a team pays big dividends over time.
+
+Many of our projects use `pre-commit` to enforce the linter and formatter conventions.
+To set up your pre-commit environment locally (requires a python development environment), run
+
+```bash
+python -m pip install pre-commit
+pre-commit install
+```
+
+The next time you make a commit, the pre-commit hooks will run on the contents of your commit
+(the first time may be a bit slow as there is some additional setup).
+
 #### Try to avoid excessive merge commits
 
 More merge commits in a PR can make review more difficult,
