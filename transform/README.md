@@ -103,6 +103,16 @@ Here is one possible configuration for VS Code:
 1. Associate `.sql` files with the `jinja-sql` language by going to `Code` -> `Preferences` -> `Settings` -> `Files: Associations`, per [these](https://github.com/innoverio/vscode-dbt-power-user#associate-your-sql-files-the-jinja-sql-language) instructions.
 1. Test that the `vscode-dbt-power-user` extension is working by opening one of the project model `.sql` files and pressing the "▶" icon in the upper right corner. You should have query results pane open that shows a preview of the data.
 
+### Building the docs
+
+To build and view the docs locally, run
+
+```bash
+(dbt docs generate && cd target/ && python -m http.server)
+```
+
+in a terminal, then navigate to `http://localhost:8000` in your web browser.
+
 
 ## Resources:
 - Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
