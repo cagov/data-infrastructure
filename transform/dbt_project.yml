@@ -21,13 +21,27 @@ clean-targets: # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
-# Configuring models
-# Full documentation: https://docs.getdbt.com/docs/configuring-models
+models:
+  ga4:
+    staging:
+      +schema: staging
+    marts:
+      +schema: google
 
-# In this example config, we tell dbt to build all models in the example/ directory
-# as tables. These settings can be overridden in the individual model files
-# using the `{{ config(...) }}` macro.
-models: {}
+  dse_analytics:
+    staging:
+      +schema: staging
+
+    intermediate:
+      +schema: intermediate
+
+    marts:
+      state_entities:
+        +schema: state_entities
+
+seeds:
+  ga4:
+    +schema: staging
 
 vars:
   ga4:
