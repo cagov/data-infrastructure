@@ -16,7 +16,7 @@ more-or-less match the dbt Cloud experience.
 
 ### Setting up your environment
 
-First, reate a Python virtual environment
+First, create a Python virtual environment
 (this could be a `conda` environment or a native Python one)
 A local install of this repository requires:
 
@@ -27,7 +27,7 @@ A local install of this repository requires:
 A minimal setup using `conda` could be:
 
 ```bash
-conda env create -n dbt python=3.10  # Create a new Python 3.10 environment named `dbt`
+conda create -n dbt python=3.10  # Create a new Python 3.10 environment named `dbt`
 conda activate dbt  # Activate the new environment
 python -m pip install -r requirements.txt  # Install the requirements
 ```
@@ -76,7 +76,7 @@ default:
     dev:
       type: bigquery
       method: oauth
-      project: <project-name> . # Project ID to use
+      project: <project-id>  # Project ID to use
       dataset: dbt_<your-name>  # Test schema for development, don't use prod!
       threads: 4
 ```
