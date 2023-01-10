@@ -81,6 +81,15 @@ default:
       threads: 4
 ```
 
+This requires you to be authenticated using the `gcloud` CLI tool:
+
+```bash
+gcloud auth application-default login \
+  --scopes=https://www.googleapis.com/auth/bigquery,\
+https://www.googleapis.com/auth/drive.readonly,\
+https://www.googleapis.com/auth/iam.test
+```
+
 You can verify that your `profiles.yml` is configured properly by running
 
 ```bash
