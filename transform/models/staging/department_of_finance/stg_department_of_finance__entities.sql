@@ -32,7 +32,7 @@ as
     "Board (?:of|on|for)?",
     "Agency (?:on|for)?",
     "(?:Department|Dept\\.) of",
-    "Commision (?:on|for)?",
+    "Commission (?:on|for)?",
     "Committee (?:on|for)?",
     "Bureau of",
     "Council on",
