@@ -27,8 +27,6 @@ repos:
     rev: 1.4.2
     hooks:
       - id: sqlfluff-lint
-        args: ["--dialect", "bigquery"]
         additional_dependencies: ["dbt-bigquery", "sqlfluff-templater-dbt"]
       - id: sqlfluff-fix
-        args: ["--dialect", "bigquery"]
         additional_dependencies: ["dbt-bigquery", "sqlfluff-templater-dbt"]

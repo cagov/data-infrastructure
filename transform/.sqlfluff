@@ -1,5 +1,6 @@
 [sqlfluff]
 dialect = bigquery
+templater = dbt
 
 # Disable some format rules while we are using sqlfmt (which is what
 # dbt cloud integrates) to maintain consistency. If dbt cloud ever
