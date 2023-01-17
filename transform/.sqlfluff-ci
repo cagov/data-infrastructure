@@ -1,0 +1,7 @@
+[sqlfluff]
+# The dbt templater is gives a more accurate picture for the linter. However,
+# the dbt templater requires an actual connection to the warehouse to work.
+# Eventually, consider pointing this at a test instance for CI, but for now,
+# just use the jinja templater and ignore any templating errors that occur.
+templater = jinja
+ignore = templating
