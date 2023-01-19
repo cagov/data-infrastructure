@@ -71,3 +71,14 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
+  - name: int_state_entities__budgets.sql
+    description: Fiscal year budgets for state entities
+    columns:
+      - name: primary_code
+        description: Four digit business unit code for entity.
+      - name: name
+        description: Entity name
+      - name: name_alpha
+        description: Variant of name for easier alphabetization
+      - name: budget_year_dollars
+        description: Budget for current fiscal year.
