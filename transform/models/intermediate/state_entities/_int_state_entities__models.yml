@@ -71,7 +71,7 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
-  - name: int_state_entities__budgets.sql
+  - name: int_state_entities__budgets
     description: Fiscal year budgets for state entities
     columns:
       - name: primary_code

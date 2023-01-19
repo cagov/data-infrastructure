@@ -25,6 +25,9 @@ sources:
             description: Name of entity
             tests:
               - not_null
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns: [A, B, L1, L2, L3]
       - name: ebudget_agency_and_department_budgets
         description: |
           Budget information at the agency and department levels from ebudget.ca.gov
@@ -83,7 +86,8 @@ sources:
             description: Four digit business unit code
             tests:
               - not_null
-              - unique
+              # Can't do unique because there are some duplicated administrative codes
+              # - unique
           - name: line_type
             description: Unknown
           - name: indent_nbr
@@ -136,3 +140,12 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
+  - name: state_ebudget__budgets
+    description: Budget information for all state entities from ebudget.ca.gov
+    columns:
+      - name: primary_code
+        description: Four digit business unit code
+      - name: name
+        description: The name of the state entity
+      - name: budget_year_dollars
+        description: The budget of the entity for the current budget year
