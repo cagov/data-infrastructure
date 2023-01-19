@@ -140,11 +140,15 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
-  - name: state_ebudget__budgets
+  - name: stg_ebudget__budgets
     description: Budget information for all state entities from ebudget.ca.gov
     columns:
       - name: primary_code
         description: Four digit business unit code
+        tests:
+          - not_null
+          # There are duplicates!
+          # - unique
       - name: name
         description: The name of the state entity
       - name: budget_year_dollars

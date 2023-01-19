@@ -11,6 +11,7 @@ with
             active_entities.primary_code,
             active_entities.name,
             active_entities.name_alpha,
+            budgets.name as budget_name,
             budgets.budget_year_dollars
         from active_entities
         left join budgets on active_entities.primary_code = budgets.primary_code

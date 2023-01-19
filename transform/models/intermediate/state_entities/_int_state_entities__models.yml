@@ -13,6 +13,7 @@ models:
         description: The most specific non-null entity code
         tests:
           - not_null
+          - unique
       - name: agency_code
         description: Agency code for entity
       - name: subagency_code
@@ -71,11 +72,16 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
+
   - name: int_state_entities__budgets
     description: Fiscal year budgets for state entities
     columns:
       - name: primary_code
         description: Four digit business unit code for entity.
+        tests:
+          # There are duplicates!
+          # - unique
+          - not_null
       - name: name
         description: Entity name
       - name: name_alpha

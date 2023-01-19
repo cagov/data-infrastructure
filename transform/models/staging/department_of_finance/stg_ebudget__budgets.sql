@@ -23,6 +23,7 @@ with
                 program_titl as name,
                 by_dols as budget_year_dollars
             from programs
+            where not starts_with(program_code, '99')
         )
     )
 
