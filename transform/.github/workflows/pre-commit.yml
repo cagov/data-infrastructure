@@ -34,3 +34,5 @@ jobs:
           DBT_PROFILES_DIR: ci
         run: dbt deps && dbt compile
       - uses: pre-commit/action@v3.0.0
+        env:
+          DBT_PROFILES_DIR: ci
