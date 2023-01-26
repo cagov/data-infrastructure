@@ -32,3 +32,26 @@ repos:
       - id: sqlfluff-fix
         args: ["--config", ".sqlfluff-ci"]
         additional_dependencies: ["dbt-bigquery", "sqlfluff-templater-dbt"]
+  - repo: https://github.com/dbt-checkpoint/dbt-checkpoint
+    # Last tagged release is old and unsupported, but the most recent refs
+    # have some broken fixes from Datacoves... This is just a known
+    # fair-to-decent commit.
+    rev: 9097e05
+    hooks:
+      # There are a ton of checks in this repo, these are the ones that
+      # seemed most immediately useful.
+      # https://github.com/dbt-checkpoint/dbt-checkpoint/blob/main/HOOKS.md
+      - id: check-model-columns-have-desc
+      - id: check-model-has-description
+      - id: check-model-has-properties-file
+      - id: check-script-ref-and-source
+      - id: check-script-has-no-table-name
+      - id: check-source-columns-have-desc
+      - id: check-macro-has-description
+      - id: check-macro-arguments-have-desc
+      # It would be great to run these source checks, but there is no way to exclude
+      # souces that come from third-party packages, and we shouldn't be in the business
+      # of maintaining those.
+      # - id: check-model-has-all-columns
+      # - id: check-source-has-all-columns
+      # - id: check-source-table-has-description
