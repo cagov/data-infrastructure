@@ -4,27 +4,12 @@ with
         from {{ source('state_entities', 'ebudget_agency_and_department_budgets') }}
     ),
 
-    programs as (
-        select * from {{ source('state_entities', 'ebudget_program_budgets') }}
-    ),
-
     ebudget_budgets as (
-        (
-            select
-                web_agency_cd as primary_code,
-                legal_titl as name,
-                all_budget_year_dols as budget_year_dollars
-            from agencies_and_departments
-        )
-        union all
-        (
-            select
-                program_code as primary_code,
-                program_titl as name,
-                by_dols as budget_year_dollars
-            from programs
-            where not starts_with(program_code, '99')
-        )
+        select
+            web_agency_cd as primary_code,
+            legal_titl as name,
+            all_budget_year_dols as budget_year_dollars
+        from agencies_and_departments
     )
 
 select *
