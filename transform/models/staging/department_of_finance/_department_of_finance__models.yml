@@ -140,6 +140,14 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
+      - name: name_alpha
+        description: |
+          The name with things like "Office of" moved to the end,
+          suitable for alphabetization.
+      - name: ucm_level
+        description: |
+          The level in the hierarchy of the Uniform Control Manual
+          (agency, subagency, L1, L2, or L3)
   - name: stg_ebudget__budgets
     description: Budget information for all state entities from ebudget.ca.gov
     columns:

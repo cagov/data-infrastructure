@@ -15,6 +15,7 @@ with
     active_entity_budgets as (
         select
             active_agencies_and_departments.primary_code,
+            active_agencies_and_departments.ucm_level,
             active_agencies_and_departments.name,
             active_agencies_and_departments.name_alpha,
             budgets.name as budget_name,
