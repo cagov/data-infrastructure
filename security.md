@@ -86,3 +86,7 @@ These should be periodically reviewed by CalData and ODI IT-Ops staff to ensure 
 ## Snowflake
 
 (TODO)
+
+## Security Review Standard Practices
+
+(TODO, possibly pulling from [Agile Application Security](https://www.amazon.com/Agile-Application-Security-Enabling-Continuous/dp/1491938846/ref=cm_cr_arp_d_product_top))
