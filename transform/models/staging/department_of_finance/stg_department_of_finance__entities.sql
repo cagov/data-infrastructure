@@ -101,9 +101,23 @@ with
         from base_entities
     ),
 
-    entities_with_alphabetization as (
-        select *, reorder_name_for_alphabetization(name) as name_alpha from entities
+    entities_with_extras as (
+        select
+            *,
+            reorder_name_for_alphabetization(name) as name_alpha,
+            case
+                when coalesce(l3, l2, l1, subagency_code) is null
+                then "agency"
+                when coalesce(l3, l2, l1) is null
+                then "subagency"
+                when coalesce(l3, l2) is null
+                then "L1"
+                when l3 is null
+                then "L2"
+                else "L3"
+            end as ucm_level
+        from entities
     )
 
 select *
-from entities_with_alphabetization
+from entities_with_extras

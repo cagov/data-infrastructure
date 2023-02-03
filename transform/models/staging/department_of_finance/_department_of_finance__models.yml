@@ -25,6 +25,85 @@ sources:
             description: Name of entity
             tests:
               - not_null
+        tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns: [A, B, L1, L2, L3]
+      - name: ebudget_agency_and_department_budgets
+        description: |
+          Budget information at the agency and department levels from ebudget.ca.gov
+        columns:
+          - name: org_cd
+            description: Four digit business unit code
+            tests:
+              - not_null
+              - unique
+          - name: web_agency_cd
+            description: Four digit business unit code (same as org_cd, it seems)
+            tests:
+              - not_null
+              - unique
+          - name: org_id
+            description: ID for the entity within the ebudget system (DO NOT USE)
+          - name: legal_titl
+            description: Name of agency or department
+          - name: state_budget_year_dols
+            description: Budget for the fiscal year, in dollars
+          - name: all_budget_year_dols
+            description: TODO
+          - name: budget_year_pers
+            description: Headcount for the budget year (not authoritative)
+          - name: general_fund_total
+            description: TODO
+          - name: special_fund_total
+            description: TODO
+          - name: bond_fund_total
+            description: TODO
+          - name: capital_outlay_total
+            description: TODO
+          - name: spr_include_co_fig
+            description: Unknown
+          - name: display_on_web_fig
+            description: Unused
+          - name: state_grand_total
+            description: Total budget for the state, not this row (DO NOT USE)
+
+      - name: ebudget_program_budgets
+        description: Budget information at the program level from ebudget.ca.gov
+        columns:
+          - name: program_id
+            description: Unknown (DO NOT USE)
+          - name: last_upd_date
+            description: Unknown (DO NOT USE)
+          - name: last_upd_user
+            description: Unknown (DO NOT USE)
+          - name: py_dols
+            description: Unknown
+          - name: cy_dols
+            description: Unknown
+          - name: by_dols
+            description: Budget for the fiscal year, in dollars
+          - name: program_code
+            description: Four digit business unit code
+            tests:
+              - not_null
+              # Can't do unique because there are some duplicated administrative codes
+              # - unique
+          - name: line_type
+            description: Unknown
+          - name: indent_nbr
+            description: Unknown
+          - name: program_titl
+            description: Name of the state entity
+          - name: org_id
+            description: ID for the parent entity within the ebudget system (DO NOT USE)
+          - name: py_pers_yrs
+            description: Unknown
+          - name: cy_pers_yrs
+            description: Unknown
+          - name: by_pers_yrs
+            description: Personnel for the fiscal year, in full-time-person-years
+          - name: spr_include_co_fig
+            description: Unknown
 
 models:
   - name: stg_department_of_finance__entities
@@ -61,3 +140,24 @@ models:
       - name: name_raw
         description: |
           The original name, as well as any parentheticals or directives for the entity.
+      - name: name_alpha
+        description: |
+          The name with things like "Office of" moved to the end,
+          suitable for alphabetization.
+      - name: ucm_level
+        description: |
+          The level in the hierarchy of the Uniform Control Manual
+          (agency, subagency, L1, L2, or L3)
+  - name: stg_ebudget__budgets
+    description: Budget information for all state entities from ebudget.ca.gov
+    columns:
+      - name: primary_code
+        description: Four digit business unit code
+        tests:
+          - not_null
+          # There are duplicates!
+          # - unique
+      - name: name
+        description: The name of the state entity
+      - name: budget_year_dollars
+        description: The budget of the entity for the current budget year
