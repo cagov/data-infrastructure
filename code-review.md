@@ -123,5 +123,3 @@ but they should be prepared to follow up with any failures that result from such
 *Note: these conventions and recommendations are partially drawn from maintainer guidelines for
 [JupyterHub](https://tljh.jupyter.org/en/latest/contributing/code-review.html) and
 [Dask](https://docs.dask.org/en/stable/maintainers.html).*
-
-

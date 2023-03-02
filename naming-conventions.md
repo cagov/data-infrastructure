@@ -2,7 +2,7 @@
 
 This is a living document of the DSE team's Cloud Server, Database, project, and tool naming and security conventions. The conventions here are meant to guide us in how we name resources and allow access to our tools and data.
 
-## Naming Conventions 
+## Naming Conventions
 
 Inspiration via [stepan.wtf](https://stepan.wtf/cloud-naming-convention/)
 
@@ -36,10 +36,10 @@ Principles
    - _ex: stg_ga4_statewide_322878501_
    - _ex: stg_ga4_innovation_326878242_
 
-- Considerations: 
+- Considerations:
    - ODI-built products versus paid products e.g. page feedback vs. survey monkey - may have security implication
    - Potential new dataset to adhere to naming conventions and to union historical data not captured when we did the initial GA4 <> BQ link (may be able to use Fivetran to do the incremental loading to avoid data sampling mentioned below)
-   - dbt scratch datasets are created with prefix dbt_<first name initial><last name> e.g. dbt_irose 
+   - dbt scratch datasets are created with prefix dbt_<first name initial><last name> e.g. dbt_irose
 
 #### DSE - Reference Data
 
@@ -70,24 +70,24 @@ Principles
 
 - Project name: DSE Product Analytics
 - Repo: git://github.com/cagov/data-dbt-core.git
-- In BQ scratch datasets are created with prefix dbt_<first name initial><last name> e.g. dbt_irose 
+- In BQ scratch datasets are created with prefix dbt_<first name initial><last name> e.g. dbt_irose
 - **Considerations**:
     - dbt project names should map to BQ project names
 
 ## Resources
 ### Warehouse
-- https://blog.panoply.io/data-warehouse-naming-conventions 
-- https://docs.getdbt.com/blog/stakeholder-friendly-model-names 
-- https://docs.getdbt.com/blog/on-the-importance-of-naming 
+- https://blog.panoply.io/data-warehouse-naming-conventions
+- https://docs.getdbt.com/blog/stakeholder-friendly-model-names
+- https://docs.getdbt.com/blog/on-the-importance-of-naming
 
 ### Cloud Storage
-- https://cloud.google.com/storage/docs/naming-buckets 
-- https://hadoopjournal.wordpress.com/2020/09/04/google-cloud-storage-best-practices/ 
+- https://cloud.google.com/storage/docs/naming-buckets
+- https://hadoopjournal.wordpress.com/2020/09/04/google-cloud-storage-best-practices/
 
 ### Security / Data Governance
 - [How we structure our dbt project](https://docs.getdbt.com/guides/best-practices/how-we-structure/1-guide-overview)
 - [BigQuery Security Guide](https://cloud.google.com/bigquery/docs/data-governance)
-- [Principle of Least Privilege](https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege) 
+- [Principle of Least Privilege](https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege)
 - [Data Governance Summary](https://cloud.google.com/bigquery/docs/data-governance-summary)
 - [General Security Best Practices in BigQuery](https://towardsdatascience.com/6-best-practices-for-managing-data-access-to-bigquery-4396b0a3cfba)
 - https://airbyte.com/blog/best-practices-dbt-style-guide
