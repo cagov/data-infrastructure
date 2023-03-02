@@ -36,7 +36,7 @@ responsible for pushing code changes to production on merge.
 
 Some good practices around the use of service accounts
 (largely drawn from [here](https://cloud.google.com/iam/docs/best-practices-service-accounts)):
-* Service accounts often have greater permissions than human users, 
+* Service accounts often have greater permissions than human users,
   so user permissions to impersonate these accounts should be monitored!
 * Don't use service accounts during development (unless testing the service account permissions).
   Instead, use your own credentials in a safe development environment.
@@ -55,14 +55,14 @@ When productionizing a service or application, make sure to review the relevant
 roles and service accounts to ensure they only have the necessary policies,
 and that unauthorized users don't have permission to assume those roles.
 
-### GCP practices 
+### GCP practices
 
 GCP's [IAM documentation](https://cloud.google.com/iam/docs/how-to) is a good read,
 and goes into much greater detail than this document on how to craft and maintain IAM roles.
 
 Default GCP service accounts often have more permissions than are strictly needed
 for their intended operation. For example, they might have read/write access to *all*
-GCS buckets in a project, when their application only requires access to one. 
+GCS buckets in a project, when their application only requires access to one.
 
 ### AWS practices
 
