@@ -149,11 +149,13 @@ resource "aws_batch_compute_environment" "sample" {
     max_vcpus = 16
 
     security_group_ids = [
-      aws_default_security_group.default.id
+      aws_security_group.sample.id
+      # aws_default_security_group.default.id
     ]
 
     subnets = [
-      aws_default_subnet.default.id
+      aws_subnet.sample.id
+      # aws_default_subnet.default.id
     ]
 
     type = "FARGATE"
