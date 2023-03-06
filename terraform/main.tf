@@ -116,32 +116,6 @@ resource "aws_nat_gateway" "sample" {
   depends_on = [aws_internet_gateway.sample]
 }
 
-data "aws_vpc" "default" {
-  default = true
-}
-
-resource "aws_default_subnet" "default" {
-  availability_zone = "us-west-1b"
-}
-
-resource "aws_default_security_group" "default" {
-  vpc_id = data.aws_vpc.default.id
-
-  ingress {
-    protocol  = -1
-    self      = true
-    from_port = 0
-    to_port   = 0
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 resource "aws_batch_compute_environment" "sample" {
   compute_environment_name = "sample"
 
@@ -150,12 +124,10 @@ resource "aws_batch_compute_environment" "sample" {
 
     security_group_ids = [
       aws_security_group.sample.id
-      # aws_default_security_group.default.id
     ]
 
     subnets = [
       aws_subnet.sample.id
-      # aws_default_subnet.default.id
     ]
 
     type = "FARGATE"
