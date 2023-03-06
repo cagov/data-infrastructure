@@ -43,9 +43,13 @@ resource "aws_ecr_repository" "main-ecr" {
 #          Networking            #
 ##################################
 
-resource "aws_security_group" "sample" {
+resource "aws_vpc" "vpc" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_security_group" "sg" {
   name   = "aws_batch_compute_environment_security_group"
-  vpc_id = aws_vpc.sample.id
+  vpc_id = aws_vpc.vpc.id
 
   ingress {
     from_port   = 443
@@ -62,32 +66,28 @@ resource "aws_security_group" "sample" {
   }
 }
 
-resource "aws_vpc" "sample" {
-  cidr_block = "10.0.0.0/16"
-}
-
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.sample.id
+  vpc_id = aws_vpc.vpc.id
 }
 
-resource "aws_internet_gateway" "sample" {
-  vpc_id = aws_vpc.sample.id
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.vpc.id
 }
 
 resource "aws_route" "public" {
   destination_cidr_block = "0.0.0.0/0"
   route_table_id         = aws_route_table.public.id
-  gateway_id             = aws_internet_gateway.sample.id
+  gateway_id             = aws_internet_gateway.igw.id
 }
 
-resource "aws_subnet" "sample" {
-  vpc_id                  = aws_vpc.sample.id
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.0.0.0/24"
   map_public_ip_on_launch = true
 }
 
 resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.sample.id
+  subnet_id      = aws_subnet.public.id
   route_table_id = aws_route_table.public.id
 }
 
@@ -119,18 +119,18 @@ resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole"
 }
 
-resource "aws_batch_compute_environment" "sample" {
-  compute_environment_name = "sample"
+resource "aws_batch_compute_environment" "batch_env" {
+  compute_environment_name = "${var.name}-batch-env"
 
   compute_resources {
     max_vcpus = 16
 
     security_group_ids = [
-      aws_security_group.sample.id
+      aws_security_group.sg.id
     ]
 
     subnets = [
-      aws_subnet.sample.id
+      aws_subnet.public.id
     ]
 
     type = "FARGATE"
@@ -142,7 +142,7 @@ resource "aws_batch_compute_environment" "sample" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "tf_test_batch_exec_role"
+  name               = "${var.name}-batch-exec-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -162,17 +162,17 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_batch_job_queue" "test_queue" {
-  name     = "tf-test-batch-job-queue"
+resource "aws_batch_job_queue" "batch_queue" {
+  name     = "${var.name}-batch-job-queue"
   state    = "ENABLED"
   priority = 1
   compute_environments = [
-    aws_batch_compute_environment.sample.arn,
+    aws_batch_compute_environment.batch_env.arn,
   ]
 }
 
-resource "aws_batch_job_definition" "test" {
-  name = "tf_test_batch_job_definition"
+resource "aws_batch_job_definition" "batch_job_def" {
+  name = "${var.name}-batch-job-definition"
   type = "container"
   platform_capabilities = [
     "FARGATE",
