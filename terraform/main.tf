@@ -1,3 +1,7 @@
+##################################
+#        Terraform Setup         #
+##################################
+
 terraform {
   backend "s3" {
   }
@@ -22,6 +26,10 @@ provider "aws" {
   }
 }
 
+##################################
+#       Container registry       #
+##################################
+
 resource "aws_ecr_repository" "main-ecr" {
   name                 = "${var.name}-ecr-${var.region}"
   image_tag_mutability = "MUTABLE"
@@ -31,29 +39,9 @@ resource "aws_ecr_repository" "main-ecr" {
   }
 }
 
-resource "aws_iam_role" "aws_batch_service_role" {
-  name = "aws_batch_service_role"
-
-  assume_role_policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-    {
-        "Action": "sts:AssumeRole",
-        "Effect": "Allow",
-        "Principal": {
-        "Service": "batch.amazonaws.com"
-        }
-    }
-    ]
-}
-EOF
-}
-
-resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
-  role       = aws_iam_role.aws_batch_service_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole"
-}
+##################################
+#          Networking            #
+##################################
 
 resource "aws_security_group" "sample" {
   name   = "aws_batch_compute_environment_security_group"
@@ -76,10 +64,6 @@ resource "aws_security_group" "sample" {
 
 resource "aws_vpc" "sample" {
   cidr_block = "10.0.0.0/16"
-}
-
-resource "aws_eip" "sample" {
-  vpc = true
 }
 
 resource "aws_route_table" "public" {
@@ -107,13 +91,32 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-resource "aws_nat_gateway" "sample" {
-  subnet_id     = aws_subnet.sample.id
-  allocation_id = aws_eip.sample.id
+##################################
+#          AWS Batch             #
+##################################
 
-  # To ensure proper ordering, it is recommended to add an explicit dependency
-  # on the Internet Gateway for the VPC.
-  depends_on = [aws_internet_gateway.sample]
+resource "aws_iam_role" "aws_batch_service_role" {
+  name = "aws_batch_service_role"
+
+  assume_role_policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+    {
+        "Action": "sts:AssumeRole",
+        "Effect": "Allow",
+        "Principal": {
+        "Service": "batch.amazonaws.com"
+        }
+    }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
+  role       = aws_iam_role.aws_batch_service_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole"
 }
 
 resource "aws_batch_compute_environment" "sample" {
@@ -186,6 +189,9 @@ resource "aws_batch_job_definition" "test" {
     {"type": "VCPU", "value": "0.25"},
     {"type": "MEMORY", "value": "512"}
   ],
+  "networkConfiguration": {
+    "assignPublicIp": "ENABLED"
+  },
   "executionRoleArn": "${aws_iam_role.ecs_task_execution_role.arn}"
 }
 CONTAINER_PROPERTIES
