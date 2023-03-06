@@ -59,21 +59,87 @@ resource "aws_security_group" "sample" {
   name   = "aws_batch_compute_environment_security_group"
   vpc_id = aws_vpc.sample.id
 
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_vpc" "sample" {
+  cidr_block = "10.0.0.0/16"
+}
+
+resource "aws_eip" "sample" {
+  vpc = true
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.sample.id
+}
+
+resource "aws_internet_gateway" "sample" {
+  vpc_id = aws_vpc.sample.id
+}
+
+resource "aws_route" "public" {
+  destination_cidr_block = "0.0.0.0/0"
+  route_table_id         = aws_route_table.public.id
+  gateway_id             = aws_internet_gateway.sample.id
+}
+
+resource "aws_subnet" "sample" {
+  vpc_id                  = aws_vpc.sample.id
+  cidr_block              = "10.0.0.0/24"
+  map_public_ip_on_launch = true
+}
+
+resource "aws_route_table_association" "public" {
+  subnet_id      = aws_subnet.sample.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_nat_gateway" "sample" {
+  subnet_id     = aws_subnet.sample.id
+  allocation_id = aws_eip.sample.id
+
+  # To ensure proper ordering, it is recommended to add an explicit dependency
+  # on the Internet Gateway for the VPC.
+  depends_on = [aws_internet_gateway.sample]
+}
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+resource "aws_default_subnet" "default" {
+  availability_zone = "us-west-1b"
+}
+
+resource "aws_default_security_group" "default" {
+  vpc_id = data.aws_vpc.default.id
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
-
-resource "aws_vpc" "sample" {
-  cidr_block = "10.1.0.0/16"
-}
-
-resource "aws_subnet" "sample" {
-  vpc_id     = aws_vpc.sample.id
-  cidr_block = "10.1.1.0/24"
 }
 
 resource "aws_batch_compute_environment" "sample" {
@@ -83,11 +149,11 @@ resource "aws_batch_compute_environment" "sample" {
     max_vcpus = 16
 
     security_group_ids = [
-      aws_security_group.sample.id
+      aws_default_security_group.default.id
     ]
 
     subnets = [
-      aws_subnet.sample.id
+      aws_default_subnet.default.id
     ]
 
     type = "FARGATE"
@@ -138,7 +204,7 @@ resource "aws_batch_job_definition" "test" {
   container_properties = <<CONTAINER_PROPERTIES
 {
   "command": ["echo", "test"],
-  "image": "ubuntu",
+  "image": "public.ecr.aws/ubuntu/ubuntu:edge",
   "fargatePlatformConfiguration": {
     "platformVersion": "LATEST"
   },
