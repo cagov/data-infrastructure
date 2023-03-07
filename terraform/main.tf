@@ -218,8 +218,8 @@ resource "aws_batch_job_definition" "batch_job_def" {
 
   container_properties = <<CONTAINER_PROPERTIES
 {
-  "command": ["echo", "test"],
-  "image": "public.ecr.aws/ubuntu/ubuntu:edge",
+  "command": ["python", "-m", "jobs.test"],
+  "image": "676096391788.dkr.ecr.us-west-1.amazonaws.com/dse-infra-dev-ecr-us-west-1:latest",
   "fargatePlatformConfiguration": {
     "platformVersion": "LATEST"
   },
