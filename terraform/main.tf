@@ -129,6 +129,41 @@ resource "aws_route_table_association" "public" {
 }
 
 ##################################
+#             S3                 #
+##################################
+
+resource "aws_s3_bucket" "scratch" {
+  bucket = "${var.name}-scratch"
+}
+
+data "aws_iam_policy_document" "s3_scratch_policy_document" {
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+    resources = [aws_s3_bucket.scratch.arn]
+  }
+  statement {
+    actions = [
+      "s3:ListBucket",
+      "s3:*Object",
+    ]
+    resources = ["${aws_s3_bucket.scratch.arn}/*"]
+  }
+}
+
+resource "aws_iam_policy" "s3_scratch_policy" {
+  name        = "${var.name}-s3-scratch-policy"
+  description = "Policy allowing read/write for s3 scratch bucket"
+  policy      = data.aws_iam_policy_document.s3_scratch_policy_document.json
+}
+
+resource "aws_iam_role_policy_attachment" "s3_scratch_policy_role_attachment" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.s3_scratch_policy.arn
+}
+
+##################################
 #          AWS Batch             #
 ##################################
 
