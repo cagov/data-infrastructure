@@ -39,16 +39,6 @@ resource "aws_ecr_repository" "main-ecr" {
   }
 }
 
-data "aws_iam_policy_document" "main-ecr-login-policy-document" {
-  # Policy from https://github.com/aws-actions/amazon-ecr-login#permissions
-  statement {
-    actions = [
-      "ecr:GetAuthorizationToken"
-    ]
-    resources = ["*"]
-  }
-}
-
 data "aws_iam_policy_document" "main-ecr-policy-document" {
   # Policy from https://github.com/aws-actions/amazon-ecr-login#permissions
   statement {
@@ -64,12 +54,12 @@ data "aws_iam_policy_document" "main-ecr-policy-document" {
     ]
     resources = [aws_ecr_repository.main-ecr.arn]
   }
-}
-
-resource "aws_iam_policy" "main-ecr-login-policy" {
-  name        = "${var.name}-ecr-login-policy"
-  description = "Policy allowing docker login to main ecr repository for ${var.name}"
-  policy      = data.aws_iam_policy_document.main-ecr-login-policy-document.json
+  statement {
+    actions = [
+      "ecr:GetAuthorizationToken"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_policy" "main-ecr-policy" {
@@ -85,11 +75,6 @@ resource "aws_iam_user" "main-ecr-cd-bot" {
 resource "aws_iam_user_policy_attachment" "ecr-cd-bot-policy-attachment" {
   user       = aws_iam_user.main-ecr-cd-bot.name
   policy_arn = aws_iam_policy.main-ecr-policy.arn
-}
-
-resource "aws_iam_user_policy_attachment" "ecr-cd-bot-login-policy-attachment" {
-  user       = aws_iam_user.main-ecr-cd-bot.name
-  policy_arn = aws_iam_policy.main-ecr-login-policy.arn
 }
 
 ##################################
