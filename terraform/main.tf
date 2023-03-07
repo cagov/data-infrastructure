@@ -133,23 +133,23 @@ resource "aws_route_table_association" "public" {
 #          AWS Batch             #
 ##################################
 
-resource "aws_iam_role" "aws_batch_service_role" {
-  name = "aws_batch_service_role"
-
-  assume_role_policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-    {
-        "Action": "sts:AssumeRole",
-        "Effect": "Allow",
-        "Principal": {
-        "Service": "batch.amazonaws.com"
-        }
-    }
+data "aws_iam_policy_document" "aws_batch_service_policy" {
+  statement {
+    actions = [
+      "sts:AssumeRole"
     ]
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["batch.amazonaws.com"]
+    }
+  }
 }
-EOF
+
+
+resource "aws_iam_role" "aws_batch_service_role" {
+  name               = "aws_batch_service_role"
+  assume_role_policy = data.aws_iam_policy_document.aws_batch_service_policy.json
 }
 
 resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
@@ -216,21 +216,19 @@ resource "aws_batch_job_definition" "batch_job_def" {
     "FARGATE",
   ]
 
-  container_properties = <<CONTAINER_PROPERTIES
-{
-  "command": ["python", "-m", "jobs.test"],
-  "image": "676096391788.dkr.ecr.us-west-1.amazonaws.com/dse-infra-dev-ecr-us-west-1:latest",
-  "fargatePlatformConfiguration": {
-    "platformVersion": "LATEST"
-  },
-  "resourceRequirements": [
-    {"type": "VCPU", "value": "0.25"},
-    {"type": "MEMORY", "value": "512"}
-  ],
-  "networkConfiguration": {
-    "assignPublicIp": "ENABLED"
-  },
-  "executionRoleArn": "${aws_iam_role.ecs_task_execution_role.arn}"
-}
-CONTAINER_PROPERTIES
+  container_properties = jsonencode({
+    command = ["python", "-m", "jobs.test"]
+    image   = "676096391788.dkr.ecr.us-west-1.amazonaws.com/dse-infra-dev-ecr-us-west-1:latest"
+    fargatePlatformConfiguration = {
+      platformVersion = "LATEST"
+    }
+    resourceRequirements = [
+      { type = "VCPU", value = "0.25" },
+      { type : "MEMORY", value = "512" }
+    ]
+    networkConfiguration = {
+      assignPublicIp : "ENABLED"
+    },
+    executionRoleArn = aws_iam_role.ecs_task_execution_role.arn
+  })
 }
