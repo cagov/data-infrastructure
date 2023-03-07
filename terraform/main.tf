@@ -39,6 +39,39 @@ resource "aws_ecr_repository" "main-ecr" {
   }
 }
 
+data "aws_iam_policy_document" "main-ecr-policy-document" {
+  # Policy from https://github.com/aws-actions/amazon-ecr-login#permissions
+  statement {
+    actions = [
+      "ecr:BatchGetImage",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:CompleteLayerUpload",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:InitiateLayerUpload",
+      "ecr:PutImage",
+      "ecr:UploadLayerPart",
+      "ecr:ListImages"
+    ]
+    resources = [aws_ecr_repository.main-ecr.arn]
+  }
+}
+
+resource "aws_iam_policy" "main-ecr-policy" {
+  name        = "${var.name}-ecr-push-policy"
+  description = "Policy allowing pushing to the main ecr repository for ${var.name}"
+  policy      = data.aws_iam_policy_document.main-ecr-policy-document.json
+}
+
+resource "aws_iam_user" "main-ecr-cd-bot" {
+  name = "${var.name}-ecr-cd-bot"
+}
+
+resource "aws_iam_user_policy_attachment" "ecr-cd-bot-policy-attachment" {
+  user       = aws_iam_user.main-ecr-cd-bot.name
+  policy_arn = aws_iam_policy.main-ecr-policy.arn
+}
+
+
 ##################################
 #          Networking            #
 ##################################
