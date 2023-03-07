@@ -32,10 +32,13 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push docker image to Amazon ECR
+        uses: docker/build-push-action@v4
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: dse-infra-dev-ecr-us-west-1
           IMAGE_TAG: latest
-        run: |
-          docker build -f images/Dockerfile -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        with:
+          push: true
+          context: "."
+          file: "./images/Dockerfile"
+          tags: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}:${{ env.IMAGE_TAG }}
