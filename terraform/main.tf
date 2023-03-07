@@ -50,7 +50,6 @@ data "aws_iam_policy_document" "main-ecr-policy-document" {
       "ecr:InitiateLayerUpload",
       "ecr:PutImage",
       "ecr:UploadLayerPart",
-      "ecr:ListImages",
     ]
     resources = [aws_ecr_repository.main-ecr.arn]
   }
@@ -224,7 +223,7 @@ resource "aws_batch_job_definition" "batch_job_def" {
     }
     resourceRequirements = [
       { type = "VCPU", value = "0.25" },
-      { type : "MEMORY", value = "512" }
+      { type = "MEMORY", value = "512" }
     ]
     networkConfiguration = {
       assignPublicIp : "ENABLED"
