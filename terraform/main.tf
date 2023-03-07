@@ -158,8 +158,14 @@ resource "aws_iam_policy" "s3_scratch_policy" {
   policy      = data.aws_iam_policy_document.s3_scratch_policy_document.json
 }
 
+resource "aws_iam_role" "batch_job_role" {
+  name               = "${var.name}-batch-job-role"
+  description        = "Role for AWS batch jobs"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
 resource "aws_iam_role_policy_attachment" "s3_scratch_policy_role_attachment" {
-  role       = aws_iam_role.ecs_task_execution_role.name
+  role       = aws_iam_role.batch_job_role.name
   policy_arn = aws_iam_policy.s3_scratch_policy.arn
 }
 
@@ -264,5 +270,6 @@ resource "aws_batch_job_definition" "batch_job_def" {
       assignPublicIp : "ENABLED"
     },
     executionRoleArn = aws_iam_role.ecs_task_execution_role.arn
+    jobRoleArn       = aws_iam_role.batch_job_role.arn
   })
 }
