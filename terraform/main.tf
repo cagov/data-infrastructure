@@ -107,17 +107,12 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_security_group" "sg" {
-  name   = "aws_batch_compute_environment_security_group"
-  vpc_id = aws_vpc.vpc.id
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  name        = "aws_batch_compute_environment_security_group"
+  description = "Allow ECS tasks to reach out to internet"
+  vpc_id      = aws_vpc.vpc.id
 
   egress {
+    description = "Allow ECS tasks to talk to the internet"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -142,7 +137,7 @@ resource "aws_route" "public" {
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = "10.0.0.0/24"
-  map_public_ip_on_launch = true
+  map_public_ip_on_launch = false
 }
 
 resource "aws_route_table_association" "public" {
