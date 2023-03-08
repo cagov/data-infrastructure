@@ -30,7 +30,7 @@ provider "aws" {
 #       Container registry       #
 ##################################
 
-resource "aws_ecr_repository" "main-ecr" {
+resource "aws_ecr_repository" "main_ecr" {
   name                 = "${var.name}-ecr-${var.region}"
   image_tag_mutability = "MUTABLE"
 
@@ -39,7 +39,7 @@ resource "aws_ecr_repository" "main-ecr" {
   }
 }
 
-data "aws_iam_policy_document" "main-ecr-policy-document" {
+data "aws_iam_policy_document" "main_ecr_policy_document" {
   # Policy from https://github.com/aws-actions/amazon-ecr-login#permissions
   statement {
     actions = [
@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "main-ecr-policy-document" {
       "ecr:PutImage",
       "ecr:UploadLayerPart",
     ]
-    resources = [aws_ecr_repository.main-ecr.arn]
+    resources = [aws_ecr_repository.main_ecr.arn]
   }
   statement {
     actions = [
@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "main-ecr-policy-document" {
   }
 }
 
-data "aws_iam_policy_document" "batch-submit-policy-document" {
+data "aws_iam_policy_document" "batch_submit_policy_document" {
   statement {
     actions = [
       "batch:SubmitJob",
@@ -72,44 +72,44 @@ data "aws_iam_policy_document" "batch-submit-policy-document" {
   }
 }
 
-resource "aws_iam_policy" "main-ecr-policy" {
+resource "aws_iam_policy" "main_ecr_policy" {
   name        = "${var.name}-ecr-push-policy"
   description = "Policy allowing pushing to the main ecr repository for ${var.name}"
-  policy      = data.aws_iam_policy_document.main-ecr-policy-document.json
+  policy      = data.aws_iam_policy_document.main_ecr_policy_document.json
 }
 
-resource "aws_iam_policy" "batch-submit-policy" {
+resource "aws_iam_policy" "batch_submit_policy" {
   name        = "${var.name}-batch-submit-policy"
   description = "Policy allowing to submit batch jobs for ${var.name}"
-  policy      = data.aws_iam_policy_document.batch-submit-policy-document.json
+  policy      = data.aws_iam_policy_document.batch_submit_policy_document.json
 }
 
-resource "aws_iam_user" "cd-bot" {
+resource "aws_iam_user" "cd_bot" {
   name = "${var.name}-cd-bot"
 }
 
-resource "aws_iam_user_policy_attachment" "ecr-cd-bot-policy-attachment" {
-  user       = aws_iam_user.cd-bot.name
-  policy_arn = aws_iam_policy.main-ecr-policy.arn
+resource "aws_iam_user_policy_attachment" "ecr_cd_bot_policy_attachment" {
+  user       = aws_iam_user.cd_bot.name
+  policy_arn = aws_iam_policy.main_ecr_policy.arn
 }
 
-resource "aws_iam_user_policy_attachment" "batch-cd-bot-policy-attachment" {
-  user       = aws_iam_user.cd-bot.name
-  policy_arn = aws_iam_policy.batch-submit-policy.arn
+resource "aws_iam_user_policy_attachment" "batch_cd_bot_policy_attachment" {
+  user       = aws_iam_user.cd_bot.name
+  policy_arn = aws_iam_policy.batch_submit_policy.arn
 }
 
 ##################################
 #          Networking            #
 ##################################
 
-resource "aws_vpc" "vpc" {
+resource "aws_vpc" "this" {
   cidr_block = "10.0.0.0/16"
 }
 
 resource "aws_security_group" "sg" {
   name        = "aws_batch_compute_environment_security_group"
   description = "Allow ECS tasks to reach out to internet"
-  vpc_id      = aws_vpc.vpc.id
+  vpc_id      = aws_vpc.this.id
 
   egress {
     description = "Allow ECS tasks to talk to the internet"
@@ -121,21 +121,21 @@ resource "aws_security_group" "sg" {
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.this.id
 }
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.vpc.id
+resource "aws_internet_gateway" "this" {
+  vpc_id = aws_vpc.this.id
 }
 
 resource "aws_route" "public" {
   destination_cidr_block = "0.0.0.0/0"
   route_table_id         = aws_route_table.public.id
-  gateway_id             = aws_internet_gateway.igw.id
+  gateway_id             = aws_internet_gateway.this.id
 }
 
 resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.vpc.id
+  vpc_id                  = aws_vpc.this.id
   cidr_block              = "10.0.0.0/24"
   map_public_ip_on_launch = false
 }
