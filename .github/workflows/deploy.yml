@@ -2,12 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main, terraform-mvp]  # TODO remove branch
-
-env:
-  REGION: us-west-1
-  DEFAULT_IMAGE_REPO: dse-infra-dev-ecr-us-west-1
-  DEFAULT_IMAGE_NAME: analytics
+    branches: [main]
 
 jobs:
   deploy:
