@@ -61,19 +61,41 @@ data "aws_iam_policy_document" "main-ecr-policy-document" {
   }
 }
 
+data "aws_iam_policy_document" "batch-submit-policy-document" {
+  statement {
+    actions = [
+      "batch:SubmitJob",
+      "batch:CancelJob",
+      "batch:ListJobs",
+    ]
+    resources = ["*"]
+  }
+}
+
 resource "aws_iam_policy" "main-ecr-policy" {
   name        = "${var.name}-ecr-push-policy"
   description = "Policy allowing pushing to the main ecr repository for ${var.name}"
   policy      = data.aws_iam_policy_document.main-ecr-policy-document.json
 }
 
-resource "aws_iam_user" "main-ecr-cd-bot" {
-  name = "${var.name}-ecr-cd-bot"
+resource "aws_iam_policy" "batch-submit-policy" {
+  name        = "${var.name}-batch-submit-policy"
+  description = "Policy allowing to submit batch jobs for ${var.name}"
+  policy      = data.aws_iam_policy_document.batch-submit-policy-document.json
+}
+
+resource "aws_iam_user" "cd-bot" {
+  name = "${var.name}-cd-bot"
 }
 
 resource "aws_iam_user_policy_attachment" "ecr-cd-bot-policy-attachment" {
-  user       = aws_iam_user.main-ecr-cd-bot.name
+  user       = aws_iam_user.cd-bot.name
   policy_arn = aws_iam_policy.main-ecr-policy.arn
+}
+
+resource "aws_iam_user_policy_attachment" "batch-cd-bot-policy-attachment" {
+  user       = aws_iam_user.cd-bot.name
+  policy_arn = aws_iam_policy.batch-submit-policy.arn
 }
 
 ##################################
