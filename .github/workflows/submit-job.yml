@@ -2,7 +2,7 @@ name: submit
 
 on:
   push:
-    branches: [main, terraform-mvp]
+    branches: [main]
 
 jobs:
   deploy:
