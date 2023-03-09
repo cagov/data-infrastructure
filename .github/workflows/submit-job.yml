@@ -6,7 +6,7 @@ on:
     - cron: "23 12 * * *"
 
 jobs:
-  deploy:
+  submit:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
