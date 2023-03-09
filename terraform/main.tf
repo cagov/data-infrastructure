@@ -26,6 +26,8 @@ provider "aws" {
   }
 }
 
+data "aws_caller_identity" "current" {}
+
 ##################################
 #       Container registry       #
 ##################################
@@ -57,6 +59,7 @@ data "aws_iam_policy_document" "main_ecr_policy_document" {
     actions = [
       "ecr:GetAuthorizationToken"
     ]
+    # Why does this need *? https://github.com/aws-actions/amazon-ecr-login#ecr-private
     resources = ["*"]
   }
 }
@@ -68,7 +71,10 @@ data "aws_iam_policy_document" "batch_submit_policy_document" {
       "batch:CancelJob",
       "batch:ListJobs",
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:batch:${var.region}:${data.aws_caller_identity.current.account_id}:job-definition/${var.name}*",
+      aws_batch_job_queue.batch_queue.arn,
+    ]
   }
 }
 
