@@ -1,6 +1,8 @@
 name: submit
 
 on:
+  push:
+    branches: [terraform-mvp]
   workflow_dispatch:
   schedule:
     - cron: "23 12 * * *"
@@ -19,4 +21,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-1
-      - run: aws batch submit-job --job-name=test --job-queue=dse-infra-dev-batch-job-queue --job-definition dse-infra-dev-batch-job-definition
+      - run: |
+          aws batch submit-job \
+          --job-name test \
+          --job-queue dse-infra-dev-batch-job-queue \
+          --job-definition dse-infra-dev-batch-job-definition \
+          --container-overrides '{"resourceRequirements": [{"value": "2", "type": "VCPU"}, {"value": "4096", "type": "MEMORY"}]}'
