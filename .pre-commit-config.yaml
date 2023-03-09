@@ -12,3 +12,10 @@ repos:
       - id: terraform_fmt
       - id: terraform_validate
       - id: terraform_tflint
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.16.0
+    hooks:
+      - id: terraform-docs-go
+        args: ["./terraform"]
+      - id: terraform-docs-go
+        args: ["./terraform/remote-state"]
