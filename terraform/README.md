@@ -21,10 +21,11 @@ Anaconda users on any archictecture should be able to use `conda` or `mamba`:
 conda install -c conda-forge terraform
 ```
 
-We also use `tflint` for linting, which can be installed in the same manner, e.g.:
+We also use `tflint` for linting, and `terraform-docs` to help with documentation of resources.
+These can be installed in the same manner, e.g.:
 
 ```bash
-conda install -c conda-forge tflint
+conda install -c conda-forge tflint go-terraform-docs
 ```
 
 There are a number of pre-commit checks that run on committing as well as in CI.
