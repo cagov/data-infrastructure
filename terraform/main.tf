@@ -275,7 +275,7 @@ resource "aws_batch_job_definition" "batch_job_def" {
 
   container_properties = jsonencode({
     command = ["python", "-m", "jobs.test"]
-    image   = "676096391788.dkr.ecr.us-west-1.amazonaws.com/dse-infra-dev-ecr-us-west-1:latest"
+    image   = "${aws_ecr_repository.main_ecr.repository_url}:latest"
     fargatePlatformConfiguration = {
       platformVersion = "LATEST"
     }
