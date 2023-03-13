@@ -24,11 +24,15 @@ repos:
       - id: sqlfmt
         language_version: python
   - repo: https://github.com/sqlfluff/sqlfluff
-    rev: 1.4.2
+    rev: 2.0.0a6
     hooks:
       - id: sqlfluff-lint
         additional_dependencies:
-          ["dbt-bigquery==1.3", "sqlfluff-templater-dbt", "dbt-core==1.3.2"]
+          - dbt-bigquery==1.4.2
+          - sqlfluff-templater-dbt==2.0.0a6
+          - dbt-core==1.4.5
       - id: sqlfluff-fix
         additional_dependencies:
-          ["dbt-bigquery==1.3", "sqlfluff-templater-dbt", "dbt-core==1.3.2"]
+          - dbt-bigquery==1.4.2
+          - sqlfluff-templater-dbt==2.0.0a6
+          - dbt-core==1.4.5
