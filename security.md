@@ -69,6 +69,23 @@ GCS buckets in a project, when their application only requires access to one.
 AWS has a nice [user guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)
 for how to work with IAM, including some [best-practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html).
 
+### Fivetran practices
+
+Fivetran's [security docs](https://fivetran.com/docs/security) which link to a deeper dive white paper are a good place to go to understand their standards and policies for connecting, replicating, and loading data from all of our data sources.
+
+Within the ***Users & Permissions*** section of our Fivetran account there are three sub-sections for: *Users*, *Roles*, and *Teams*.
+
+The [*Roles* page](https://fivetran.com/dashboard/account/users-permissions/roles) defines all default role types and how many users are associated with each type. There is also the ability to create custom roles via the *+ Add Role* button.
+
+Currently, we have two teams:
+- IT
+- Data Services and Engineering (DSE) 
+
+Our IT team's role is Account Billing and User Access. This is a custom role that provides billing and user management access with view-only access for the remaining account-level features; it provides no destination or connector access.
+
+
+The DSE team's roles are a bit more varied, but currently there are three people (Deputy Director of DSE, Data Strategist (to be replaced when our Data Services and Platform Lead is on board), Senior Data Engineer) with Account Administrator roles. 
+
 ## Third-party SaaS Integrations
 
 Often a third-party software-as-a-service (SaaS) provider will require service accounts
