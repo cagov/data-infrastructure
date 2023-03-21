@@ -75,6 +75,14 @@ Fivetran's [security docs](https://fivetran.com/docs/security) which link to a d
 
 Within the ***Users & Permissions*** section of our Fivetran account there are three sub-sections for: *Users*, *Roles*, and *Teams*.
 
+Fivetran also provides [detailed docs on Role-Based Access Controls (RBAC)](https://fivetran.com/docs/getting-started/fivetran-dashboard/account-management/role-based-access-control) which covers the relationship among users, roles, and teams when defining RBAC policies.
+
+This diagram from their docs gives an at-a-glance view of how RBAC could be configured across multiple teams, destinations, and connectors. Since we aren't a massive team, we may not have as much delegation, but this gives you a sense of what's possible.
+
+[!Diagram showing an approach to delegating access down from account to destinations to sources in Fivetran](https://fivetran.com/static-assets-docs/static/admin-teams-connectors.cbaa03b2.png)
+[See diagram in context of docs](https://fivetran.com/docs/getting-started/fivetran-dashboard/account-management/role-based-access-control#newrbacmodelbenefits).
+
+**Note:** With the recent creation of organizations in Fivetran, client project security policies get simplified as we can airgap them from our other projects by creating a separate account. This is also better from a handoff perspective.
 The [*Roles* page](https://fivetran.com/dashboard/account/users-permissions/roles) defines all default role types and how many users are associated with each type. There is also the ability to create custom roles via the *+ Add Role* button.
 
 Currently, we have two teams:
