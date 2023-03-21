@@ -7,5 +7,5 @@ variable "name" {
 variable "region" {
   description = "Region for AWS resources"
   type        = string
-  default     = "us-west-1"
+  default     = "us-west-2"
 }
