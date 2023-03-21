@@ -79,7 +79,7 @@ Fivetran also provides [detailed docs on Role-Based Access Controls (RBAC)](http
 
 This diagram from their docs gives an at-a-glance view of how RBAC could be configured across multiple teams, destinations, and connectors. Since we aren't a massive team, we may not have as much delegation, but this gives you a sense of what's possible.
 
-[!Diagram showing an approach to delegating access down from account to destinations to sources in Fivetran](https://fivetran.com/static-assets-docs/static/admin-teams-connectors.cbaa03b2.png)
+![Diagram showing an approach to delegating access down from account to destinations to sources in Fivetran](https://fivetran.com/static-assets-docs/static/admin-teams-connectors.cbaa03b2.png)
 [See diagram in context of docs](https://fivetran.com/docs/getting-started/fivetran-dashboard/account-management/role-based-access-control#newrbacmodelbenefits).
 
 **Note:** With the recent creation of organizations in Fivetran, client project security policies get simplified as we can airgap them from our other projects by creating a separate account. This is also better from a handoff perspective.
