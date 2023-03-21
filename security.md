@@ -92,7 +92,7 @@ Currently, we have two teams:
 Our IT team's role is **Account Billing and User Access**. This is a custom role that provides billing and user management access with view-only access for the remaining account-level features; it provides no destination or connector access.
 
 
-The DSE team's roles are a bit more varied, but currently there are three people (Deputy Director of DSE, Data Strategist (to be replaced when our Data Services and Platform Lead is on board), Senior Data Engineer) with Account Administrator roles. 
+The DSE team both manages CalData projects and onboards clients into Fivetran, and so its members have Account Administrator roles. 
 
 ## Third-party SaaS Integrations
 
