@@ -89,7 +89,7 @@ Currently, we have two teams:
 - IT
 - Data Services and Engineering (DSE) 
 
-Our IT team's role is Account Billing and User Access. This is a custom role that provides billing and user management access with view-only access for the remaining account-level features; it provides no destination or connector access.
+Our IT team's role is **Account Billing and User Access**. This is a custom role that provides billing and user management access with view-only access for the remaining account-level features; it provides no destination or connector access.
 
 
 The DSE team's roles are a bit more varied, but currently there are three people (Deputy Director of DSE, Data Strategist (to be replaced when our Data Services and Platform Lead is on board), Senior Data Engineer) with Account Administrator roles. 
