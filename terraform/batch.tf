@@ -36,9 +36,7 @@ resource "aws_batch_compute_environment" "batch_env" {
       aws_security_group.sg.id
     ]
 
-    subnets = [
-      aws_subnet.public.id
-    ]
+    subnets = aws_subnet.public[*].id
 
     type = "FARGATE"
   }
