@@ -33,7 +33,7 @@ resource "aws_batch_compute_environment" "batch_env" {
     max_vcpus = 16
 
     security_group_ids = [
-      aws_security_group.sg.id
+      aws_security_group.batch.id
     ]
 
     subnets = aws_subnet.public[*].id

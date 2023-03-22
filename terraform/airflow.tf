@@ -1,87 +1,3 @@
-resource "aws_vpc" "mwaa" {
-  cidr_block = "10.0.0.0/16"
-}
-
-resource "aws_subnet" "public_mwaa" {
-  count                   = 2
-  cidr_block              = "10.0.${count.index}.0/24"
-  vpc_id                  = aws_vpc.mwaa.id
-  map_public_ip_on_launch = true
-  availability_zone       = count.index % 2 == 0 ? "${var.region}a" : "${var.region}b"
-}
-
-resource "aws_subnet" "private_mwaa" {
-  count                   = 2
-  cidr_block              = "10.0.${count.index + 2}.0/24"
-  vpc_id                  = aws_vpc.mwaa.id
-  map_public_ip_on_launch = false
-  availability_zone       = count.index % 2 == 0 ? "${var.region}a" : "${var.region}b"
-}
-
-resource "aws_eip" "this" {
-  count = 2
-  vpc   = true
-}
-
-resource "aws_nat_gateway" "this" {
-  count         = 2
-  allocation_id = aws_eip.this[count.index].id
-  subnet_id     = aws_subnet.public_mwaa[count.index].id
-}
-
-resource "aws_internet_gateway" "mwaa" {
-  vpc_id = aws_vpc.mwaa.id
-}
-
-resource "aws_route_table" "public_mwaa" {
-  vpc_id = aws_vpc.mwaa.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.mwaa.id
-  }
-}
-
-resource "aws_route_table_association" "public_mwaa" {
-  count          = 2
-  route_table_id = aws_route_table.public_mwaa.id
-  subnet_id      = aws_subnet.public_mwaa[count.index].id
-}
-
-resource "aws_route_table" "private_mwaa" {
-  count  = length(aws_nat_gateway.this)
-  vpc_id = aws_vpc.mwaa.id
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.this[count.index].id
-  }
-}
-
-resource "aws_route_table_association" "private_mwaa" {
-  count          = length(aws_subnet.private_mwaa)
-  route_table_id = aws_route_table.private_mwaa[count.index].id
-  subnet_id      = aws_subnet.private_mwaa[count.index].id
-}
-
-resource "aws_security_group" "mwaa" {
-  vpc_id = aws_vpc.mwaa.id
-  name   = "${var.name}-mwaa-no-ingress-sg"
-  ingress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    self      = true
-  }
-  egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
-    cidr_blocks = [
-      "0.0.0.0/0"
-    ]
-  }
-}
-
-
 resource "aws_iam_role" "mwaa" {
   name               = "${var.name}-mwaa-execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume.json
@@ -228,7 +144,7 @@ resource "aws_mwaa_environment" "this" {
 
   network_configuration {
     security_group_ids = [aws_security_group.mwaa.id]
-    subnet_ids         = aws_subnet.private_mwaa[*].id
+    subnet_ids         = aws_subnet.private[*].id
   }
   webserver_access_mode = "PUBLIC_ONLY"
 }
