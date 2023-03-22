@@ -196,11 +196,29 @@ data "aws_iam_policy_document" "mwaa" {
       "arn:aws:sqs:${var.region}:*:airflow-celery-*"
     ]
   }
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:DescribeKey",
+      "kms:GenerateDataKey*",
+      "kms:Encrypt"
+    ]
+    resources     = []
+    not_resources = ["arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"]
+    condition {
+      test = "StringLike"
+      values = [
+        "sqs.${var.region}.amazonaws.com"
+      ]
+      variable = "kms:ViaService"
+    }
+  }
 }
 
 resource "aws_mwaa_environment" "this" {
   execution_role_arn = aws_iam_role.mwaa.arn
-  name               = "${var.name}-mwaa-environment-2"
+  name               = "${var.name}-mwaa-environment"
   max_workers        = 5
   min_workers        = 1
   airflow_version    = "2.4.3"
