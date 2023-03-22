@@ -5,4 +5,4 @@ URL = "https://usbuildingdata.blob.core.windows.net/usbuildings-v2/Alaska.geojso
 
 if __name__ == "__main__":
     gdf = geopandas.read_file(URL)
-    gdf.to_parquet("s3://dse-infra-dev-scratch/alaska.parquet")
+    gdf.to_parquet("s3://dse-infra-dev-us-west-2-scratch/alaska.parquet")
