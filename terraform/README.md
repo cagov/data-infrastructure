@@ -1,6 +1,14 @@
 # CalData Terraform Infrastructure
 
-This Terraform project
+This Terraform project sets up AWS infrastructure for the CalData Data Services and Engineering team.
+It includes:
+
+* An [AWS Batch](https://aws.amazon.com/batch/) environment for running arbitrary containerized jobs
+* A [Managed Workflows on Apache Airflow](https://aws.amazon.com/managed-workflows-for-apache-airflow/) environment for orchestrating jobs.
+* A VPC and subnets for the above
+* An ECR repository for hosting Docker images storing code and libraries for jobs
+* A bot user for running AWS operations in GitHub Actions
+* An S3 scratch bucket
 
 ## Setup
 
