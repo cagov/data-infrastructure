@@ -124,6 +124,12 @@ data "aws_iam_policy_document" "batch_submit_policy_document" {
       aws_batch_job_queue.batch_queue.arn,
     ]
   }
+  statement {
+    actions = [
+      "batch:DescribeJobs",
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_policy" "batch_submit_policy" {
