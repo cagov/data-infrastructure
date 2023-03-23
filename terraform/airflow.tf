@@ -3,10 +3,19 @@ resource "aws_iam_role" "mwaa" {
   assume_role_policy = data.aws_iam_policy_document.assume.json
 }
 
-resource "aws_iam_role_policy" "mwaa" {
+resource "aws_iam_policy" "mwaa" {
   name   = "${var.name}-mwaa-execution-policy"
   policy = data.aws_iam_policy_document.mwaa.json
-  role   = aws_iam_role.mwaa.id
+}
+
+resource "aws_iam_role_policy_attachment" "mwaa_execution_role" {
+  role       = aws_iam_role.mwaa.name
+  policy_arn = aws_iam_policy.mwaa.arn
+}
+
+resource "aws_iam_role_policy_attachment" "mwaa_batch_submit_role" {
+  role       = aws_iam_role.mwaa.name
+  policy_arn = aws_iam_policy.batch_submit_policy.arn
 }
 
 data "aws_iam_policy_document" "assume" {
@@ -135,6 +144,7 @@ data "aws_iam_policy_document" "mwaa" {
 resource "aws_mwaa_environment" "this" {
   execution_role_arn = aws_iam_role.mwaa.arn
   name               = "${var.name}-mwaa-environment"
+  schedulers         = 2
   max_workers        = 5
   min_workers        = 1
   airflow_version    = "2.4.3"
