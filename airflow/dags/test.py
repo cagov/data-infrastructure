@@ -1,4 +1,4 @@
-"""Test DAG"""
+"""Test DAG."""
 from __future__ import annotations
 
 import os
@@ -15,6 +15,7 @@ DEFAULT_ARGS = {
     "retry_delay": timedelta(minutes=5),
 }
 
+
 @dag(
     description="Test DAG",
     start_date=datetime(2023, 3, 23),
@@ -22,7 +23,7 @@ DEFAULT_ARGS = {
     default_args=DEFAULT_ARGS,
 )
 def building_footprints_dag():
-    """Test DAG"""
+    """Test DAG."""
     submit_batch_job = BatchOperator(
         task_id="submit_batch_job",
         job_name="submit_batch_job",
@@ -30,7 +31,10 @@ def building_footprints_dag():
         job_definition=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_DEFINITION"],
         overrides={
             "environment": [
-                {"name": "BUCKET", "value": os.environ["AIRFLOW__CUSTOM__SCRATCH_BUCKET"]}
+                {
+                    "name": "BUCKET",
+                    "value": os.environ["AIRFLOW__CUSTOM__SCRATCH_BUCKET"],
+                }
             ],
         },
     )
