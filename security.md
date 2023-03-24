@@ -87,12 +87,12 @@ The [*Roles* page](https://fivetran.com/dashboard/account/users-permissions/role
 
 Currently, we have two teams:
 - IT
-- Data Services and Engineering (DSE) 
+- Data Services and Engineering (DSE)
 
 Our IT team's role is **Account Billing and User Access**. This is a custom role that provides billing and user management access with view-only access for the remaining account-level features; it provides no destination or connector access.
 
 
-The DSE team both manages CalData projects and onboards clients into Fivetran, and so its members have Account Administrator roles. 
+The DSE team both manages CalData projects and onboards clients into Fivetran, and so its members have Account Administrator roles.
 
 ## Third-party SaaS Integrations
 
