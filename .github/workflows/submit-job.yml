@@ -1,8 +1,6 @@
 name: submit
 
 on:
-  push:
-    branches: [mwaa-poc]
   workflow_dispatch:
   schedule:
     - cron: "23 12 * * *"
