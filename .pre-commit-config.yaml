@@ -8,6 +8,7 @@ repos:
       - id: trailing-whitespace
       - id: check-merge-conflict
       - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.77.1
     hooks:
