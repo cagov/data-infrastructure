@@ -34,9 +34,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_dynamodb_table.terraform-state-lock](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/dynamodb_table) | resource |
-| [aws_s3_bucket.terraform-state](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket) | resource |
-| [aws_s3_bucket_versioning.terraform-state](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket_versioning) | resource |
+| [aws_dynamodb_table.terraform_state_lock](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/dynamodb_table) | resource |
+| [aws_s3_bucket.terraform_state](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_versioning.terraform_state](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket_versioning) | resource |
 
 ## Inputs
 
