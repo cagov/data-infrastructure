@@ -1,93 +1,151 @@
-# Data Services and Engineering Standards
+# Naming Conventions
 
-This is a living document of the DSE team's Cloud Server, Database, project, and tool naming and security conventions. The conventions here are meant to guide us in how we name resources and allow access to our tools and data.
+This page documents the Data Services and Engineering (DSE) team's naming conventions for cloud resources.
 
-## Naming Conventions 
+## General Approach
 
-Inspiration via [stepan.wtf](https://stepan.wtf/cloud-naming-convention/)
+Our approach is adapted from [this blog post](https://stepan.wtf/cloud-naming-convention/).
+The goals of establishing a naming convetion are:
+1. Prevent name collisions between similar resources (especially in cases where names are required to be unique).
+1. Allow developers to identify at a glance what a particular resource is and who owns it.
+1. Structured naming allows for easier sorting and filtering of resources.
 
-[prefix]\_[projectname]\_[env]\_[resource]\_[location]\_[description]\_[suffix]
+The overall name template is:
 
-| **Component** | **Description** | **Req.** | **Constraints** |
+```
+{owner}-{project}-{env}-[{region}]-[{description}]-[{suffix}]
+```
+Where `{...}` indicates a component in the name, and `[{...}]` indicates that it is optional or conditionally required.
+
+| **Component** | **Description** | **Required** | **Constraints** |
 | ------------- | ------------- | ------------- | ------------- |
-**env** | data status type | ✔ | len 3, fixed
-**project** | project name | ✔ | len 4-10, a-z0-9
-**description** | additional description | ✗ | len 1-20, a-z0-9
-**suffix** | random suffix | ✗ | len 4, a-z0-9
+**owner** | Owner of the resource | ✔ | len 3-6 |
+**project** | Project name | ✔ | len 4-10, a-z0-9 |
+**env** | Environment type, e.g. `dev`, `prd`, `stg` | ✔ | len 3, a-z, enum |
+**region** | Region (if applicable) | ✗ |  enum
+**description** | Additional description (if needed) |  ✗| len 1-20, a-z0-9
+**suffix** | Random suffix (only use if there are multiple identical resources) | ✗ | len 4, a-z0-9
 
 
-Principles
-- As short as possible, but still human readable
+**Owner:**
+This is a required field.
+For most of our projects, it will be `dse` (for Data Services and Engineering),
+though it could be other things for projects that we will be handing off to clients upon completion.
 
-### BigQuery
-- **Project name constraints**: The name has invalid characters. Enter letters, numbers, single quotes, hyphens, spaces or exclamation points.
-- **Project ID** constraints: Project ID can have lowercase letters, digits, or hyphens. It must start with a lowercase letter and end with a letter or number.
-- Cannot change dataset names, see [here](https://stackoverflow.com/questions/22692905/rename-datasets-in-bigquery)
+**Project:**
+A short project name. This is a required field. For general DSE infrastructure, use `infra`.
 
-#### DSE - Product Analytics
+**Environment:**
+The deployment environment. This is a required field.
+Generally `prd` (production), `stg` (staging), or `dev` (development).
 
-- **Project name**: [DSE Product Analytics](https://console.cloud.google.com/welcome?project=dse-product-analytics-prd-bqd)
-- **Project ID**: dse-product-analytics-prd-bqd
-- **Sources**: GA4, GSC, Benefits rec widget data
-- **Datasets**
-   - _prd_benefitsrecwidget_research_
-   - _analytics_314711183_
-   - _analytics_322878501_
-   - _ex: stg_ga4_statewide_322878501_
-   - _ex: stg_ga4_innovation_326878242_
+**Region:**
+If the resource exists in a particular region (e.g. `us-west-1`), this should be included.
 
-- Considerations: 
-   - ODI-built products versus paid products e.g. page feedback vs. survey monkey - may have security implication
-   - Potential new dataset to adhere to naming conventions and to union historical data not captured when we did the initial GA4 <> BQ link (may be able to use Fivetran to do the incremental loading to avoid data sampling mentioned below)
-   - dbt scratch datasets are created with prefix dbt_<first name initial><last name> e.g. dbt_irose 
+**Description:**
+There may be multiple resources that are identical with respect to the above parameters,
+but have a different purpose.
+In that case, append a `description` to the name to describe that purpose.
+For instance, we might have multiple subnets, some of which are `public` and some of which are `private`. Or we could have multiple buckets for storing different kinds data within the same project.
 
-#### DSE - Reference Data
+**Suffix:**
+If there all of the above are identical (including `description`),
+include a random suffix.
+This can be accomplished with the terraform [`random_id`](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) resource.
 
-- **Project name**: [DSE Reference Data](https://console.cloud.google.com/welcome?project=dse-reference-data-prd-bqd)
-- **Project id**: dse-reference-data-prd-bqd
-- **Sources**: Geo, income, R/E, Dept list
-- **Datasets**
-   - ex: prd_censusACS_2020
-   - ex: prd_censusDEC_2020
+### Examples
 
-### FiveTran
+**GCP Project:** We have a GCP project for managing web/product analytics collaborations with the CalInnovate side of ODI. GCP projects to not exist in a region, so a production project could be called `dse-product-analytics-prd`.
 
-- **Destination name constraints**: Destination names must start with a letter or underscore and only contain letters, numbers or underscores
-- **Connector name**: Appears in your destination and cannot be changed after you test the connector or save the form for later.
+**MWAA Environment:** An Apache Airflow environment in AWS does exist in a region, and supports general DSE infrastructure. So a development deployment of the environment could be `dse-infra-dev-us-west-2`.
 
-#### DSE - Product Analytics
-- **Destination name**: DSE_Product_Analytics
-- **Connector name**: prd_benefitsRecWidget_research
-- **Considerations/Things to know:**
-   - Destination names should map to BQ project names replacing spaces with underscores
-   - Connector names should map to BQ dataset names
-   - BigQuery connector checks:
-      - We are not using our own Service Account
-      - We are not using our GCS bucket to process data, instead we are using a Fivetran-managed bucket.
-      - We are not shifting UTC offset with daylight savings time
+**Scratch bucket:** We might have several S3 buckets supporting different aspects of a project. For instance, one bucket could be used for scratch work, and another could be used for source data. The scratch bucket could then be named `dse-infra-dev-us-west-1-scratch`.
+
+## Resource tagging
+
+Cloud resources can be tagged with user-specified key-value pairs
+which allow for resource and cost tracking within a given cloud account.
+
+Our tagging convention is that information which is available in the resource name should also be available in tags as a specific key-value pair:
+
+| **Key** | **Value** | **Required** |
+|---------|-----------|--------------|
+| Owner   | `{owner}` | ✔            |
+| Project | `{project}`| ✔           |
+| Environment | `{env}` | ✔          |
+| Description | `{description}` | ✗  |
+
+Note that the `{region}` and `{suffix}` components are not included.
+This is because the region information is typically available elsewhere in the API/Console,
+and the suffix information is not semantically meaningful.
+
+## Specific considerations
+
+Not all resources can follow the above convention exactly.
+For instance, some resource names may not allow hyphens, or may have length limits.
+In those cases, we should try to adhere to the conventions as closely as possible
+(e.g., by substituting underscores for hyphens)
+and document the exception here.
+
+### Cloud data warehouse schemas
+
+Data warehouse schemas (or datasets in BigQuery) are often user/analyst-facing,
+and have different considerations.
+They usually [cannot have hyphens in them](https://cloud.google.com/bigquery/docs/datasets#dataset-naming), so words should be separated with underscores "`_`".
+Furthermore, analysts needn't need to know details of regions or deployments, so `region` and `env` are dropped, and the naming convention becomes:
+
+```
+{owner}_{project}_[{description}]
+```
+
+If a project is owned by the Data Services and Engineering team,
+the `owner` component may be ommited, and the schema name is simply
+```
+{project}_[{description}]
+```
+Note that Snowflake [normalizes all object names to upper case](https://docs.snowflake.com/en/sql-reference/identifiers-syntax).
+This is opposite to how [PostgreSQL normalizes object names](https://www.postgresql.org/docs/current/sql-syntax-lexical.html) (sigh).
+Most of the time this doesn't matter, but occasionally requires thought if you have a mixed-case object name. If you are naming new database tables or schemas, mixed-case identifiers should be avoided.
 
 ### dbt
 
-- Project name: DSE Product Analytics
-- Repo: git://github.com/cagov/data-dbt-core.git
-- In BQ scratch datasets are created with prefix dbt_<first name initial><last name> e.g. dbt_irose 
-- **Considerations**:
-    - dbt project names should map to BQ project names
+Models in a data warehouse do not follow the same naming conventions as raw cloud resources,
+as their most frequent consumers are analytics engineers and data analysts.
 
-## Resources
-### Warehouse
-- https://blog.panoply.io/data-warehouse-naming-conventions 
+**Dimension tables** are prefixed with `dim_`.
+
+**Fact tables** are prefixed with `fct_`.
+
+**Staging tables** are prefixed with `stg_`.
+
+**Intermediate tables** are prefixed with `int_`.
+
+We may adopt additional conventions for denoting aggregations, column data types, etc. in the future.
+
+Feature branches in dbt are tested in separate schemas within the cloud data warehouse.
+When a developer uses dbt locally or in dbt Cloud, they choose a name for the development schema.
+By convention, this is `dbt_{username}`, where `username` is the first initial of their given name followed by their surname.
+
+### Fivetran
+
+The names of tables loaded by Fivetran are typically set by either Fivetran or the names of the tables in the source systems.
+As such, we don't have much control over them, and they won't adhere to any particular naming conventions.
+
+Fivetran connectors names cannot contain hyphens, and should follow this pattern:
+
+```
+fivetran_{owner}_{project}_{connector_type}_[{description}]
+```
+The schemas into which a fivetran connector is writing should be named the same as the connector
+(which is why the connector name has some seemingly redundant information).
+
+If a project is owned by the Data Services and Engineering team,
+the `owner` component may be ommited, and the schema name is simply
+```
+fivetran_{project}_{connector_type}_[{description}]
+```
+
+## External References
+
 - https://docs.getdbt.com/blog/stakeholder-friendly-model-names 
 - https://docs.getdbt.com/blog/on-the-importance-of-naming 
-
-### Cloud Storage
-- https://cloud.google.com/storage/docs/naming-buckets 
-- https://hadoopjournal.wordpress.com/2020/09/04/google-cloud-storage-best-practices/ 
-
-### Security / Data Governance
-- [How we structure our dbt project](https://docs.getdbt.com/guides/best-practices/how-we-structure/1-guide-overview)
-- [BigQuery Security Guide](https://cloud.google.com/bigquery/docs/data-governance)
-- [Principle of Least Privilege](https://cloud.google.com/blog/products/identity-security/dont-get-pwned-practicing-the-principle-of-least-privilege) 
-- [Data Governance Summary](https://cloud.google.com/bigquery/docs/data-governance-summary)
-- [General Security Best Practices in BigQuery](https://towardsdatascience.com/6-best-practices-for-managing-data-access-to-bigquery-4396b0a3cfba)
-- https://airbyte.com/blog/best-practices-dbt-style-guide
