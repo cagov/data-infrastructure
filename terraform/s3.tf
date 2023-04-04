@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "s3_scratch_policy_document" {
 }
 
 resource "aws_iam_policy" "s3_scratch_policy" {
-  name        = "${local.prefix}-s3-scratch-policy"
+  name        = "${local.prefix}-${var.region}-s3-scratch-policy"
   description = "Policy allowing read/write for s3 scratch bucket"
   policy      = data.aws_iam_policy_document.s3_scratch_policy_document.json
 }

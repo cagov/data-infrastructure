@@ -1,10 +1,10 @@
 resource "aws_iam_role" "mwaa" {
-  name               = "${local.prefix}-mwaa-execution-role"
+  name               = "${local.prefix}-${var.region}-mwaa-execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume.json
 }
 
 resource "aws_iam_policy" "mwaa" {
-  name   = "${local.prefix}-mwaa-execution-policy"
+  name   = "${local.prefix}-${var.region}-mwaa-execution-policy"
   policy = data.aws_iam_policy_document.mwaa.json
 }
 
@@ -16,6 +16,12 @@ resource "aws_iam_role_policy_attachment" "mwaa_execution_role" {
 resource "aws_iam_role_policy_attachment" "mwaa_batch_submit_role" {
   role       = aws_iam_role.mwaa.name
   policy_arn = aws_iam_policy.batch_submit_policy.arn
+}
+
+locals {
+  # Define the environment name as a `local` so we can refer to it in the
+  # execution role policy without introducing a cycle.
+  environment_name = "${local.prefix}-${var.region}-mwaa-environment"
 }
 
 data "aws_iam_policy_document" "assume" {
@@ -43,7 +49,7 @@ data "aws_iam_policy_document" "mwaa" {
       "airflow:PublishMetrics"
     ]
     resources = [
-      "arn:aws:airflow:${var.region}:${data.aws_caller_identity.current.account_id}:environment/${local.prefix}-mwaa-environment"
+      "arn:aws:airflow:${var.region}:${data.aws_caller_identity.current.account_id}:environment/${local.environment_name}"
     ]
   }
   statement {
@@ -85,7 +91,7 @@ data "aws_iam_policy_document" "mwaa" {
       "logs:GetQueryResults"
     ]
     resources = [
-      "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:airflow-${local.prefix}-mwaa-environment-*"
+      "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:airflow-${local.environment_name}-*"
     ]
   }
   statement {
@@ -143,7 +149,7 @@ data "aws_iam_policy_document" "mwaa" {
 
 resource "aws_mwaa_environment" "this" {
   execution_role_arn = aws_iam_role.mwaa.arn
-  name               = "${local.prefix}-mwaa-environment"
+  name               = local.environment_name
   schedulers         = 2
   max_workers        = 5
   min_workers        = 1
@@ -151,8 +157,8 @@ resource "aws_mwaa_environment" "this" {
 
   airflow_configuration_options = {
     "custom.scratch_bucket"         = aws_s3_bucket.scratch.id
-    "custom.default_job_queue"      = aws_batch_job_queue.batch_queue.name
-    "custom.default_job_definition" = aws_batch_job_definition.batch_job_def.name
+    "custom.default_job_queue"      = aws_batch_job_queue.default.name
+    "custom.default_job_definition" = aws_batch_job_definition.default.name
   }
 
   source_bucket_arn = aws_s3_bucket.mwaa.arn
@@ -163,4 +169,5 @@ resource "aws_mwaa_environment" "this" {
     subnet_ids         = aws_subnet.private[*].id
   }
   webserver_access_mode = "PUBLIC_ONLY"
+  depends_on            = [aws_iam_role_policy_attachment.mwaa_execution_role]
 }

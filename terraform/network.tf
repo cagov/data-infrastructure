@@ -8,6 +8,10 @@ data "aws_availability_zones" "available" {
 
 resource "aws_vpc" "this" {
   cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "${local.prefix}-main"
+  }
 }
 
 resource "aws_security_group" "batch" {
@@ -21,6 +25,10 @@ resource "aws_security_group" "batch" {
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${local.prefix}-batch-sg"
   }
 }
 
@@ -41,10 +49,18 @@ resource "aws_security_group" "mwaa" {
       "0.0.0.0/0"
     ]
   }
+
+  tags = {
+    Name = "${local.prefix}-mwaa-no-ingress-sg"
+  }
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
+
+  tags = {
+    Name = "${local.prefix}-main"
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -53,17 +69,38 @@ resource "aws_route_table" "public" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.this.id
   }
+
+  tags = {
+    Name = "${local.prefix}-public"
+  }
+}
+
+resource "random_id" "public_subnet" {
+  count       = 2
+  byte_length = 3
+}
+
+resource "random_id" "private_subnet" {
+  count       = 2
+  byte_length = 3
 }
 
 resource "aws_eip" "this" {
   count = 2
   vpc   = true
+
+  tags = {
+    Name = "${local.prefix}-${data.aws_availability_zones.available.names[count.index]}-nat-${random_id.private_subnet[count.index].hex}"
+  }
 }
 
 resource "aws_nat_gateway" "this" {
   count         = length(aws_subnet.public)
   allocation_id = aws_eip.this[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
+  tags = {
+    Name = "${local.prefix}-${data.aws_availability_zones.available.names[count.index]}-nat-${random_id.private_subnet[count.index].hex}"
+  }
 }
 
 resource "aws_route_table" "private" {
@@ -73,6 +110,9 @@ resource "aws_route_table" "private" {
     cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.this[count.index].id
   }
+  tags = {
+    Name = "${local.prefix}-${data.aws_availability_zones.available.names[count.index]}-nat-${random_id.private_subnet[count.index].hex}"
+  }
 }
 
 resource "aws_subnet" "public" {
@@ -81,6 +121,10 @@ resource "aws_subnet" "public" {
   cidr_block              = "10.0.${count.index}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "${local.prefix}-${data.aws_availability_zones.available.names[count.index]}-public-${random_id.public_subnet[count.index].hex}"
+  }
 }
 
 resource "aws_route_table_association" "public" {
@@ -95,6 +139,10 @@ resource "aws_subnet" "private" {
   cidr_block              = "10.0.${count.index + length(aws_subnet.public)}.0/24"
   availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = false
+
+  tags = {
+    Name = "${local.prefix}-${data.aws_availability_zones.available.names[count.index]}-private-${random_id.private_subnet[count.index].hex}"
+  }
 }
 
 resource "aws_route_table_association" "private" {
