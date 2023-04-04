@@ -11,7 +11,7 @@ resource "aws_vpc" "this" {
 }
 
 resource "aws_security_group" "batch" {
-  name        = "${var.name}-batch-sg"
+  name        = "${local.prefix}-batch-sg"
   description = "Allow ECS tasks to reach out to internet"
   vpc_id      = aws_vpc.this.id
 
@@ -26,7 +26,7 @@ resource "aws_security_group" "batch" {
 
 resource "aws_security_group" "mwaa" {
   vpc_id = aws_vpc.this.id
-  name   = "${var.name}-mwaa-no-ingress-sg"
+  name   = "${local.prefix}-mwaa-no-ingress-sg"
   ingress {
     from_port = 0
     to_port   = 0

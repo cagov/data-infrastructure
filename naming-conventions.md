@@ -147,5 +147,5 @@ fivetran_{project}_{connector_type}_[{description}]
 
 ## External References
 
-- https://docs.getdbt.com/blog/stakeholder-friendly-model-names 
-- https://docs.getdbt.com/blog/on-the-importance-of-naming 
+- https://docs.getdbt.com/blog/stakeholder-friendly-model-names
+- https://docs.getdbt.com/blog/on-the-importance-of-naming

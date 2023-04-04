@@ -27,7 +27,7 @@ resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
 }
 
 resource "aws_batch_compute_environment" "batch_env" {
-  compute_environment_name = "${var.name}-batch-env"
+  compute_environment_name = "${local.prefix}-batch-env"
 
   compute_resources {
     max_vcpus = 16
@@ -47,7 +47,7 @@ resource "aws_batch_compute_environment" "batch_env" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${var.name}-batch-exec-role"
+  name               = "${local.prefix}-batch-exec-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -68,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 }
 
 resource "aws_iam_role" "batch_job_role" {
-  name               = "${var.name}-batch-job-role"
+  name               = "${local.prefix}-batch-job-role"
   description        = "Role for AWS batch jobs"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
@@ -79,7 +79,7 @@ resource "aws_iam_role_policy_attachment" "s3_scratch_policy_role_attachment" {
 }
 
 resource "aws_batch_job_queue" "batch_queue" {
-  name     = "${var.name}-batch-job-queue"
+  name     = "${local.prefix}-batch-job-queue"
   state    = "ENABLED"
   priority = 1
   compute_environments = [
@@ -88,7 +88,7 @@ resource "aws_batch_job_queue" "batch_queue" {
 }
 
 resource "aws_batch_job_definition" "batch_job_def" {
-  name = "${var.name}-batch-job-definition"
+  name = "${local.prefix}-batch-job-definition"
   type = "container"
   platform_capabilities = [
     "FARGATE",
@@ -120,7 +120,7 @@ data "aws_iam_policy_document" "batch_submit_policy_document" {
       "batch:ListJobs",
     ]
     resources = [
-      "arn:aws:batch:${var.region}:${data.aws_caller_identity.current.account_id}:job-definition/${var.name}*",
+      "arn:aws:batch:${var.region}:${data.aws_caller_identity.current.account_id}:job-definition/${local.prefix}*",
       aws_batch_job_queue.batch_queue.arn,
     ]
   }
@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "batch_submit_policy_document" {
 }
 
 resource "aws_iam_policy" "batch_submit_policy" {
-  name        = "${var.name}-batch-submit-policy"
-  description = "Policy allowing to submit batch jobs for ${var.name}"
+  name        = "${local.prefix}-batch-submit-policy"
+  description = "Policy allowing to submit batch jobs for ${local.prefix}"
   policy      = data.aws_iam_policy_document.batch_submit_policy_document.json
 }

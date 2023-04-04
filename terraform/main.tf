@@ -20,8 +20,9 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Owner   = "CalData-DSE"
-      Project = var.name
+      Owner       = var.owner
+      Project     = var.project
+      Environment = var.environment
     }
   }
 }

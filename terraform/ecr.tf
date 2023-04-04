@@ -3,7 +3,7 @@
 ##################################
 
 resource "aws_ecr_repository" "main_ecr" {
-  name                 = "${var.name}-ecr-${var.region}"
+  name                 = "${local.prefix}-ecr-${var.region}"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -35,7 +35,7 @@ data "aws_iam_policy_document" "main_ecr_policy_document" {
 }
 
 resource "aws_iam_policy" "main_ecr_policy" {
-  name        = "${var.name}-ecr-push-policy"
-  description = "Policy allowing pushing to the main ecr repository for ${var.name}"
+  name        = "${local.prefix}-ecr-push-policy"
+  description = "Policy allowing pushing to the main ecr repository for ${local.prefix}"
   policy      = data.aws_iam_policy_document.main_ecr_policy_document.json
 }

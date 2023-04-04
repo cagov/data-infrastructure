@@ -1,10 +1,10 @@
 resource "aws_iam_role" "mwaa" {
-  name               = "${var.name}-mwaa-execution-role"
+  name               = "${local.prefix}-mwaa-execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume.json
 }
 
 resource "aws_iam_policy" "mwaa" {
-  name   = "${var.name}-mwaa-execution-policy"
+  name   = "${local.prefix}-mwaa-execution-policy"
   policy = data.aws_iam_policy_document.mwaa.json
 }
 
@@ -43,7 +43,7 @@ data "aws_iam_policy_document" "mwaa" {
       "airflow:PublishMetrics"
     ]
     resources = [
-      "arn:aws:airflow:${var.region}:${data.aws_caller_identity.current.account_id}:environment/${var.name}-mwaa-environment"
+      "arn:aws:airflow:${var.region}:${data.aws_caller_identity.current.account_id}:environment/${local.prefix}-mwaa-environment"
     ]
   }
   statement {
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "mwaa" {
       "logs:GetQueryResults"
     ]
     resources = [
-      "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:airflow-${var.name}-mwaa-environment-*"
+      "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:airflow-${local.prefix}-mwaa-environment-*"
     ]
   }
   statement {
@@ -143,7 +143,7 @@ data "aws_iam_policy_document" "mwaa" {
 
 resource "aws_mwaa_environment" "this" {
   execution_role_arn = aws_iam_role.mwaa.arn
-  name               = "${var.name}-mwaa-environment"
+  name               = "${local.prefix}-mwaa-environment"
   schedulers         = 2
   max_workers        = 5
   min_workers        = 1

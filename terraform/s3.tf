@@ -4,7 +4,7 @@
 
 # Scratch bucket
 resource "aws_s3_bucket" "scratch" {
-  bucket = "${var.name}-${var.region}-scratch"
+  bucket = "${local.prefix}-${var.region}-scratch"
 }
 
 data "aws_iam_policy_document" "s3_scratch_policy_document" {
@@ -24,7 +24,7 @@ data "aws_iam_policy_document" "s3_scratch_policy_document" {
 }
 
 resource "aws_iam_policy" "s3_scratch_policy" {
-  name        = "${var.name}-s3-scratch-policy"
+  name        = "${local.prefix}-s3-scratch-policy"
   description = "Policy allowing read/write for s3 scratch bucket"
   policy      = data.aws_iam_policy_document.s3_scratch_policy_document.json
 }
@@ -32,7 +32,7 @@ resource "aws_iam_policy" "s3_scratch_policy" {
 
 # MWAA bucket
 resource "aws_s3_bucket" "mwaa" {
-  bucket = "${var.name}-${var.region}-mwaa"
+  bucket = "${local.prefix}-${var.region}-mwaa"
 }
 
 resource "aws_s3_bucket_versioning" "mwaa" {
