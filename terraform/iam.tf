@@ -12,7 +12,7 @@ resource "aws_iam_user" "cd_bot" {
 
 resource "aws_iam_user_policy_attachment" "ecr_cd_bot_policy_attachment" {
   user       = aws_iam_user.cd_bot.name
-  policy_arn = aws_iam_policy.main_ecr_policy.arn
+  policy_arn = aws_iam_policy.default_ecr_policy.arn
 }
 
 resource "aws_iam_user_policy_attachment" "batch_cd_bot_policy_attachment" {

@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "aws_batch_service_policy" {
 
 
 resource "aws_iam_role" "aws_batch_service_role" {
-  name               = "aws_batch_service_role"
+  name               = "${local.prefix}-${var.region}-batch-service-role"
   assume_role_policy = data.aws_iam_policy_document.aws_batch_service_policy.json
 }
 
@@ -26,8 +26,8 @@ resource "aws_iam_role_policy_attachment" "aws_batch_service_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole"
 }
 
-resource "aws_batch_compute_environment" "batch_env" {
-  compute_environment_name = "${local.prefix}-batch-env"
+resource "aws_batch_compute_environment" "default" {
+  compute_environment_name = "${local.prefix}-${var.region}-default"
 
   compute_resources {
     max_vcpus = 16
@@ -47,7 +47,7 @@ resource "aws_batch_compute_environment" "batch_env" {
 }
 
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name               = "${local.prefix}-batch-exec-role"
+  name               = "${local.prefix}-${var.region}-batch-exec-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -68,7 +68,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 }
 
 resource "aws_iam_role" "batch_job_role" {
-  name               = "${local.prefix}-batch-job-role"
+  name               = "${local.prefix}-${var.region}-batch-job-role"
   description        = "Role for AWS batch jobs"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
@@ -78,17 +78,17 @@ resource "aws_iam_role_policy_attachment" "s3_scratch_policy_role_attachment" {
   policy_arn = aws_iam_policy.s3_scratch_policy.arn
 }
 
-resource "aws_batch_job_queue" "batch_queue" {
-  name     = "${local.prefix}-batch-job-queue"
+resource "aws_batch_job_queue" "default" {
+  name     = "${local.prefix}-${var.region}-default"
   state    = "ENABLED"
   priority = 1
   compute_environments = [
-    aws_batch_compute_environment.batch_env.arn,
+    aws_batch_compute_environment.default.arn,
   ]
 }
 
-resource "aws_batch_job_definition" "batch_job_def" {
-  name = "${local.prefix}-batch-job-definition"
+resource "aws_batch_job_definition" "default" {
+  name = "${local.prefix}-${var.region}-default"
   type = "container"
   platform_capabilities = [
     "FARGATE",
@@ -96,7 +96,7 @@ resource "aws_batch_job_definition" "batch_job_def" {
 
   container_properties = jsonencode({
     command = ["python", "-m", "jobs.test"]
-    image   = "${aws_ecr_repository.main_ecr.repository_url}:latest"
+    image   = "${aws_ecr_repository.default.repository_url}:latest"
     fargatePlatformConfiguration = {
       platformVersion = "LATEST"
     }
@@ -121,7 +121,7 @@ data "aws_iam_policy_document" "batch_submit_policy_document" {
     ]
     resources = [
       "arn:aws:batch:${var.region}:${data.aws_caller_identity.current.account_id}:job-definition/${local.prefix}*",
-      aws_batch_job_queue.batch_queue.arn,
+      aws_batch_job_queue.default.arn,
     ]
   }
   statement {
@@ -133,7 +133,7 @@ data "aws_iam_policy_document" "batch_submit_policy_document" {
 }
 
 resource "aws_iam_policy" "batch_submit_policy" {
-  name        = "${local.prefix}-batch-submit-policy"
+  name        = "${local.prefix}-${var.region}-batch-submit-policy"
   description = "Policy allowing to submit batch jobs for ${local.prefix}"
   policy      = data.aws_iam_policy_document.batch_submit_policy_document.json
 }

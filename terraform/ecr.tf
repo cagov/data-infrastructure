@@ -2,8 +2,8 @@
 #       Container registry       #
 ##################################
 
-resource "aws_ecr_repository" "main_ecr" {
-  name                 = "${local.prefix}-ecr-${var.region}"
+resource "aws_ecr_repository" "default" {
+  name                 = "${local.prefix}-${var.region}-default"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -11,7 +11,7 @@ resource "aws_ecr_repository" "main_ecr" {
   }
 }
 
-data "aws_iam_policy_document" "main_ecr_policy_document" {
+data "aws_iam_policy_document" "default_ecr_policy_document" {
   # Policy from https://github.com/aws-actions/amazon-ecr-login#permissions
   statement {
     actions = [
@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "main_ecr_policy_document" {
       "ecr:PutImage",
       "ecr:UploadLayerPart",
     ]
-    resources = [aws_ecr_repository.main_ecr.arn]
+    resources = [aws_ecr_repository.default.arn]
   }
   statement {
     actions = [
@@ -34,8 +34,8 @@ data "aws_iam_policy_document" "main_ecr_policy_document" {
   }
 }
 
-resource "aws_iam_policy" "main_ecr_policy" {
-  name        = "${local.prefix}-ecr-push-policy"
-  description = "Policy allowing pushing to the main ecr repository for ${local.prefix}"
-  policy      = data.aws_iam_policy_document.main_ecr_policy_document.json
+resource "aws_iam_policy" "default_ecr_policy" {
+  name        = "${local.prefix}-${var.region}-default-ecr-push-policy"
+  description = "Policy allowing pushing to the default ecr repository for ${local.prefix}"
+  policy      = data.aws_iam_policy_document.default_ecr_policy_document.json
 }
