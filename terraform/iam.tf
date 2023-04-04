@@ -7,7 +7,7 @@
 
 # CD bot for GitHub actions
 resource "aws_iam_user" "cd_bot" {
-  name = "${var.name}-cd-bot"
+  name = "${local.prefix}-cd-bot"
 }
 
 resource "aws_iam_user_policy_attachment" "ecr_cd_bot_policy_attachment" {

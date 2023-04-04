@@ -13,14 +13,15 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Owner   = "CalData-DSE"
-      Project = var.name
+      Owner       = var.owner
+      Project     = var.project
+      Environment = var.environment
     }
   }
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "${var.name}-terraform-state"
+  bucket = "${local.prefix}-terraform-state"
 
   lifecycle {
     prevent_destroy = true
@@ -36,7 +37,7 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
 }
 
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name           = "${var.name}-terraform-state-lock"
+  name           = "${local.prefix}-terraform-state-lock"
   read_capacity  = 1
   write_capacity = 1
   hash_key       = "LockID"
