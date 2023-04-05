@@ -21,6 +21,8 @@ repos:
     rev: v0.16.0
     hooks:
       - id: terraform-docs-go
+        args: ["./terraform", "--output-file", "../docs/cloud-resources.md"]
+      - id: terraform-docs-go
         args: ["./terraform"]
       - id: terraform-docs-go
         args: ["./terraform/remote-state"]
