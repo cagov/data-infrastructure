@@ -32,6 +32,7 @@ nav:
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
+  - Writing Documentation: writing-documentation.md
   - Learning:
     - git: learning/git.md
     - dbt: learning/dbt.md
