@@ -31,4 +31,8 @@ nav:
   - Code Review: code-review.md
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
-  - Cloud Resources: cloud-resources.md
+  - Cloud Infrastructure: cloud-infrastructure.md
+  - Learning:
+    - git: learning/git.md
+    - dbt: learning/dbt.md
+    - Cloud Data Warehouses: learning/cloud-data-warehouses.md
