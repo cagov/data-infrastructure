@@ -1,3 +1,7 @@
 site_name: CalData Data Services and Engineering Infrastructure
 theme:
   name: material
+  logo: images/odi-square_logomark-blue.svg
+  favicon: images/odi-circle_logomark-blue.png
+extra_css:
+  - stylesheets/extra.css
