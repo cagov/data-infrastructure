@@ -5,7 +5,7 @@ This page documents the Data Services and Engineering (DSE) team's naming conven
 ## General Approach
 
 Our approach is adapted from [this blog post](https://stepan.wtf/cloud-naming-convention/).
-The goals of establishing a naming convetion are:
+The goals of establishing a naming convention are:
 1. Prevent name collisions between similar resources (especially in cases where names are required to be unique).
 1. Allow developers to identify at a glance what a particular resource is and who owns it.
 1. Structured naming allows for easier sorting and filtering of resources.
@@ -99,7 +99,7 @@ Furthermore, analysts needn't need to know details of regions or deployments, so
 ```
 
 If a project is owned by the Data Services and Engineering team,
-the `owner` component may be ommited, and the schema name is simply
+the `owner` component may be omitted, and the schema name is simply
 ```
 {project}_[{description}]
 ```
@@ -140,7 +140,7 @@ The schemas into which a fivetran connector is writing should be named the same 
 (which is why the connector name has some seemingly redundant information).
 
 If a project is owned by the Data Services and Engineering team,
-the `owner` component may be ommited, and the schema name is simply
+the `owner` component may be omitted, and the schema name is simply
 ```
 fivetran_{project}_{connector_type}_[{description}]
 ```
