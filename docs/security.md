@@ -8,6 +8,7 @@ especially as it relates to cloud and SaaS services.
 The major public clouds (AWS, GCP, Azure) all have a service for Identity and Access Management (IAM).
 This allows us to manage which users or services are able to perform actions on which resources.
 In general, IAM is described by:
+
 * Users (or principals) - some person or workflow which uses IAM to access cloud resources.
 * Permissions - an ability to perform some action on a resource or collection of resources.
 * Policies - a group of related permissions for performing a job, which can be assigned to a role or user.
