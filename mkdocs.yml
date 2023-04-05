@@ -3,8 +3,16 @@ theme:
   name: material
   logo: images/odi-square_logomark-blue.svg
   favicon: images/odi-circle_logomark-blue.png
+  features:
+    - content.code.copy
 extra_css:
   - stylesheets/extra.css
+
+
+repo_name: cagov/data-infrastructure
+repo_url: https://github.com/cagov/data-infrastructure
+edit_uri: ""
+
 
 markdown_extensions:
   - toc:
@@ -17,3 +25,9 @@ markdown_extensions:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Introduction: index.md
+  - Code Review: code-review.md
+  - Naming Conventions: naming-conventions.md
+  - Security Guidelines: security.md
