@@ -5,3 +5,15 @@ theme:
   favicon: images/odi-circle_logomark-blue.png
 extra_css:
   - stylesheets/extra.css
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.highlight:
+      auto_title: false
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
