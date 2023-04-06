@@ -72,6 +72,16 @@ GCS buckets in a project, when their application only requires access to one.
 AWS has a nice [user guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)
 for how to work with IAM, including some [best-practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html).
 
+## Third-party SaaS Integrations
+
+Often a third-party software-as-a-service (SaaS) provider will require service accounts
+to access resources within a cloud account.
+For example, `dbt` requires [fairly expansive permissions](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup#required-permissions)
+within your cloud data warehouse to create, transform, and drop data.
+
+Specific IAM roles needed for a SaaS product are usually documented in their setup guides.
+These should be periodically reviewed by CalData and ODI IT-Ops staff to ensure they are still required.
+
 ### Fivetran practices
 
 Fivetran's [security docs](https://fivetran.com/docs/security) which link to a deeper dive white paper are a good place to go to understand their standards and policies for connecting, replicating, and loading data from all of our data sources.
@@ -96,16 +106,6 @@ Our IT team's role is **Account Billing and User Access**. This is a custom role
 
 
 The DSE team both manages CalData projects and onboards clients into Fivetran, and so its members have Account Administrator roles.
-
-## Third-party SaaS Integrations
-
-Often a third-party software-as-a-service (SaaS) provider will require service accounts
-to access resources within a cloud account.
-For example, `dbt` requires [fairly expansive permissions](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup#required-permissions)
-within your cloud data warehouse to create, transform, and drop data.
-
-Specific IAM roles needed for a SaaS product are usually documented in their setup guides.
-These should be periodically reviewed by CalData and ODI IT-Ops staff to ensure they are still required.
 
 ## IAM through infrastructure-as-code
 
