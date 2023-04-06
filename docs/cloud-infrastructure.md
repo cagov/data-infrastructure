@@ -1,4 +1,4 @@
-# CalData Cloud Infrastructure
+# Cloud Infrastructure
 
 The DSE team uses Terraform to manage cloud infrastructure.
 Our stack includes:

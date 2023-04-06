@@ -1,9 +1,10 @@
 # Writing Documentation
 
-Documentation for this project is built using mkdocs
-and hosted using GitHub Pages.
+Documentation for this project is built using [mkdocs](https://www.mkdocs.org/)
+with the [material theme](https://squidfunk.github.io/mkdocs-material/)
+and hosted using [GitHub Pages](https://pages.github.com/).
 The documentation source files are in the `docs/` directory
-and are authored using markdown.
+and are authored using [markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
 ## Local Development
 

@@ -1,4 +1,4 @@
-# CalData Security Conventions
+# Security Guidelines
 
 This document describes security conventions for CalData's Data Services and Engineering team,
 especially as it relates to cloud and SaaS services.
