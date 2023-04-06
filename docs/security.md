@@ -9,12 +9,13 @@ The major public clouds (AWS, GCP, Azure) all have a service for Identity and Ac
 This allows us to manage which users or services are able to perform actions on which resources.
 In general, IAM is described by:
 
-* Users (or principals) - some person or workflow which uses IAM to access cloud resources.
-* Permissions - an ability to perform some action on a resource or collection of resources.
-* Policies - a group of related permissions for performing a job, which can be assigned to a role or user.
-* Role - a group of policies for performing a workflow, which can be assumed by principals.
+* **Users** (or principals) - some person or workflow which uses IAM to access cloud resources. Users can be assigned to **groups**.
+* **Permissions** - an ability to perform some action on a resource or collection of resources.
+* **Groups** - Rather than assigning permissions directly to users, it is considered good practice to instead create user **groups** with appropriate permissions, then add users to the group. This makes it easier to add and remove users while maintaining separate user personas.
+* **Policies** - a group of related **permissions** for performing a job, which can be assigned to a **role** or **user**.
+* **Role** - a group of policies for performing a workflow. Roles are similar to **users**, but do not have a user identity associated with them. Instead, they can be assumed by users or services to perform the relevant workflow.
 
-Most of the work of IAM is managing users, permissions, policies, and roles to perform tasks in a secure way.
+Most of the work of IAM is managing users, permissions, groups, policies, and roles to perform tasks in a secure way.
 
 ### Principle of Least-Privilege
 
@@ -37,6 +38,7 @@ responsible for pushing code changes to production on merge.
 
 Some good practices around the use of service accounts
 (largely drawn from [here](https://cloud.google.com/iam/docs/best-practices-service-accounts)):
+
 * Service accounts often have greater permissions than human users,
   so user permissions to impersonate these accounts should be monitored!
 * Don't use service accounts during development (unless testing the service account permissions).
