@@ -147,6 +147,6 @@ By using the field by which the table is partitioned in our filter, we reduced t
 ## References
 * [Blog post on BigQuery's strategy for data layout and storage](https://cloud.google.com/blog/topics/developers-practitioners/bigquery-explained-storage-overview)
 * [BigQuery partitioning guide](https://cloud.google.com/bigquery/docs/partitioned-tables)
-* Snowflake documentation on clustering and micropartitions
-* BigQuery optimization guide (most tips apply more generally to CDWs)
-* Snowflake documentation on query performance profiling
+* [Snowflake documentation on clustering and micropartitions](https://docs.snowflake.com/en/user-guide/tables-clustering-micropartitions)
+* [BigQuery optimization guide (most tips apply more generally to CDWs)](https://cloud.google.com/bigquery/docs/best-practices-performance-overview)
+* [Snowflake documentation on query performance profiling](https://docs.snowflake.com/user-guide/ui-query-profile)
