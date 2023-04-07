@@ -24,7 +24,7 @@ Where `{...}` indicates a component in the name, and `[{...}]` indicates that it
 **env** | Environment type, e.g. `dev`, `prd`, `stg` | ✔ | len 3, a-z, enum |
 **region** | Region (if applicable) | ✗ |  enum
 **description** | Additional description (if needed) |  ✗| len 1-20, a-z0-9
-**suffix** | Random suffix (only use if there are multiple identical resources) | ✗ | len 4, a-z0-9
+**suffix** | Random suffix (only use if there are multiple identical resources) | ✗ | len 3, a-z0-9
 
 
 **Owner:**
@@ -147,5 +147,5 @@ fivetran_{project}_{connector_type}_[{description}]
 
 ## External References
 
-- https://docs.getdbt.com/blog/stakeholder-friendly-model-names 
-- https://docs.getdbt.com/blog/on-the-importance-of-naming 
+- https://docs.getdbt.com/blog/stakeholder-friendly-model-names
+- https://docs.getdbt.com/blog/on-the-importance-of-naming
