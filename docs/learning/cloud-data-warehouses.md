@@ -19,12 +19,12 @@ By having a solid understanding of how cloud data warehouses work,
 you can construct fast, efficient queries and avoid surprise costs.
 
 ### Usage-based pricing
-With most on-premise transactional warehouses costs scale with the number of server instances you buy and run.
+With most on-premise transactional warehouses, costs scale with the number of server instances you buy and run.
 These servers usually are always-on and power various applications with high availability.
 In a traditional transactional warehouse both compute power and storage are associated with the same logical machine.
 
 Cloud data warehouses typically have a different pricing model:
-they decouple storage and compute, charge based on your query usage.
+they decouple storage and compute and charge based on your query usage.
 Google BigQuery charges based on the amount of [data your queries scan](https://cloud.google.com/bigquery/pricing).
 Snowflake charges based on the amount of [compute resources needed to execute your queries](https://www.snowflake.com/pricing/).
 There are also costs associated with data storage, but those are usually small compared to compute.
@@ -40,6 +40,7 @@ This means that data for each column of a table are stored sequentially in objec
 [This BigQuery blog post](https://cloud.google.com/blog/topics/developers-practitioners/bigquery-admin-reference-guide-storage) goes into a bit more detail.
 
 ![On the left is data laid out in a record-oriented way, where each row's values are contiguous in memory. On the right is data laid out in a columnar way, where each column's values are contiguous in memory.](../images/columnar-storage.png "Columnar storage")
+
 There are a number of consequences of using columnar storage:
 
 * You can read in columns separately from each other. So if your query only needs to look at one column of a several-hundred column table, it can do that without incurring the cost of loading and processing all of the other columns.
@@ -49,7 +50,7 @@ There are a number of consequences of using columnar storage:
 In addition to columnar storage,
 cloud data warehouses also usually divide tables row-wise into chunks called partitions.
 Different warehouses choose different sizing strategies for partitions,
-but they are typically from a few megabytes to a few hundred megabytes.
+but they are typically from a few to a few hundred megabytes.
 Having separate logical partitions in a table allows the compute resources to process the partitions independently of each other in parallel.
 This massively parallel processing capability is a large part of what makes cloud data warehouses scalable.
 When designing your tables, you can often set partitioning strategies or clustering keys for the table.
@@ -90,7 +91,7 @@ just to insert a single row.
 So rather than supporting constraints with horrible performance characteristics,
 cloud data warehouses just don't do it.
 This can be surprising to some people, since they often still include the syntax for constraints for SQL standard compatibility
-(see, e.g., the Snowflake docs on [constraints](https://docs.snowflake.com/en/sql-reference/constraints-overview)).
+(see the Snowflake docs on [constraints](https://docs.snowflake.com/en/sql-reference/constraints-overview)).
 
 !!! note
     One exception to the above is `NOT NULL` constraints,
