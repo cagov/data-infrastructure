@@ -3,7 +3,7 @@
 Many CalData projects use [dbt](https://www.getdbt.com/)
 for transforming and modeling data within our cloud data warehouses.
 dbt has become extremely popular over the last several years,
-popularizing the position of "analytics engineering".
+popularizing the practice and position of "analytics engineering".
 It has a number of features that makes it valuable for data stacks:
 
 * It works well with version control
