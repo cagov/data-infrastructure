@@ -3,6 +3,8 @@ repos:
     rev: v4.4.0
     hooks:
       - id: check-yaml
+        args:
+          -   --unsafe
       - id: check-json
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -18,6 +20,8 @@ repos:
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.16.0
     hooks:
+      - id: terraform-docs-go
+        args: ["./terraform", "--output-file", "../docs/cloud-resources.md"]
       - id: terraform-docs-go
         args: ["./terraform"]
       - id: terraform-docs-go
