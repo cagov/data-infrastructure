@@ -1,6 +1,8 @@
 # Conventions for Code Review and GitHub
 
-## The Process
+This page documents the Data Services and Engineering Team's practices around GitHub-based development and code review.
+
+## Creating a Pull Request
 
 The process for GitHub-based development is:
 
@@ -20,7 +22,7 @@ The process for GitHub-based development is:
 1. In general, the author of a PR should not approve and merge their own pull request.
 1. Delete your feature branch, it's in `main` now.
 
-## Authoring a pull request
+## Considerations when authoring a pull request
 
 #### Have Empathy
 

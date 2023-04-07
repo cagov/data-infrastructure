@@ -1,0 +1,39 @@
+site_name: CalData Data Services and Engineering Infrastructure
+theme:
+  name: material
+  logo: images/odi-square_logomark-blue.svg
+  favicon: images/odi-circle_logomark-blue.png
+  features:
+    - content.code.copy
+extra_css:
+  - stylesheets/extra.css
+
+
+repo_name: cagov/data-infrastructure
+repo_url: https://github.com/cagov/data-infrastructure
+edit_uri: ""
+
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.highlight:
+      auto_title: false
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Introduction: index.md
+  - Code Review: code-review.md
+  - Naming Conventions: naming-conventions.md
+  - Security Guidelines: security.md
+  - Cloud Infrastructure: cloud-infrastructure.md
+  - Writing Documentation: writing-documentation.md
+  - Learning:
+    - git: learning/git.md
+    - dbt: learning/dbt.md
+    - Cloud Data Warehouses: learning/cloud-data-warehouses.md
