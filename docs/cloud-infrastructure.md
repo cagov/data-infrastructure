@@ -4,7 +4,7 @@ The DSE team uses Terraform to manage cloud infrastructure.
 Our stack includes:
 
 * An [AWS Batch](https://aws.amazon.com/batch/) environment for running arbitrary containerized jobs
-* A [Managed Workflows on Apache Airflow](https://aws.amazon.com/managed-workflows-for-apache-airflow/) environment for orchestrating jobs.
+* A [Managed Workflows on Apache Airflow](https://aws.amazon.com/managed-workflows-for-apache-airflow/) environment for orchestrating jobs
 * A VPC and subnets for the above
 * An ECR repository for hosting Docker images storing code and libraries for jobs
 * A bot user for running AWS operations in GitHub Actions
@@ -49,7 +49,7 @@ flowchart TD
 ### Installation
 
 This project requires Terraform to run.
-You might use any of a number of different package managers to install it depending on your system.
+You might use a different package manager to install it depending on your system.
 
 For Macs, you can use `brew`:
 
@@ -77,7 +77,7 @@ To install the checks, run the following from the repository root:
 pre-commit install
 ```
 
-You can manually run the pre-commit checks using
+You can manually run the pre-commit checks using:
 
 ```bash
 pre-commit run --all-files
