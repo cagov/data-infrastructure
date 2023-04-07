@@ -1,0 +1,21 @@
+name: pre-commit
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+      - uses: actions/setup-python@v3
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: v1.4.0
+      - name: Install tflint
+        run: curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+      - uses: pre-commit/action@v3.0.0

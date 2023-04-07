@@ -1,0 +1,28 @@
+name: submit
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 12 * * *"
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          # TODO: use OIDC for auth: https://github.com/aws-actions/configure-aws-credentials#assuming-a-role
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Submit batch job
+        run: |
+          aws batch submit-job \
+          --job-name test \
+          --job-queue dse-infra-dev-batch-job-queue \
+          --job-definition dse-infra-dev-batch-job-definition \
+          --container-overrides '{"resourceRequirements": [{"value": "2", "type": "VCPU"}, {"value": "4096", "type": "MEMORY"}], "environment": [{"name": "BUCKET", "value": "dse-infra-dev-us-west-2-scratch"}]}'

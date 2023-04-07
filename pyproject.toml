@@ -1,0 +1,52 @@
+[tool.ruff]
+line-length = 88
+select = [
+  "B", # flake8-bugbear
+  "BLE", # flake8-blind-except
+  "C4", # comprehensions
+  "D", # pydocstyle
+  "E", # pycodestyle
+  "F", # pyflakes
+  "I", # isort
+  "ISC", # flake8-implicit-str-concat
+  "PGH", # pygrep-hooks
+  "PLC", # pylint
+  "PLE", # pylint
+  "PLR", # pylint import style
+  "PLW", # pylint
+  "RET", # flake8-return
+  "RUF", # ruff-specific rules
+  "SIM", # flake8-simplify
+  "T10", # flake8-debugger
+  "TID", # flake8-tidy-imports
+  "UP", # pyupgrade
+  "W", # pycodestyle
+  "YTT", # flake8-2020
+
+]
+respect-gitignore = true
+ignore = [
+  "D100", # public module
+  "D101", # public class
+  "D102", # public method
+  "D103", # public function
+  "D104", # public package
+  "D203", # blank line before docstring
+  "D212", # Start multi-line docstring at the second line.
+  "E501", # line length handled by black
+  "PGH003", # specific mypy ignore codes
+  "PLR0913", # too many arguments
+  "RET505", # no-else-return
+  "RET506", # no-else-raise
+]
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+allow_untyped_decorators = true # would love to enable this, but airflow decorators are untyped
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+warn_redundant_casts = true
+warn_unused_ignores = false
+warn_unreachable = true

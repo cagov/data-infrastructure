@@ -1,0 +1,9 @@
+name: base
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.10
+  - geopandas
+  - pyarrow
+  - s3fs
