@@ -8,11 +8,9 @@ theme:
 extra_css:
   - stylesheets/extra.css
 
-
 repo_name: cagov/data-infrastructure
 repo_url: https://github.com/cagov/data-infrastructure
 edit_uri: ""
-
 
 markdown_extensions:
   - toc:
@@ -34,6 +32,6 @@ nav:
   - Cloud Infrastructure: cloud-infrastructure.md
   - Writing Documentation: writing-documentation.md
   - Learning:
-    - git: learning/git.md
-    - dbt: learning/dbt.md
-    - Cloud Data Warehouses: learning/cloud-data-warehouses.md
+      - git: learning/git.md
+      - dbt: learning/dbt.md
+      - Cloud Data Warehouses: learning/cloud-data-warehouses.md

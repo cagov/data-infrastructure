@@ -4,7 +4,7 @@ repos:
     hooks:
       - id: check-yaml
         args:
-          -   --unsafe
+          - --unsafe
       - id: check-json
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -21,7 +21,8 @@ repos:
     rev: v0.16.0
     hooks:
       - id: terraform-docs-go
-        args: ["./terraform", "--output-file", "../docs/cloud-resources.md"]
+        args:
+          ["./terraform", "--output-file", "../docs/cloud-infrastructure.md"]
       - id: terraform-docs-go
         args: ["./terraform"]
       - id: terraform-docs-go
@@ -41,9 +42,9 @@ repos:
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
     hooks:
-      -   id: codespell
-          types_or: [rst, markdown]
-          files: docs
+      - id: codespell
+        types_or: [rst, markdown]
+        files: docs
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.1.1
     hooks:
@@ -54,3 +55,43 @@ repos:
           - pandas-stubs==v1.5.3.230321
           - types-requests
           - numpy
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v2.7.1
+    hooks:
+      - id: prettier
+        types: [yaml]
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.28.0
+    hooks:
+      - id: yamllint
+        args: []
+  - repo: https://github.com/tconbeer/sqlfmt
+    rev: v0.13.0
+    hooks:
+      - id: sqlfmt
+        language_version: python
+  - repo: local
+    hooks:
+      - name: Dbt deps
+        id: dbt-deps
+        language: python
+        entry: dbt deps --project-dir=transform
+        always_run: true
+        pass_filenames: false
+        types: [sql]
+        additional_dependencies:
+          - dbt-bigquery==1.4.2
+          - dbt-core==1.4.5
+  - repo: https://github.com/sqlfluff/sqlfluff
+    rev: 2.0.3
+    hooks:
+      - id: sqlfluff-lint
+        additional_dependencies:
+          - dbt-bigquery==1.4.2
+          - sqlfluff-templater-dbt==2.0.3
+          - dbt-core==1.4.5
+      - id: sqlfluff-fix
+        additional_dependencies:
+          - dbt-bigquery==1.4.2
+          - sqlfluff-templater-dbt==2.0.3
+          - dbt-core==1.4.5
