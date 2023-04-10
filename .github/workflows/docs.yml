@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - dbt-docs
 permissions:
   contents: write
 jobs:
@@ -13,9 +14,30 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 3.x
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          # The credentials here can read metadata only, which makes them
+          # good enough for `dbt compile`, but not good enough for
+          # `dbt docs generate`. Should we want to do more detailed checks
+          # at some point, we should revisit the service account permissions.
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+          export_environment_variables: true
       - uses: actions/cache@v2
         with:
           key: ${{ github.ref }}
           path: .cache
-      - run: pip install mkdocs-material
-      - run: mkdocs gh-deploy --force
+      - name: Install dependencies
+        run: |
+          pip install -r transform/requirements.txt
+          pip install mkdocs-material
+      - name: Build dbt docs
+        env:
+          DBT_PROFILES_DIR: transform/ci
+        run: |
+          dbt deps --project-dir=transform
+          dbt docs generate --project-dir=transform
+          cp -r transform/target docs/dbt_docs
+      - name: Deploy 🚀
+        run: mkdocs gh-deploy --force
