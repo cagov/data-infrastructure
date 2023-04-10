@@ -76,7 +76,7 @@ repos:
         id: dbt-deps
         language: python
         entry: dbt deps --project-dir=transform
-        always_run: true
+        always_run: false
         pass_filenames: false
         types: [sql]
         additional_dependencies:
