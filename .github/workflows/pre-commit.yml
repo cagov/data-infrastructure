@@ -3,7 +3,8 @@ name: pre-commit
 on:
   pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   pre-commit:
@@ -20,4 +21,17 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/\
           tflint/master/install_linux.sh | bash
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          # The credentials here can read metadata only, which makes them
+          # good enough for `dbt compile`, but not good enough for
+          # `dbt docs generate`. Should we want to do more detailed checks
+          # at some point, we should revisit the service account permissions.
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+          export_environment_variables: true
+      - uses: actions/setup-python@v3
       - uses: pre-commit/action@v3.0.0
+        env:
+          DBT_PROFILES_DIR: transform/ci
