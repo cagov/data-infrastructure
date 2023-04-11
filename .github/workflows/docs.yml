@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - dbt-docs
 permissions:
   contents: write
 jobs:
@@ -18,10 +17,8 @@ jobs:
         name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v1
         with:
-          # The credentials here can read metadata only, which makes them
-          # good enough for `dbt compile`, but not good enough for
-          # `dbt docs generate`. Should we want to do more detailed checks
-          # at some point, we should revisit the service account permissions.
+          # The credentials here can read metadata, data, and create jobs (execute
+          # queries), which allows it to compile the dbt project and generate docs.
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
           export_environment_variables: true
       - uses: actions/cache@v2
