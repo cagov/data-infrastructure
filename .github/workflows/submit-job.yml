@@ -24,11 +24,11 @@ jobs:
         run: |
           aws batch submit-job \
           --job-name test \
-          --job-queue dse-infra-dev-batch-job-queue \
-          --job-definition dse-infra-dev-batch-job-definition \
-          --container-overrides '{\
-            "resourceRequirements": \
-            [{"value": "2", "type": "VCPU"}, {"value": "4096", "type": "MEMORY"}], \
-            "environment": \
-            [{"name": "BUCKET", "value": "dse-infra-dev-us-west-2-scratch"}]\
+          --job-queue dse-infra-dev-us-west-2-default \
+          --job-definition dse-infra-dev-us-west-2-default \
+          --container-overrides '{
+            "resourceRequirements":
+            [{"value": "2", "type": "VCPU"}, {"value": "4096", "type": "MEMORY"}],
+            "environment":
+            [{"name": "BUCKET", "value": "dse-infra-dev-us-west-2-scratch"}]
           }'
