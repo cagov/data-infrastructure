@@ -22,11 +22,15 @@ repos:
     hooks:
       - id: terraform-docs-go
         args:
-          ["./terraform", "--output-file", "../docs/cloud-infrastructure.md"]
+          [
+            "./terraform/aws",
+            "--output-file",
+            "../../docs/cloud-infrastructure.md",
+          ]
       - id: terraform-docs-go
-        args: ["./terraform"]
+        args: ["./terraform/aws"]
       - id: terraform-docs-go
-        args: ["./terraform/remote-state"]
+        args: ["./terraform/aws/remote-state"]
   - repo: https://github.com/psf/black
     rev: 23.1.0
     hooks:
