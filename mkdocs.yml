@@ -33,6 +33,7 @@ nav:
   - Writing Documentation: writing-documentation.md
   - dbt Project: /dbt_docs/index.html
   - Learning:
+      - MDSA Glossary: learning/glossary.md
       - git: learning/git.md
       - dbt: learning/dbt.md
       - Cloud Data Warehouses: learning/cloud-data-warehouses.md
