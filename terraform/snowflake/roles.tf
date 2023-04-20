@@ -59,6 +59,42 @@ resource "snowflake_role" "reporter" {
   comment  = "Permissions to read data from the ANALYTICS database"
 }
 
+
+######################################
+#           Roles Grants             #
+######################################
+
+# Grant our roles to the SYSADMIN user, per best practices:
+# https://docs.snowflake.com/en/user-guide/security-access-control-considerations#aligning-object-access-with-business-functions
+# This allows SYSADMIN to make additional grants of database objects to these roles.
+
+resource "snowflake_role_grants" "loader" {
+  provider               = snowflake.securityadmin
+  role_name              = snowflake_role.loader.name
+  enable_multiple_grants = true
+  roles = [
+    "SYSADMIN",
+  ]
+}
+
+resource "snowflake_role_grants" "transformer" {
+  provider               = snowflake.securityadmin
+  role_name              = snowflake_role.transformer.name
+  enable_multiple_grants = true
+  roles = [
+    "SYSADMIN",
+  ]
+}
+
+resource "snowflake_role_grants" "reporter" {
+  provider               = snowflake.securityadmin
+  role_name              = snowflake_role.reporter.name
+  enable_multiple_grants = true
+  roles = [
+    "SYSADMIN",
+  ]
+}
+
 ######################################
 #         Warehouse Grants           #
 ######################################
