@@ -5,7 +5,7 @@
 locals {
   // https://docs.snowflake.com/en/sql-reference/sql/grant-privilege.html
   admin = {
-    database = ["CREATE SCHEMA"]
+    database = ["USAGE", "CREATE SCHEMA"]
     schema = [
       "CREATE MATERIALIZED VIEW",
       "CREATE PIPE",
@@ -17,6 +17,7 @@ locals {
       "MODIFY",
       "MONITOR",
       "OWNERSHIP",
+      "USAGE",
     ]
     table = [
       "DELETE",
@@ -136,7 +137,8 @@ resource "snowflake_warehouse_grant" "reporter" {
 resource "snowflake_database_grant" "loader_raw" {
   provider      = snowflake.securityadmin
   database_name = snowflake_database.raw.name
-  privilege     = "USAGE"
+  for_each      = toset(local.admin.database)
+  privilege     = each.key
   roles         = [snowflake_role.loader.name]
 }
 
@@ -162,14 +164,16 @@ resource "snowflake_table_grant" "loader_raw" {
 resource "snowflake_database_grant" "reporter_analytics" {
   provider      = snowflake.securityadmin
   database_name = snowflake_database.analytics.name
-  privilege     = "USAGE"
+  for_each      = toset(local.read.database)
+  privilege     = each.key
   roles         = [snowflake_role.reporter.name]
 }
 
 resource "snowflake_schema_grant" "reporter_analytics" {
   provider      = snowflake.securityadmin
   database_name = snowflake_database.analytics.name
-  privilege     = "USAGE"
+  for_each      = toset(local.read.schema)
+  privilege     = each.key
   on_future     = true
   roles         = [snowflake_role.reporter.name]
 }
@@ -187,7 +191,8 @@ resource "snowflake_table_grant" "reporter_analytics" {
 resource "snowflake_database_grant" "transformer_transform" {
   provider      = snowflake.securityadmin
   database_name = snowflake_database.transform.name
-  privilege     = "USAGE"
+  for_each      = toset(local.admin.database)
+  privilege     = each.key
   roles         = [snowflake_role.transformer.name]
 }
 
@@ -213,7 +218,8 @@ resource "snowflake_table_grant" "transformer_transform" {
 resource "snowflake_database_grant" "transformer_analytics" {
   provider      = snowflake.securityadmin
   database_name = snowflake_database.analytics.name
-  privilege     = "USAGE"
+  for_each      = toset(local.admin.database)
+  privilege     = each.key
   roles         = [snowflake_role.transformer.name]
 }
 
@@ -239,7 +245,8 @@ resource "snowflake_table_grant" "transformer_analytics" {
 resource "snowflake_database_grant" "transformer_raw" {
   provider      = snowflake.securityadmin
   database_name = snowflake_database.raw.name
-  privilege     = "USAGE"
+  for_each      = toset(local.read.database)
+  privilege     = each.key
   roles         = [snowflake_role.transformer.name]
 }
 
