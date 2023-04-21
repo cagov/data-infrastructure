@@ -42,19 +42,19 @@ locals {
 ######################################
 
 resource "snowflake_role" "loader" {
-  provider = snowflake.securityadmin
+  provider = snowflake.useradmin
   name     = "LOADER"
   comment  = "Permissions to load data to the RAW database"
 }
 
 resource "snowflake_role" "transformer" {
-  provider = snowflake.securityadmin
+  provider = snowflake.useradmin
   name     = "TRANSFORMER"
   comment  = "Permissions to read data from the RAW database, and read/write to TRANSFORM and ANALYTICS"
 }
 
 resource "snowflake_role" "reporter" {
-  provider = snowflake.securityadmin
+  provider = snowflake.useradmin
   name     = "REPORTER"
   comment  = "Permissions to read data from the ANALYTICS database"
 }
@@ -69,7 +69,7 @@ resource "snowflake_role" "reporter" {
 # This allows SYSADMIN to make additional grants of database objects to these roles.
 
 resource "snowflake_role_grants" "loader" {
-  provider               = snowflake.securityadmin
+  provider               = snowflake.useradmin
   role_name              = snowflake_role.loader.name
   enable_multiple_grants = true
   roles = [
@@ -78,7 +78,7 @@ resource "snowflake_role_grants" "loader" {
 }
 
 resource "snowflake_role_grants" "transformer" {
-  provider               = snowflake.securityadmin
+  provider               = snowflake.useradmin
   role_name              = snowflake_role.transformer.name
   enable_multiple_grants = true
   roles = [
@@ -87,7 +87,7 @@ resource "snowflake_role_grants" "transformer" {
 }
 
 resource "snowflake_role_grants" "reporter" {
-  provider               = snowflake.securityadmin
+  provider               = snowflake.useradmin
   role_name              = snowflake_role.reporter.name
   enable_multiple_grants = true
   roles = [
