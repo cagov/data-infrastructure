@@ -2,15 +2,28 @@
 #           Permissions              #
 ######################################
 
-# https://community.snowflake.com/s/article/How-to-grant-select-on-all-future-tables-in-a-schema-and-database-level
+# WARNING! An earlier version of these access control types used abbreviated names
+# for them, e.g. RWC instead of READWRITECONTROL. This ran into trouble with a pretty
+# gnarly bug in the Snowflake terraform provider, where object names with underscores
+# in them are not properly handled, and are treated as wildcards. So there could be
+# name collisions in the terraform state where, e.g., TRANSFORMER was equivalent to
+# TRANSFORM_R. To avoid this until a proper fix is in place, we just create longer
+# access control type names which are much less likely to collide accidentally.
+# This solution stinks.
+#
+# Some more reading:
+# https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/1527
+# https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/1241
 
 locals {
-  // https://docs.snowflake.com/en/sql-reference/sql/grant-privilege.html
+  # Access control permissions for database objects.
   database = {
     READ             = ["USAGE"]
     READWRITE        = ["USAGE"]
     READWRITECONTROL = ["USAGE", "CREATE SCHEMA"]
   }
+
+  # Access control permissions for schema objects.
   schema = {
     READ      = ["USAGE"]
     READWRITE = ["USAGE"]
@@ -29,6 +42,8 @@ locals {
       "USAGE",
     ]
   }
+
+  # Access control permissions for table objects.
   table = {
     READ = ["SELECT", "REFERENCES"]
     READWRITE = [
@@ -78,6 +93,7 @@ locals {
 #            Databases                #
 #######################################
 
+# The primary database where transformation tools like dbt operate.
 resource "snowflake_database" "transform" {
   provider                    = snowflake.sysadmin
   name                        = "TRANSFORM"
@@ -89,6 +105,7 @@ resource "snowflake_database" "transform" {
   }
 }
 
+# The primary raw database, where ELT tools land data.
 resource "snowflake_database" "raw" {
   provider                    = snowflake.sysadmin
   name                        = "RAW"
@@ -100,6 +117,7 @@ resource "snowflake_database" "raw" {
   }
 }
 
+# The primary reporting database.
 resource "snowflake_database" "analytics" {
   provider                    = snowflake.sysadmin
   name                        = "ANALYTICS"
@@ -115,6 +133,7 @@ resource "snowflake_database" "analytics" {
 #            Access Roles            #
 ######################################
 
+# Access roles for the RAW database.
 resource "snowflake_role" "raw" {
   provider = snowflake.useradmin
   for_each = toset(keys(local.database))
@@ -122,6 +141,7 @@ resource "snowflake_role" "raw" {
   comment  = "${each.key} access to ${snowflake_database.raw.name}"
 }
 
+# Access roles for the TRANSFORM database.
 resource "snowflake_role" "transform" {
   provider = snowflake.useradmin
   for_each = toset(keys(local.database))
@@ -129,6 +149,7 @@ resource "snowflake_role" "transform" {
   comment  = "${each.key} access to ${snowflake_database.transform.name}"
 }
 
+# Access roles for the ANALYTICS database.
 resource "snowflake_role" "analytics" {
   provider = snowflake.useradmin
   for_each = toset(keys(local.database))
@@ -167,10 +188,17 @@ resource "snowflake_role_grants" "analytics_to_sysadmin" {
   depends_on             = [snowflake_role.analytics]
 }
 
-
 ######################################
 #   Database/Schema/Table Grants     #
 ######################################
+
+# The strategy taken here is to loop over every single access control type
+# (READ, READWRITE, READWRITECONTROL) + permission (e.g. SELECT) combination,
+# and create a role grant for that combination. This generates a lot of grants!
+#
+# Schema and table grants also get the on_future=true flag, which means that the roles
+# created here also get the same permissions in newly-created schemas and tables.
+# https://community.snowflake.com/s/article/How-to-grant-select-on-all-future-tables-in-a-schema-and-database-level
 
 resource "snowflake_database_grant" "raw" {
   provider               = snowflake.securityadmin

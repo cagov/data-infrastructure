@@ -11,6 +11,7 @@ terraform {
   required_version = ">= 1.0"
 }
 
+# TODO: move to variable.
 locals {
   account = "heb41095"
 }
@@ -31,13 +32,14 @@ provider "snowflake" {
   role    = "SYSADMIN"
 }
 
-# Snowflake provider for managing grants to roles
+# Snowflake provider for managing grants to roles.
 provider "snowflake" {
   alias   = "securityadmin"
   account = local.account
   role    = "SECURITYADMIN"
 }
-# Snowflake provider for managing grants to roles
+
+# Snowflake provider for managing user accounts and roles.
 provider "snowflake" {
   alias   = "useradmin"
   account = local.account

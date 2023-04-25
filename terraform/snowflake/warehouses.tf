@@ -1,4 +1,11 @@
+######################################
+#           Permissions              #
+######################################
+
 locals {
+  # Permissions to use a data warehouse. No role is given the MODIFY permission,
+  # instead warehouses should be treated as stateless, and if we need a larger
+  # one it should be created individually.
   warehouse = {
     MOU = ["MONITOR", "OPERATE", "USAGE"]
   }
@@ -8,6 +15,7 @@ locals {
 #           Warehouses          #
 #################################
 
+# Primary warehouse for loading data to Snowflake from ELT/ETL tools
 resource "snowflake_warehouse" "loading" {
   name                = "LOADING"
   provider            = snowflake.sysadmin
@@ -18,6 +26,8 @@ resource "snowflake_warehouse" "loading" {
   warehouse_size      = "x-small"
 }
 
+# Primary warehouse for transforming data. Analytics engineers and automated
+# transformation tools should use this warehouse.
 resource "snowflake_warehouse" "transforming" {
   name                = "TRANSFORMING"
   provider            = snowflake.sysadmin
@@ -28,6 +38,7 @@ resource "snowflake_warehouse" "transforming" {
   warehouse_size      = "x-small"
 }
 
+# Primary warehouse for reporting. End-users and BI tools should use this warehouse.
 resource "snowflake_warehouse" "reporting" {
   name                = "REPORTING"
   provider            = snowflake.sysadmin
@@ -42,18 +53,21 @@ resource "snowflake_warehouse" "reporting" {
 #     Warehouse Access Roles    #
 #################################
 
+# Monitoring, usage, and operating permissions for the LOADING warehouse.
 resource "snowflake_role" "loading" {
   name     = "LOADING_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the LOADING warehouse"
 }
 
+# Monitoring, usage, and operating permissions for the TRANSFORMING warehouse.
 resource "snowflake_role" "transforming" {
   name     = "TRANSFORMING_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the TRANSFORMING warehouse"
 }
 
+# Monitoring, usage, and operating permissions for the REPORTING warehouse.
 resource "snowflake_role" "reporting" {
   name     = "REPORTING_WH_MOU"
   provider = snowflake.useradmin
@@ -89,6 +103,7 @@ resource "snowflake_role_grants" "reporting_to_sysadmin" {
 #       Warehouse Grants        #
 #################################
 
+# Allow the loading access role to use the loading warehouse
 resource "snowflake_warehouse_grant" "loader" {
   provider          = snowflake.securityadmin
   for_each          = toset(local.warehouse.MOU)
@@ -98,6 +113,7 @@ resource "snowflake_warehouse_grant" "loader" {
   with_grant_option = false
 }
 
+# Allow the transforming access role to use the transforming warehouse
 resource "snowflake_warehouse_grant" "transformer" {
   provider          = snowflake.securityadmin
   for_each          = toset(local.warehouse.MOU)
@@ -107,6 +123,7 @@ resource "snowflake_warehouse_grant" "transformer" {
   with_grant_option = false
 }
 
+# Allow the reporting access role to use the reporting warehouse
 resource "snowflake_warehouse_grant" "reporter" {
   provider          = snowflake.securityadmin
   for_each          = toset(local.warehouse.MOU)
