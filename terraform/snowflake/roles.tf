@@ -1,44 +1,4 @@
 ######################################
-#           Permissions              #
-######################################
-
-locals {
-  // https://docs.snowflake.com/en/sql-reference/sql/grant-privilege.html
-  admin = {
-    database = ["USAGE", "CREATE SCHEMA"]
-    schema = [
-      "CREATE MATERIALIZED VIEW",
-      "CREATE PIPE",
-      "CREATE PROCEDURE",
-      "CREATE STAGE",
-      "CREATE TABLE",
-      "CREATE TEMPORARY TABLE",
-      "CREATE VIEW",
-      "MODIFY",
-      "MONITOR",
-      "OWNERSHIP",
-      "USAGE",
-    ]
-    table = [
-      "DELETE",
-      "INSERT",
-      "TRUNCATE",
-      "UPDATE",
-    ]
-  }
-  read = {
-    // Full application database
-    database = ["USAGE"]
-    schema   = ["USAGE"]
-    table    = ["SELECT", "REFERENCES"]
-    view     = ["SELECT", "REFERENCES"]
-  }
-  use = {
-    warehouse = ["MONITOR", "OPERATE", "USAGE"]
-  }
-}
-
-######################################
 #           Base Roles               #
 ######################################
 
@@ -62,208 +22,99 @@ resource "snowflake_role" "reporter" {
 
 
 ######################################
-#           Roles Grants             #
+#            Role Grants             #
 ######################################
 
 # Grant our roles to the SYSADMIN user, per best practices:
 # https://docs.snowflake.com/en/user-guide/security-access-control-considerations#aligning-object-access-with-business-functions
 # This allows SYSADMIN to make additional grants of database objects to these roles.
 
-resource "snowflake_role_grants" "loader" {
+resource "snowflake_role_grants" "loader_to_sysadmin" {
   provider               = snowflake.useradmin
   role_name              = snowflake_role.loader.name
   enable_multiple_grants = true
-  roles = [
-    "SYSADMIN",
-  ]
+  roles                  = ["SYSADMIN"]
 }
 
-resource "snowflake_role_grants" "transformer" {
+resource "snowflake_role_grants" "transformer_to_sysadmin" {
   provider               = snowflake.useradmin
   role_name              = snowflake_role.transformer.name
   enable_multiple_grants = true
-  roles = [
-    "SYSADMIN",
-  ]
+  roles                  = ["SYSADMIN"]
 }
 
-resource "snowflake_role_grants" "reporter" {
+resource "snowflake_role_grants" "reporter_to_sysadmin" {
   provider               = snowflake.useradmin
   role_name              = snowflake_role.reporter.name
   enable_multiple_grants = true
-  roles = [
-    "SYSADMIN",
-  ]
+  roles                  = ["SYSADMIN"]
 }
 
-######################################
-#         Warehouse Grants           #
-######################################
-
-resource "snowflake_warehouse_grant" "loader" {
-  provider          = snowflake.securityadmin
-  for_each          = toset(local.use.warehouse)
-  warehouse_name    = snowflake_warehouse.loading.name
-  privilege         = each.key
-  roles             = [snowflake_role.loader.name]
-  with_grant_option = false
-}
-
-resource "snowflake_warehouse_grant" "transformer" {
-  provider          = snowflake.securityadmin
-  for_each          = toset(local.use.warehouse)
-  warehouse_name    = snowflake_warehouse.transforming.name
-  privilege         = each.key
-  roles             = [snowflake_role.transformer.name]
-  with_grant_option = false
-}
-
-resource "snowflake_warehouse_grant" "reporter" {
-  provider          = snowflake.securityadmin
-  for_each          = toset(local.use.warehouse)
-  warehouse_name    = snowflake_warehouse.reporting.name
-  privilege         = each.key
-  roles             = [snowflake_role.reporter.name]
-  with_grant_option = false
-}
-
-######################################
-#         Database Grants            #
-######################################
-
-# https://community.snowflake.com/s/article/How-to-grant-select-on-all-future-tables-in-a-schema-and-database-level
-
-// Loader has admin privileges to create schemas and tables in RAW
-resource "snowflake_database_grant" "loader_raw" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.raw.name
-  for_each      = toset(local.admin.database)
-  privilege     = each.key
-  roles         = [snowflake_role.loader.name]
-}
-
-resource "snowflake_schema_grant" "loader_raw" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.raw.name
-  for_each      = toset(local.admin.schema)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.loader.name]
-}
-
-resource "snowflake_table_grant" "loader_raw" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.raw.name
-  for_each      = toset(local.admin.table)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.loader.name]
+// Loader has RWC privileges in RAW
+resource "snowflake_role_grants" "raw_rwc_to_loader" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.raw.name}_READWRITECONTROL"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.loader.name]
+  depends_on             = [snowflake_role.raw]
 }
 
 // Reporter has read privileges in ANALYTICS
-resource "snowflake_database_grant" "reporter_analytics" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.analytics.name
-  for_each      = toset(local.read.database)
-  privilege     = each.key
-  roles         = [snowflake_role.reporter.name]
+resource "snowflake_role_grants" "analytics_r_to_reporter" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.analytics.name}_READ"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.reporter.name]
+  depends_on             = [snowflake_role.analytics]
 }
 
-resource "snowflake_schema_grant" "reporter_analytics" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.analytics.name
-  for_each      = toset(local.read.schema)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.reporter.name]
+// Transformer has RWC privileges in TRANSFORM
+resource "snowflake_role_grants" "transform_rwc_to_transformer" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.transform.name}_READWRITECONTROL"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.transformer.name]
+  depends_on             = [snowflake_role.transform]
 }
 
-resource "snowflake_table_grant" "reporter_analytics" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.analytics.name
-  for_each      = toset(local.read.table)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.reporter.name]
-}
-
-// Transformer has admin privileges in TRANSFORM
-resource "snowflake_database_grant" "transformer_transform" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.transform.name
-  for_each      = toset(local.admin.database)
-  privilege     = each.key
-  roles         = [snowflake_role.transformer.name]
-}
-
-resource "snowflake_schema_grant" "transformer_transform" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.transform.name
-  for_each      = toset(local.admin.schema)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.transformer.name]
-}
-
-resource "snowflake_table_grant" "transformer_transform" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.transform.name
-  for_each      = toset(local.admin.table)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.transformer.name]
-}
-
-// Transformer has admin privileges in ANALYTICS
-resource "snowflake_database_grant" "transformer_analytics" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.analytics.name
-  for_each      = toset(local.admin.database)
-  privilege     = each.key
-  roles         = [snowflake_role.transformer.name]
-}
-
-resource "snowflake_schema_grant" "transformer_analytics" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.analytics.name
-  for_each      = toset(local.admin.schema)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.transformer.name]
-}
-
-resource "snowflake_table_grant" "transformer_analytics" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.analytics.name
-  for_each      = toset(local.admin.table)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.transformer.name]
+// Transformer has RWC privileges in ANALYTICS
+resource "snowflake_role_grants" "analytics_rwc_to_transformer" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.analytics.name}_READWRITECONTROL"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.transformer.name]
+  depends_on             = [snowflake_role.transform]
 }
 
 // Transformer has read permissions in RAW
-resource "snowflake_database_grant" "transformer_raw" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.raw.name
-  for_each      = toset(local.read.database)
-  privilege     = each.key
-  roles         = [snowflake_role.transformer.name]
+resource "snowflake_role_grants" "raw_r_to_transformer" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.raw.name}_READ"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.transformer.name]
+  depends_on             = [snowflake_role.raw]
 }
 
-resource "snowflake_schema_grant" "transformer_raw" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.raw.name
-  for_each      = toset(local.read.schema)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.transformer.name]
+// Transformer can use the TRANSFORMING warehouse
+resource "snowflake_role_grants" "transforming_to_transformer" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.transforming.name
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.transformer.name]
 }
 
-resource "snowflake_table_grant" "transformer_raw" {
-  provider      = snowflake.securityadmin
-  database_name = snowflake_database.raw.name
-  for_each      = toset(local.read.table)
-  privilege     = each.key
-  on_future     = true
-  roles         = [snowflake_role.transformer.name]
+// Reporter can use the REPORTING warehouse
+resource "snowflake_role_grants" "reporting_to_reporter" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.reporting.name
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.reporter.name]
+}
+
+// Loader can use the LOADING warehouse
+resource "snowflake_role_grants" "loading_to_loader" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.loading.name
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.loader.name]
 }
