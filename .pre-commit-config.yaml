@@ -21,6 +21,7 @@ repos:
     rev: v0.16.0
     hooks:
       - id: terraform-docs-go
+        name: Document cloud infrastructure in mkdocs
         args:
           [
             "./terraform/aws",
@@ -28,9 +29,14 @@ repos:
             "../../docs/cloud-infrastructure.md",
           ]
       - id: terraform-docs-go
+        name: Document cloud infrastructure in README
         args: ["./terraform/aws"]
       - id: terraform-docs-go
+        name: Document cloud infrastructure remote state in README
         args: ["./terraform/aws/remote-state"]
+      - id: terraform-docs-go
+        name: Document Snowflake account infrastructure in README
+        args: ["./terraform/snowflake"]
   - repo: https://github.com/psf/black
     rev: 23.1.0
     hooks:
