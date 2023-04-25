@@ -55,21 +55,21 @@ resource "snowflake_warehouse" "reporting" {
 
 # Monitoring, usage, and operating permissions for the LOADING warehouse.
 resource "snowflake_role" "loading" {
-  name     = "LOADING_WH_MOU"
+  name     = "${snowflake_warehouse.loading.name}_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the LOADING warehouse"
 }
 
 # Monitoring, usage, and operating permissions for the TRANSFORMING warehouse.
 resource "snowflake_role" "transforming" {
-  name     = "TRANSFORMING_WH_MOU"
+  name     = "${snowflake_warehouse.transforming.name}_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the TRANSFORMING warehouse"
 }
 
 # Monitoring, usage, and operating permissions for the REPORTING warehouse.
 resource "snowflake_role" "reporting" {
-  name     = "REPORTING_WH_MOU"
+  name     = "${snowflake_warehouse.reporting.name}_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the REPORTING warehouse"
 }
@@ -109,7 +109,7 @@ resource "snowflake_warehouse_grant" "loader" {
   for_each          = toset(local.warehouse.MOU)
   warehouse_name    = snowflake_warehouse.loading.name
   privilege         = each.key
-  roles             = [snowflake_role.loader.name]
+  roles             = [snowflake_role.loading.name]
   with_grant_option = false
 }
 
@@ -119,7 +119,7 @@ resource "snowflake_warehouse_grant" "transformer" {
   for_each          = toset(local.warehouse.MOU)
   warehouse_name    = snowflake_warehouse.transforming.name
   privilege         = each.key
-  roles             = [snowflake_role.transformer.name]
+  roles             = [snowflake_role.transforming.name]
   with_grant_option = false
 }
 
@@ -129,6 +129,6 @@ resource "snowflake_warehouse_grant" "reporter" {
   for_each          = toset(local.warehouse.MOU)
   warehouse_name    = snowflake_warehouse.reporting.name
   privilege         = each.key
-  roles             = [snowflake_role.reporter.name]
+  roles             = [snowflake_role.reporting.name]
   with_grant_option = false
 }
