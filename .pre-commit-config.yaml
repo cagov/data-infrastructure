@@ -90,7 +90,7 @@ repos:
         pass_filenames: false
         types: [sql]
         additional_dependencies:
-          - dbt-bigquery==1.4.2
+          - dbt-snowflake==1.4.2
           - dbt-core==1.4.5
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 2.0.3

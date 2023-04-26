@@ -3,7 +3,7 @@ config:
   use_colors: true
   warn_error: true
 
-default:
+dse_bigquery:
   target: dev
   outputs:
     dev:
