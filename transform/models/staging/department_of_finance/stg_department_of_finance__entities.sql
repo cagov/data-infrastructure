@@ -1,15 +1,18 @@
-/*
-Wanted to materialize using "ephemeral", but using a temporary
-function requires a materialized table in BQ.
-*/
 {{ config(materialized="table") }}
 
+{% set udf_schema = schema %}
+
 {% call set_sql_header(config) %}
--- TODO: place these functions somewhere, or figure out how to make them truly
--- ephemeral!
--- then get rid of the create if not exists nonsense.
+
+-- Warning! The SQL header is rendered separately from the rest of the template,
+-- And as a result the "schema" variable does not appear to be correct.
+-- As a workaround, call generate_schema_name within the header to regenerate it.
+-- This is likely brittle, and may need to be revisited. For more reading:
+-- https://github.com/dbt-labs/dbt-core/issues/2793
+{% set udf_schema = generate_schema_name(model.config.schema, model) %}
+
 create or replace temp function
-    {{ target.schema }}_state_entities.reorder_name_for_alphabetization(name string)
+    {{ udf_schema }}.reorder_name_for_alphabetization(name string)
 returns string
 language javascript
 as
@@ -68,7 +71,7 @@ $$
 ;
 
 create or replace temp function
-    {{ target.schema }}_state_entities.extract_name(name string)
+    {{ target.schema }}_{{ model.config.schema }}.extract_name(name string)
 returns string
 language javascript
 as $$
@@ -95,7 +98,7 @@ with
             -- Extract the first portion of the entity as the name. The other
             -- two (optional) groups match parentheticals and things like
             -- "-- DO NOT USE" or " -- DOF USE ONLY"
-            {{ target.schema }}_state_entities.extract_name("name") as name,
+            {{ udf_schema }}.extract_name("name") as name,
             coalesce(l3, l2, l1, b, a) as primary_code,
             a as agency_code,
             case
@@ -115,9 +118,7 @@ with
     entities_with_extras as (
         select
             *,
-            {{ target.schema }}_state_entities.reorder_name_for_alphabetization(
-                name
-            ) as name_alpha,
+            {{ udf_schema }}.reorder_name_for_alphabetization(name) as name_alpha,
             case
                 when coalesce(l3, l2, l1, subagency_code) is null
                 then 'agency'
