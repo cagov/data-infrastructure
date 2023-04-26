@@ -9,7 +9,7 @@ with
             and abolished = false
             and restricted_use is null
             and cast(primary_code as int) < 9000
-            and not rlike(lower(name_raw), 'moved to|renum\.? to')
+            and not regexp_like(lower(name_raw), 'moved to|renum\.? to')
     )
 
 select *
