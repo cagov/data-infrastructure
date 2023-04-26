@@ -35,3 +35,5 @@ jobs:
       - uses: pre-commit/action@v3.0.0
         env:
           DBT_PROFILES_DIR: ci
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_USER: github_ci_bot

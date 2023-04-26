@@ -1,5 +1,5 @@
 *.swp
-docs/dbt_docs
+docs/dbt_docs*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

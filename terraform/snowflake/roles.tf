@@ -167,3 +167,11 @@ resource "snowflake_role_grants" "analytics_r_to_reader" {
   roles                  = [snowflake_role.reader.name]
   depends_on             = [snowflake_role.analytics]
 }
+
+# Reader can use the REPORTING warehouse
+resource "snowflake_role_grants" "reporting_to_reader" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.reporting.name
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.reader.name]
+}

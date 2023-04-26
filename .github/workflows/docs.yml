@@ -33,9 +33,16 @@ jobs:
       - name: Build dbt docs
         env:
           DBT_PROFILES_DIR: ci
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_USER: github_ci_bot
         run: |
+          # Generate snowflake dbt docs
+          dbt deps --project-dir=transform
+          dbt docs generate --project-dir=transform
+          cp -r transform/target docs/dbt_docs_snowflake
+          # Generate bigquery dbt docs
           dbt deps --project-dir=transform-bigquery
           dbt docs generate --project-dir=transform-bigquery
-          cp -r transform-biguery/target docs/dbt_docs
+          cp -r transform-bigquery/target docs/dbt_docs_bigquery
       - name: Deploy 🚀
         run: mkdocs gh-deploy --force
