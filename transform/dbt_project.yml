@@ -31,15 +31,17 @@ models:
   dse_analytics:
     staging:
       +database: TRANSFORM
-      +schema: state_entities
+      department_of_finance:
+        +schema: department_of_finance
 
     intermediate:
       +database: TRANSFORM
-      +schema: state_entities
+      state_entities:
+        +schema: state_entities
 
     marts:
+      +database: ANALYTICS
       state_entities:
-        +database: ANALYTICS
         +schema: state_entities
 
 seeds:
