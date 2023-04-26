@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: state_entities
+    database: RAW
     description: Dataset for state entities data modeling and reporting
     tables:
       - name: base_entities
