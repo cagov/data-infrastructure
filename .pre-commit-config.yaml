@@ -97,11 +97,11 @@ repos:
     hooks:
       - id: sqlfluff-lint
         additional_dependencies:
-          - dbt-bigquery==1.4.2
+          - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
           - dbt-core==1.4.5
       - id: sqlfluff-fix
         additional_dependencies:
-          - dbt-bigquery==1.4.2
+          - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
           - dbt-core==1.4.5
