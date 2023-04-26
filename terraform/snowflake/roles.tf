@@ -28,6 +28,13 @@ resource "snowflake_role" "reporter" {
   comment  = "Permissions to read data from the ANALYTICS database"
 }
 
+# The reader persona is for CI tools to be able to reflect on the databases.
+resource "snowflake_role" "reader" {
+  provider = snowflake.useradmin
+  name     = "READER"
+  comment  = "Permissions to read ANALYTICS, TRASNFORM, and RAW for CI purposes"
+}
+
 
 ######################################
 #            Role Grants             #
@@ -54,6 +61,13 @@ resource "snowflake_role_grants" "transformer_to_sysadmin" {
 resource "snowflake_role_grants" "reporter_to_sysadmin" {
   provider               = snowflake.useradmin
   role_name              = snowflake_role.reporter.name
+  enable_multiple_grants = true
+  roles                  = ["SYSADMIN"]
+}
+
+resource "snowflake_role_grants" "reader_to_sysadmin" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.reader.name
   enable_multiple_grants = true
   roles                  = ["SYSADMIN"]
 }
@@ -125,4 +139,31 @@ resource "snowflake_role_grants" "loading_to_loader" {
   role_name              = snowflake_role.loading.name
   enable_multiple_grants = true
   roles                  = [snowflake_role.loader.name]
+}
+
+# Reader has read permissions in RAW
+resource "snowflake_role_grants" "raw_r_to_reader" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.raw.name}_READ"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.reader.name]
+  depends_on             = [snowflake_role.raw]
+}
+
+# Reader has read permissions in TRANSFORM
+resource "snowflake_role_grants" "transform_r_to_reader" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.transform.name}_READ"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.reader.name]
+  depends_on             = [snowflake_role.transform]
+}
+
+# Reader has read permissions in ANALYTICS
+resource "snowflake_role_grants" "analytics_r_to_reader" {
+  provider               = snowflake.useradmin
+  role_name              = "${snowflake_database.analytics.name}_READ"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.reader.name]
+  depends_on             = [snowflake_role.analytics]
 }
