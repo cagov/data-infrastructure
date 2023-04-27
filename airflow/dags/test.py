@@ -21,6 +21,7 @@ DEFAULT_ARGS = {
     start_date=datetime(2023, 3, 23),
     schedule_interval="@daily",
     default_args=DEFAULT_ARGS,
+    catchup=False,
 )
 def building_footprints_dag():
     """Test DAG."""

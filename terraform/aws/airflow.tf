@@ -161,8 +161,9 @@ resource "aws_mwaa_environment" "this" {
     "custom.default_job_definition" = aws_batch_job_definition.default.name
   }
 
-  source_bucket_arn = aws_s3_bucket.mwaa.arn
-  dag_s3_path       = "dags/"
+  source_bucket_arn    = aws_s3_bucket.mwaa.arn
+  dag_s3_path          = "dags/"
+  requirements_s3_path = "requirements.txt"
 
   network_configuration {
     security_group_ids = [aws_security_group.mwaa.id]
