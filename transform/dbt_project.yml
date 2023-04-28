@@ -34,6 +34,9 @@ models:
         +schema: state_entities
 
     marts:
+      # All marts models as tables to avoid needing to have write access on TRANSFORM
+      # https://community.snowflake.com/s/article/SQL-compilation-error-Failure-during-expansion-of-view-mySecureView
+      +materialized: table
       +database: ANALYTICS
       state_entities:
         +schema: state_entities

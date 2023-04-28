@@ -61,6 +61,13 @@ locals {
     ]
   }
 
+  # Access control permissions for view objects
+  view = {
+    READ             = ["SELECT", "REFERENCES"]
+    READWRITE        = ["SELECT", "REFERENCES"]
+    READWRITECONTROL = ["SELECT", "REFERENCES", "OWNERSHIP"]
+  }
+
   # Create objects for each access control - privilege combination.
   # We will use them for assigning access role grants below.
   database_permissions = flatten([
@@ -82,6 +89,14 @@ locals {
   table_permissions = flatten([
     for type in keys(local.table) : [
       for privilege in local.table[type] : {
+        type      = type
+        privilege = privilege
+      }
+    ]
+  ])
+  view_permissions = flatten([
+    for type in keys(local.view) : [
+      for privilege in local.view[type] : {
         type      = type
         privilege = privilege
       }
@@ -196,10 +211,11 @@ resource "snowflake_role_grants" "analytics_to_sysadmin" {
 # (READ, READWRITE, READWRITECONTROL) + permission (e.g. SELECT) combination,
 # and create a role grant for that combination. This generates a lot of grants!
 #
-# Schema and table grants also get the on_future=true flag, which means that the roles
-# created here also get the same permissions in newly-created schemas and tables.
+# Schema, table, and view grants also get the on_future=true flag, which means that the
+# roles created here also get the same permissions in newly-created schemas and tables.
 # https://community.snowflake.com/s/article/How-to-grant-select-on-all-future-tables-in-a-schema-and-database-level
 
+# Database grants
 resource "snowflake_database_grant" "raw" {
   provider               = snowflake.securityadmin
   database_name          = snowflake_database.raw.name
@@ -230,6 +246,7 @@ resource "snowflake_database_grant" "analytics" {
   depends_on             = [snowflake_role.analytics]
 }
 
+# Schema grants
 resource "snowflake_schema_grant" "raw" {
   provider               = snowflake.securityadmin
   database_name          = snowflake_database.raw.name
@@ -263,6 +280,7 @@ resource "snowflake_schema_grant" "analytics" {
   depends_on             = [snowflake_role.analytics]
 }
 
+# Table grants
 resource "snowflake_table_grant" "raw" {
   provider               = snowflake.securityadmin
   database_name          = snowflake_database.raw.name
@@ -289,6 +307,40 @@ resource "snowflake_table_grant" "analytics" {
   provider               = snowflake.securityadmin
   database_name          = snowflake_database.analytics.name
   for_each               = { for p in local.table_permissions : "${p.type}-${p.privilege}" => p }
+  privilege              = each.value.privilege
+  enable_multiple_grants = true
+  on_future              = true
+  roles                  = ["${snowflake_database.analytics.name}_${each.value.type}"]
+  depends_on             = [snowflake_role.analytics]
+}
+
+# View grants
+resource "snowflake_view_grant" "raw" {
+  provider               = snowflake.securityadmin
+  database_name          = snowflake_database.raw.name
+  for_each               = { for p in local.view_permissions : "${p.type}-${p.privilege}" => p }
+  privilege              = each.value.privilege
+  enable_multiple_grants = true
+  on_future              = true
+  roles                  = ["${snowflake_database.raw.name}_${each.value.type}"]
+  depends_on             = [snowflake_role.raw]
+}
+
+resource "snowflake_view_grant" "transform" {
+  provider               = snowflake.securityadmin
+  database_name          = snowflake_database.transform.name
+  for_each               = { for p in local.view_permissions : "${p.type}-${p.privilege}" => p }
+  privilege              = each.value.privilege
+  enable_multiple_grants = true
+  on_future              = true
+  roles                  = ["${snowflake_database.transform.name}_${each.value.type}"]
+  depends_on             = [snowflake_role.transform]
+}
+
+resource "snowflake_view_grant" "analytics" {
+  provider               = snowflake.securityadmin
+  database_name          = snowflake_database.analytics.name
+  for_each               = { for p in local.view_permissions : "${p.type}-${p.privilege}" => p }
   privilege              = each.value.privilege
   enable_multiple_grants = true
   on_future              = true
