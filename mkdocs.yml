@@ -30,6 +30,7 @@ nav:
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
+  - Snowflake: snowflake.md
   - Writing Documentation: writing-documentation.md
   - dbt Snowflake Project: /dbt_docs_snowflake/index.html
   - dbt BigQuery Project: /dbt_docs_bigquery/index.html

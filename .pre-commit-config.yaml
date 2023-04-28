@@ -37,6 +37,10 @@ repos:
       - id: terraform-docs-go
         name: Document Snowflake account infrastructure in README
         args: ["./terraform/snowflake"]
+      - id: terraform-docs-go
+        name: Document Snowflake account infrastructure in mkdocs
+        args:
+          ["./terraform/snowflake", "--output-file", "../../docs/snowflake.md"]
   - repo: https://github.com/psf/black
     rev: 23.1.0
     hooks:
