@@ -93,15 +93,65 @@ There is no technical difference between access roles and functional roles in Sn
 
 ## Security Policies
 
-### Single Sign-On (SSO) and System for Cross-domain Identity Management (SCIM)
+Our security policies and norms for Snowflake are following the best practices laid out in
+[this article](https://community.snowflake.com/s/article/Snowflake-Security-Overview-and-Best-Practices),
+[these overview docs](https://docs.snowflake.com/en/guides-overview-secure),
+and conversations had with our Snowflake representatives.
 
-TODO
+### Use Federated Single Sign-On (SSO) and System for Cross-domain Identity Management (SCIM) for human users
 
-### User management
+Most State departments will have a federated identity provider for SSO and SCIM.
+At the Office of Data and Innovation, we use [Okta](https://www.okta.com/).
+Many State departments use [Active Directory](https://azure.microsoft.com/en-us/products/active-directory/).
 
-TODO
+Most human users should have their account lifecycle managed through SCIM, and should log in via SSO.
 
-### Service accounts
+Using SCIM with Snowflake requires creating an authorization token for the account.
+This token should be stored in DSE's shared 1Password vault,
+and needs to be manually rotated every six months.
+
+### Enable multi-factor authentication (MFA) for users
+
+Users, especially those with elevated permissions, should have multi-factor authentication enabled for their accounts.
+In some cases, this may be provided by their SSO identity provider, and in some cases this may use the built-in Snowflake MFA using Duo.
+
+### Use auto-sign-out for Snowflake sessions
+
+Ensure that `CLIENT_SESSION_KEEP_ALIVE` is set to `FALSE` in the account.
+This means that unattended browser windows will automatically sign out after a set amount of time (defaulting to one hour).
+
+### Follow the principle of least-privilege
+
+In general, users and roles should be assigned permissions according to the
+[Principle of Least Privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege),
+which states that they should have sufficient privileges to perform
+legitimate work, and no more. This reduces security risks should a particular
+user or role become compromised.
+
+### Create service accounts using Terraform
+
+Service accounts aren't associated with a human user.
+Instead, they are created by an account administrator for
+the purposes of allowing another service to perform some action.
+
+We currently use service accounts for:
+
+* Fivetran loading raw data
+* Airflow loading raw data
+* GitHub actions generating docs
+
+These service accounts are created using Terraform
+and assigned roles according to the principle of least-privilege.
+They use key pair authentication, which is more secure than password-based authentication as no sensitive data are exchanged.
+Private keys for service accounts should be stored in CalData's 1Password vault.
+
+Service accounts should not be shared across different applications,
+so if one becomes compromised, the damage is more isolated.
+
+### Regularly review users with elevated privileges
+
+Users with access to elevated privileges (especially the `ACCOUNTADMIN`, `SECURITYADMIN`, and `SYSADMIN` roles)
+should be regularly reviewed by account administrators.
 
 ## Snowflake Terraform configuration
 
