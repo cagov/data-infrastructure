@@ -4,7 +4,7 @@ version: "1.0.0"
 config-version: 2
 
 # This setting configures which "profile" dbt uses for this project.
-profile: "dse_snowflake"
+profile: "dse_bigquery"
 
 # These configurations specify where dbt should look for different types of files.
 # The `source-paths` config, for example, states that models in this project can be
@@ -22,21 +22,27 @@ clean-targets: # directories to be removed by `dbt clean`
   - "dbt_packages"
 
 models:
-  dse_analytics:
+  ga4:
     staging:
-      +database: TRANSFORM
-      department_of_finance:
-        +schema: department_of_finance
-
-    intermediate:
-      +database: TRANSFORM
-      state_entities:
-        +schema: state_entities
-
+      +schema: staging
     marts:
-      # All marts models as tables to avoid needing to have write access on TRANSFORM
-      # https://community.snowflake.com/s/article/SQL-compilation-error-Failure-during-expansion-of-view-mySecureView
-      +materialized: table
-      +database: ANALYTICS
-      state_entities:
-        +schema: state_entities
+      +schema: google
+
+seeds:
+  ga4:
+    +schema: staging
+
+vars:
+  ga4:
+    project: dse-product-analytics-prd-bqd
+    # Note this is the statewide dataset, not the cagov-only.
+    dataset: analytics_314711183
+    start_date: "20221101"
+    frequency: daily
+
+tests:
+  ga4:
+    staging:
+      ga4:
+        not_null_stg_ga4__event_page_view_page_location:
+          +enabled: false

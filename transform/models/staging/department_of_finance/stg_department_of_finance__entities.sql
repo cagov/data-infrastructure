@@ -1,17 +1,24 @@
-/*
-Wanted to materialize using "ephemeral", but using a temporary
-function requires a materialized table in BQ.
-*/
 {{ config(materialized="table") }}
 
+{% set udf_schema = schema %}
+
 {% call set_sql_header(config) %}
-create temp function reorder_name_for_alphabetization(name string)
+
+-- Warning! The SQL header is rendered separately from the rest of the template,
+-- And as a result the "schema" variable does not appear to be correct.
+-- As a workaround, call generate_schema_name within the header to regenerate it.
+-- This is likely brittle, and may need to be revisited. For more reading:
+-- https://github.com/dbt-labs/dbt-core/issues/2793
+{% set udf_schema = generate_schema_name(model.config.schema, model) %}
+
+create or replace temp function
+    {{ udf_schema }}.reorder_name_for_alphabetization(name string)
 returns string
-language js
+language javascript
 as
-    r"""
+    $$
   // Replace fancy quotes with normal ones.
-  name = name.replace("’", "'");
+  const name = NAME.replace("’", "'");
 
   // Skip some exceptions
   const skip = ["Governor's Office"];
@@ -60,7 +67,20 @@ as
   } else {
     return name;
   }
-"""
+$$
+;
+
+create or replace temp function
+    {{ target.schema }}_{{ model.config.schema }}.extract_name(name string)
+returns string
+language javascript
+as $$
+  const match = NAME.match(/^(.+?)(?:(?:\s*\(.*\)\s*|\s*[-–]+\s*[A-Z/ ]+)*)$/);
+  if (match && match[1]) {
+    return match[1];
+  }
+  return NAME;
+$$
 ;
 {%- endcall %}
 
@@ -70,21 +90,15 @@ with
     invalid_subagencies as (
         select *
         from base_entities
-        where
-            contains_substr(name, "no subagency")
-            and contains_substr(name, "do not use")
+        where contains("name", 'no subagency') and contains("name", 'do not use')
     ),
 
     entities as (
         select
-            /*
-            Extract the first portion of the entity as the name. The other
-            two (optional) groups match parentheticals and things like
-            "-- DO NOT USE" or " -- DOF USE ONLY"
-            */
-            regexp_extract(
-                name, r"^(.+?)(?:(?:\s*\(.*\)\s*|\s*[-–]+\s*[A-Z/ ]+)*)$"
-            ) as name,
+            -- Extract the first portion of the entity as the name. The other
+            -- two (optional) groups match parentheticals and things like
+            -- "-- DO NOT USE" or " -- DOF USE ONLY"
+            {{ udf_schema }}.extract_name("name") as name,
             coalesce(l3, l2, l1, b, a) as primary_code,
             a as agency_code,
             case
@@ -93,28 +107,28 @@ with
             l1,
             l2,
             l3,
-            regexp_extract(name, r"\((.+?)\)") as parenthetical,
-            contains_substr(name, "do not use") as do_not_use,
-            contains_substr(name, "abolished") as abolished,
-            regexp_extract(name, r"[A-Z/]+ USE ONLY") as restricted_use,
-            name as name_raw
+            regexp_substr("name", '\\((.+?)\\)') as parenthetical,
+            contains(lower("name"), 'do not use') as do_not_use,
+            contains(lower("name"), 'abolished') as abolished,
+            regexp_substr("name", '[A-Z/]+ USE ONLY') as restricted_use,
+            "name" as name_raw
         from base_entities
     ),
 
     entities_with_extras as (
         select
             *,
-            reorder_name_for_alphabetization(name) as name_alpha,
+            {{ udf_schema }}.reorder_name_for_alphabetization(name) as name_alpha,
             case
                 when coalesce(l3, l2, l1, subagency_code) is null
-                then "agency"
+                then 'agency'
                 when coalesce(l3, l2, l1) is null
-                then "subagency"
+                then 'subagency'
                 when coalesce(l3, l2) is null
-                then "L1"
+                then 'L1'
                 when l3 is null
-                then "L2"
-                else "L3"
+                then 'L2'
+                else 'L3'
             end as ucm_level
         from entities
     )

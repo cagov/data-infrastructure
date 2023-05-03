@@ -21,12 +21,26 @@ repos:
     rev: v0.16.0
     hooks:
       - id: terraform-docs-go
+        name: Document cloud infrastructure in mkdocs
         args:
-          ["./terraform", "--output-file", "../docs/cloud-infrastructure.md"]
+          [
+            "./terraform/aws",
+            "--output-file",
+            "../../docs/cloud-infrastructure.md",
+          ]
       - id: terraform-docs-go
-        args: ["./terraform"]
+        name: Document cloud infrastructure in README
+        args: ["./terraform/aws"]
       - id: terraform-docs-go
-        args: ["./terraform/remote-state"]
+        name: Document cloud infrastructure remote state in README
+        args: ["./terraform/aws/remote-state"]
+      - id: terraform-docs-go
+        name: Document Snowflake account infrastructure in README
+        args: ["./terraform/snowflake"]
+      - id: terraform-docs-go
+        name: Document Snowflake account infrastructure in mkdocs
+        args:
+          ["./terraform/snowflake", "--output-file", "../../docs/snowflake.md"]
   - repo: https://github.com/psf/black
     rev: 23.1.0
     hooks:
@@ -80,18 +94,18 @@ repos:
         pass_filenames: false
         types: [sql]
         additional_dependencies:
-          - dbt-bigquery==1.4.2
+          - dbt-snowflake==1.4.2
           - dbt-core==1.4.5
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 2.0.3
     hooks:
       - id: sqlfluff-lint
         additional_dependencies:
-          - dbt-bigquery==1.4.2
+          - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
           - dbt-core==1.4.5
       - id: sqlfluff-fix
         additional_dependencies:
-          - dbt-bigquery==1.4.2
+          - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
           - dbt-core==1.4.5

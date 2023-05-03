@@ -30,8 +30,10 @@ nav:
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
+  - Snowflake: snowflake.md
   - Writing Documentation: writing-documentation.md
-  - dbt Project: /dbt_docs/index.html
+  - dbt Snowflake Project: /dbt_docs_snowflake/index.html
+  - dbt BigQuery Project: /dbt_docs_bigquery/index.html
   - Learning:
       - MDSA Glossary: learning/glossary.md
       - git: learning/git.md

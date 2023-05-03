@@ -2,7 +2,7 @@
 
 # CalData dbt Documentation
 
-Welcome to the CalData Data Services and Engineering `dbt` Snowflake docs.
+Welcome to the CalData Data Services and Engineering `dbt` BigQuery docs.
 To go back to the top-level docs, follow [this link](../)
 
 ## Navigation

@@ -1,0 +1,29 @@
+config:
+  send_anonymous_usage_stats: false
+  use_colors: true
+  warn_error: true
+
+dse_bigquery:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: oauth
+      project: "{{ env_var('GCP_PROJECT') }}"
+      # Should not be created in CI as the CI service account is read-only!
+      dataset: dbt_ci_should_not_create_this_dataset
+      threads: 4
+
+dse_snowflake:
+  target: snowflake_prd
+  outputs:
+    snowflake_prd:
+      type: snowflake
+      account: heb41095
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: READER
+      warehouse: REPORTING
+      database: ANALYTICS
+      schema: ci_should_not_create_this_schema
+      threads: 4

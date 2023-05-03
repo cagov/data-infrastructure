@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: state_entities
+    database: RAW
     description: Dataset for state entities data modeling and reporting
     tables:
       - name: base_entities
@@ -9,6 +10,7 @@ sources:
         columns:
           - name: A
             description: Agency code for entity
+            quote: true
             tests:
               - not_null
           - name: B
@@ -19,10 +21,12 @@ sources:
             description: Level beneath L1
           - name: L3
             description: Level beneath L2
+            quote: true
             tests:
               - unique
           - name: name
             description: Name of entity
+            quote: true
             tests:
               - not_null
         tests:
@@ -34,11 +38,13 @@ sources:
         columns:
           - name: org_cd
             description: Four digit business unit code
+            quote: true
             tests:
               - not_null
               - unique
           - name: web_agency_cd
             description: Four digit business unit code (same as org_cd, it seems)
+            quote: true
             tests:
               - not_null
               - unique
@@ -84,6 +90,7 @@ sources:
             description: Budget for the fiscal year, in dollars
           - name: program_code
             description: Four digit business unit code
+            quote: true
             tests:
               - not_null
               # Can't do unique because there are some duplicated administrative codes

@@ -6,9 +6,9 @@ with
 
     ebudget_budgets as (
         select
-            web_agency_cd as primary_code,
-            legal_titl as name,
-            all_budget_year_dols as budget_year_dollars
+            "web_agency_cd" as primary_code,
+            "legal_titl" as name,
+            "all_budget_year_dols" as budget_year_dollars
         from agencies_and_departments
     )
 
