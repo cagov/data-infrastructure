@@ -5,6 +5,13 @@ on:
       - main
 permissions:
   contents: write
+
+env:
+  DBT_PROFILES_DIR: ci
+  PRIVATE_KEY: ${{ SECRETS.SNOWFLAKE_PRIVATE_KEY }}
+  SNOWFLAKE_PRIVATE_KEY_PATH: /tmp/private_key.p8
+  SNOWFLAKE_USER: GITHUB_CI_SVC_USER_DEV
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -30,11 +37,11 @@ jobs:
           pip install -r transform/requirements.txt
           pip install -r transform-bigquery/requirements.txt
           pip install -r requirements-docs.txt
+        # TODO: once we are on dbt-snowflake 1.5, no need to pipe to a file, we can
+        # just use $SNOWFLAKE_PRIVATE_KEY
+      - name: Set up private key
+        run: echo "$PRIVATE_KEY" > $SNOWFLAKE_PRIVATE_KEY_PATH
       - name: Build dbt docs
-        env:
-          DBT_PROFILES_DIR: ci
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
-          SNOWFLAKE_USER: github_ci_bot
         run: |
           # Generate snowflake dbt docs
           dbt deps --project-dir=transform

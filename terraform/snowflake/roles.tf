@@ -29,6 +29,7 @@ resource "snowflake_role" "reporter" {
 }
 
 # The reader persona is for CI tools to be able to reflect on the databases.
+# TODO: can we restrict the permissions for this role to just REFERENCES?
 resource "snowflake_role" "reader" {
   provider = snowflake.useradmin
   name     = "READER"

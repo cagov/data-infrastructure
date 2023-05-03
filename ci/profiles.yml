@@ -21,7 +21,7 @@ dse_snowflake:
       type: snowflake
       account: heb41095
       user: "{{ env_var('SNOWFLAKE_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
       role: READER
       warehouse: REPORTING
       database: ANALYTICS
