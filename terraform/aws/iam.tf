@@ -43,6 +43,10 @@ resource "aws_iam_group_policy_attachment" "aae_dsa_project" {
   policy_arn = aws_iam_policy.s3_dsa_project_policy[each.key].arn
 }
 
+resource "aws_iam_group_policy_attachment" "aae_list_all_my_buckets" {
+  group      = aws_iam_group.aae.name
+  policy_arn = aws_iam_policy.s3_list_all_my_buckets.arn
+}
 
 resource "aws_iam_group_membership" "aae" {
   name  = "${aws_iam_group.aae.name}-membership"

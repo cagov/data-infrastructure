@@ -2,6 +2,23 @@
 #       DSE Infrastructure       #
 ##################################
 
+# Overall policy for listing buckets in the console
+data "aws_iam_policy_document" "s3_list_all_my_buckets" {
+  statement {
+    actions = [
+      "s3:ListAllMyBuckets",
+      "s3:GetBucketLocation",
+    ]
+    resources = ["arn:aws:s3:::*"]
+  }
+}
+
+resource "aws_iam_policy" "s3_list_all_my_buckets" {
+  name        = "${local.prefix}-s3-list-all-my-buckets"
+  description = "Policy allowing S3 bucket listing in the console"
+  policy      = data.aws_iam_policy_document.s3_list_all_my_buckets.json
+}
+
 # Scratch bucket
 resource "aws_s3_bucket" "scratch" {
   bucket = "${local.prefix}-${var.region}-scratch"
@@ -86,7 +103,10 @@ data "aws_iam_policy_document" "s3_dsa_project_policy_document" {
   for_each = toset(local.dsa_projects)
   statement {
     actions = [
-      "s3:ListBucket"
+      "s3:ListBucket",
+      "s3:GetBucketVersioning",
+      "s3:GetBucketAcl",
+      "s3:GetBucketTagging",
     ]
     resources = [aws_s3_bucket.dsa_project[each.key].arn]
   }
