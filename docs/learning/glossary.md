@@ -17,7 +17,7 @@ This glossary is a reference for commonly used acronyms, terms, and tools associ
 
 1. **Modern data stack** - a cloud-first suite of software tools that enable data teams to connect to, process, store, transform, and visualize data.
 
-2. **ETL vs ELT** – ETL (Extract, Transform and Load) and ELT (Extract, Load and Transform) are data integration methods that determine whether data is preprocessed before landing in storage or transformed after being stored.
+1. **ETL vs ELT** – ETL (Extract, Transform and Load) and ELT (Extract, Load and Transform) are data integration methods that determine whether data is preprocessed before landing in storage or transformed after being stored.
 
     Both methods have the same three operations:
 
@@ -36,18 +36,18 @@ This glossary is a reference for commonly used acronyms, terms, and tools associ
 
     Sources: *[Fivetran](https://www.fivetran.com/blog/etl-vs-elt?_gl=1*rjd374*_ga*MTAxNTU1MjM4MC4xNjc3MTkxOTcy*_ga_NE72Z5F3GB*MTY4MTMzODc0OS43LjAuMTY4MTMzODc0OS42MC4wLjA.)*, *[Snowflake](https://www.snowflake.com/guides/etl-vs-elt)*
 
-3. **Columnar Database vs Relational Database** - a columnar database stores data by columns making it suitable for analytical query processing whereas a relational database stores data by rows making it optimized for transactional applications
+1. **Columnar Database vs Relational Database** - a columnar database stores data by columns making it suitable for analytical query processing whereas a relational database stores data by rows making it optimized for transactional applications
 
     Advantages of Columnar over Relational databases:
 
     - Reduces amount of data needed to be loaded
     - Improves query performance by returning relevant data faster (instead of going row by row, multiple fields can be skipped)
 
-4. **Cloud Data Warehouse** - a database stored as a managed service in a public cloud optimized for scalable analytics.
+1. **Cloud Data Warehouse** - a database stored as a managed service in a public cloud optimized for scalable analytics.
 
     Tools like Excel, Tableau, or PowerBI are limited in how much data can be brought into the dashboard. Cloud data warehouses, however, can handle petabyte scale data without too much fuss. Now, PowerBI or Tableau can also pass off data processing to a cloud data warehouse, but then major data processing jobs get hidden in a dashboard panel, which can produce unexpected spends, poor code reusability, and brittle dashboards.
 
-5. **Analytics engineering** - applies software engineering practices to analytical workflows like version control and continuous integration/development. Analytics engineers are often thought of as a hybrid between data engineers and data analysts. Most analytics engineers spend their time transforming, modeling, testing, deploying, and documenting data. Data modeling – applying business logic to data to represent commonly known truths across an organization (for example, what data defines an order) – is the core of their workload and it enables analysts and other data consumers to answer their own questions.
+1. **Analytics engineering** - applies software engineering practices to analytical workflows like version control and continuous integration/development. Analytics engineers are often thought of as a hybrid between data engineers and data analysts. Most analytics engineers spend their time transforming, modeling, testing, deploying, and documenting data. Data modeling – applying business logic to data to represent commonly known truths across an organization (for example, what data defines an order) – is the core of their workload and it enables analysts and other data consumers to answer their own questions.
 
     Originally coined two years ago, by [Michael Kaminsky](https://www.linkedin.com/in/michael-the-data-guy-kaminsky/), the term came from the ground-up, when data people experienced a shift in their job: they went from handling data engineer/scientist/analyst’s tasks to spending most of their time fixing, cleaning, and transforming data. And so, they (mainly members of the dbt community) created a terminology to describe this middle seat role: the Analytics Engineer.
 
@@ -55,33 +55,30 @@ This glossary is a reference for commonly used acronyms, terms, and tools associ
 
     Sources: *[Castor](https://www.castordoc.com/blog/what-is-analytics-engineering)*, *[dbt](https://www.getdbt.com/what-is-analytics-engineering/)*
 
-6. **Agile development** - is an iterative approach to software development (and project management) that helps teams ship code faster and with fewer bugs.
+1. **Agile development** - is an iterative approach to software development (and project management) that helps teams ship code faster and with fewer bugs.
 
     - **Sprints** - a time-boxed period (usually 2 weeks) when a team works to complete a set amount of work. Some sprints have themes like if a new tool was procured an entire sprint may be dedicated to setup and onboarding.
 
     Additional reading: *[Atlassian: What is Agile?](https://www.atlassian.com/agile)*, *[Adobe: Project Sprints](https://business.adobe.com/blog/basics/sprints)*
-    
-7. **Version control** - enables teams to collaborate and streamline code development to resolve conflicts and create a centralized location for code.
+
+1. **Version control** - enables teams to collaborate and streamline code development to resolve conflicts and create a centralized location for code.
 
     Source: *[Gitlab: What is Version Control](https://about.gitlab.com/topics/version-control/)*
- 
-    - Low-code ETL pipelines have advantages and disadvantages. A major disadvantage is that they are hard to check into version control. You don't get history, code reviews, issues/ticketing, blames, or any of the useful things that come with having a code-first workflow. For long-running projects, having it version controlled is invaluable to understanding how thinking has changed.
 
-8. **CI/CD** - Continuous integration and continuous delivery/deployment are automated processes to deploy code (e.g., whenever you merge to main).
+1. **CI/CD** - Continuous integration and continuous delivery/deployment are automated processes to deploy code (e.g., whenever you merge to main).
 
     - Continuous integration (CI) automatically builds, tests, and integrates code changes within a shared repository
     - Continuous delivery (CD) automatically delivers code changes to production environments for human approval
     - ~OR ~ Continuous deployment (CD) automatically delivers and deploys code changes directly, circumventing human approval
 
     Source: *[Github: CI/CD explained](https://resources.github.com/ci-cd/)*
-    
+
     Some advantages of using CI/CD are:
-    
+
     - Check code quality with linters in pull requests
     - Run data/code tests in pull requests
     - Deploy documentation upon merging to main
     - Deploy infrastructure upon merging to main
-    
 
 ## Tools
 
