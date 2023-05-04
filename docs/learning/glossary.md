@@ -75,7 +75,7 @@ This glossary is a reference for commonly used acronyms, terms, and tools associ
 
     Source: *[Github: CI/CD explained](https://resources.github.com/ci-cd/)*
     
-    Advantages:
+    Some advantages of using CI/CD are:
     
     - Check code quality with linters in pull requests
     - Run data/code tests in pull requests
