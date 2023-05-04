@@ -24,10 +24,25 @@ resource "aws_iam_user_policy_attachment" "batch_cd_bot_policy_attachment" {
 #         IAM Human Users        #
 ##################################
 
+resource "aws_iam_user" "arman" {
+  name = "ArmanMadani"
+}
+
 resource "aws_iam_user" "esa" {
   name = "EsaEslami"
 }
 
+resource "aws_iam_user" "kim" {
+  name = "KimHicks"
+}
+
+resource "aws_iam_user" "monica" {
+  name = "MonicaBobra"
+}
+
+resource "aws_iam_user" "rocio" {
+  name = "RocioMora"
+}
 
 ##################################
 #         IAM User Groups        #
@@ -52,6 +67,10 @@ resource "aws_iam_group_membership" "aae" {
   name  = "${aws_iam_group.aae.name}-membership"
   group = aws_iam_group.aae.name
   users = [
+    aws_iam_user.arman.name,
     aws_iam_user.esa.name,
+    aws_iam_user.kim.name,
+    aws_iam_user.monica.name,
+    aws_iam_user.rocio.name,
   ]
 }
