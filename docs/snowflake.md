@@ -251,10 +251,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_airflow_public_key"></a> [airflow\_public\_key](#input\_airflow\_public\_key) | Public key for Airflow service user | `string` | `"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArMGtTtTc+kxRirGFkf6LwlaOxxs1ZyodB0ZhOaNnDexGr5gkmcIv/5fcS5ZYAeLkIwMX+/V8RNBwSLYDfPWzAaZzxldCqQojA4b5RvYhryEor4jlE40WSyWB1gViTs0grqigAcQV5icS53BXIH9dlHR/wtM6U04vKDx9AzhJv2/x35Pc1NLm7RsdaWH9OvKnnySpA1TWoQ3zKFSy8LW79E4MF+mwLy9vwM92GtV4FJqnZeLE75W0QRKfM4kPTLWlDog4MJKw+RQwmNXZj9MrCHV+z9GLkQW3ba0+W8jM0AvPoA8xtJvQ/4g3gCVVfjOt5euQQU8AGkUAt4TTsbm1WwIDAQAB"` | no |
-| <a name="input_dbt_public_key"></a> [dbt\_public\_key](#input\_dbt\_public\_key) | Public key for dbt Cloud service user | `string` | `"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxGn4yPVeOTBHFDCEf6idprUOLUyR12FICA8UAOtLzYDIqJdSHcQUhrHqqXtPn0Zp8YJbfSbUadNmP5van3F8Q0DcuY+SWOd0MeeSJYkoaib1YTARzLidVn3HSSiQofuSTw60lvc8POMH9Km9q2wLiVmOaGSSbgXBk3K22jb1J2QVoJeOT0awJRgZTAix9TOQEFiUmXZEBe23rPzP86yoERr0JCDlDYjB17S83FxF+gZdpv92Mjbi5s5SBXSPHwIPKUN6qOEAmL5fRheSD+J3TNPmZw8H6w4kYJlSxAQUflumhj7M7eeWwCqnB+OakaBxOVjbe3x80JaVZXPUTnFg0QIDAQAB"` | no |
-| <a name="input_github_ci_public_key"></a> [github\_ci\_public\_key](#input\_github\_ci\_public\_key) | Public key for GitHub CI service user | `string` | `"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAj9d6NsUrmluQL87jpksnMTc+lVvbMBIjemtMYvnxlBYW+TyQhmwZDKD4ety05LBb7VPXDs0bovTtIgTBRmG7wmD11egsWKigglH4qgNF0FQbfJZ5zEx5kUtp3DBL/CMsa87Pz1FrDIISxvdcfkCIi05M3p1iseqW1nFvogfLM6fO2eVzXj7n/9thDRtVx2NJAKrbe1D2ePwUuZ71RT/C5pjoNdPHa/KqVwau9PPd+Ce6+nvnw6dVYG4PoJzud8R0FGk0W77AHlXeyRb4MiaukuCjSN+aFbolBY41lViP3X8daESzF+VOB5nv4q93T0HyUPu8TbUeJl1bX5/AOtQn6QIDAQAB"` | no |
-| <a name="input_locator"></a> [locator](#input\_locator) | Snowflake account locator | `string` | `"heb41095"` | no |
+| <a name="input_airflow_public_key"></a> [airflow\_public\_key](#input\_airflow\_public\_key) | Public key for Airflow service user | `string` | n/a | yes |
+| <a name="input_dbt_public_key"></a> [dbt\_public\_key](#input\_dbt\_public\_key) | Public key for dbt Cloud service user | `string` | n/a | yes |
+| <a name="input_github_ci_public_key"></a> [github\_ci\_public\_key](#input\_github\_ci\_public\_key) | Public key for GitHub CI service user | `string` | n/a | yes |
+| <a name="input_locator"></a> [locator](#input\_locator) | Snowflake account locator | `string` | n/a | yes |
 
 ## Outputs
 
