@@ -19,7 +19,11 @@ data "aws_iam_policy_document" "self_manage_credentials" {
     effect = "Allow"
     actions = [
       "iam:ChangePassword",
-      "iam:GetUser"
+      "iam:GetUser",
+      "iam:CreateLoginProfile",
+      "iam:DeleteLoginProfile",
+      "iam:GetLoginProfile",
+      "iam:UpdateLoginProfile",
     ]
     resources = ["arn:aws:iam::*:user/$${aws:username}"]
   }
@@ -30,7 +34,7 @@ data "aws_iam_policy_document" "self_manage_credentials" {
       "iam:CreateAccessKey",
       "iam:DeleteAccessKey",
       "iam:ListAccessKeys",
-      "iam:UpdateAccessKey"
+      "iam:UpdateAccessKey",
     ]
     resources = ["arn:aws:iam::*:user/$${aws:username}"]
   }
@@ -52,25 +56,6 @@ data "aws_iam_policy_document" "self_manage_credentials" {
       "iam:ResyncMFADevice"
     ]
     resources = ["arn:aws:iam::*:user/$${aws:username}"]
-  }
-  statement {
-    sid    = "DenyAllExceptListedIfNoMFA"
-    effect = "Deny"
-    not_actions = [
-      "iam:CreateVirtualMFADevice",
-      "iam:EnableMFADevice",
-      "iam:GetUser",
-      "iam:ListMFADevices",
-      "iam:ListVirtualMFADevices",
-      "iam:ResyncMFADevice",
-      "sts:GetSessionToken"
-    ]
-    resources = ["*"]
-    condition {
-      test     = "BoolIfExists"
-      variable = "aws:MultiFactorAuthPresent"
-      values   = ["false"]
-    }
   }
 }
 
