@@ -40,3 +40,17 @@ provider "snowflake" {
   account = var.locator
   role    = "USERADMIN"
 }
+
+module "elt" {
+  source = "./modules/elt"
+  providers = {
+    snowflake.securityadmin = snowflake.securityadmin,
+    snowflake.sysadmin      = snowflake.sysadmin,
+    snowflake.useradmin     = snowflake.useradmin,
+  }
+
+  environment          = var.environment
+  airflow_public_key   = var.airflow_public_key
+  dbt_public_key       = var.dbt_public_key
+  github_ci_public_key = var.github_ci_public_key
+}

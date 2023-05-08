@@ -3,11 +3,6 @@ variable "environment" {
   type        = string
 }
 
-variable "locator" {
-  description = "Snowflake account locator"
-  type        = string
-}
-
 variable "airflow_public_key" {
   description = "Public key for Airflow service user"
   type        = string

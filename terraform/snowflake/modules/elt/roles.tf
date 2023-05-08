@@ -7,7 +7,7 @@
 # permissions in RAW.
 resource "snowflake_role" "loader" {
   provider = snowflake.useradmin
-  name     = "LOADER"
+  name     = "LOADER_${var.environment}"
   comment  = "Permissions to load data to the ${module.raw.name} database"
 }
 
@@ -16,7 +16,7 @@ resource "snowflake_role" "loader" {
 # permissions in ANALYTICS and TRANSFORM, as well as read permissions in RAW.
 resource "snowflake_role" "transformer" {
   provider = snowflake.useradmin
-  name     = "TRANSFORMER"
+  name     = "TRANSFORMER_${var.environment}"
   comment  = "Permissions to read data from the ${module.raw.name} database, and read/write to ${module.transform.name} and ${module.analytics.name}"
 }
 
@@ -24,7 +24,7 @@ resource "snowflake_role" "transformer" {
 # analytics databse. It has read permissions in ANALYTICS.
 resource "snowflake_role" "reporter" {
   provider = snowflake.useradmin
-  name     = "REPORTER"
+  name     = "REPORTER_${var.environment}"
   comment  = "Permissions to read data from the ${module.analytics.name} database"
 }
 
@@ -32,7 +32,7 @@ resource "snowflake_role" "reporter" {
 # TODO: can we restrict the permissions for this role to just REFERENCES?
 resource "snowflake_role" "reader" {
   provider = snowflake.useradmin
-  name     = "READER"
+  name     = "READER_${var.environment}"
   comment  = "Permissions to read ${module.analytics.name}, ${module.transform.name}, and ${module.raw.name} for CI purposes"
 }
 

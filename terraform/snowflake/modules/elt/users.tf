@@ -4,7 +4,7 @@
 
 resource "snowflake_user" "dbt" {
   provider = snowflake.useradmin
-  name     = "DBT_SVC_USER_DEV"
+  name     = "DBT_SVC_USER_${var.environment}"
   comment  = "Service user for dbt Cloud"
 
   default_warehouse = module.transforming.name
@@ -17,7 +17,7 @@ resource "snowflake_user" "dbt" {
 
 resource "snowflake_user" "airflow" {
   provider = snowflake.useradmin
-  name     = "AIRFLOW_SVC_USER_DEV"
+  name     = "AIRFLOW_SVC_USER_${var.environment}"
   comment  = "Service user for Airflow"
 
   default_warehouse = module.loading.name
@@ -30,7 +30,7 @@ resource "snowflake_user" "airflow" {
 
 resource "snowflake_user" "github_ci" {
   provider = snowflake.useradmin
-  name     = "GITHUB_CI_SVC_USER_DEV"
+  name     = "GITHUB_CI_SVC_USER_${var.environment}"
   comment  = "Service user for GitHub CI"
 
   default_warehouse = module.reporting.name
