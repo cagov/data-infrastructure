@@ -32,9 +32,6 @@ variable "github_ci_public_key" {
 ############################
 
 terraform {
-  backend "s3" {
-  }
-
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
@@ -79,7 +76,7 @@ provider "snowflake" {
 ############################
 
 module "elt" {
-  source = "./modules/elt"
+  source = "../../modules/elt"
   providers = {
     snowflake.securityadmin = snowflake.securityadmin,
     snowflake.sysadmin      = snowflake.sysadmin,
