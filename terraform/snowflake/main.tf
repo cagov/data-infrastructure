@@ -1,3 +1,36 @@
+############################
+#         Variables        #
+############################
+
+variable "environment" {
+  description = "Environment suffix"
+  type        = string
+}
+
+variable "locator" {
+  description = "Snowflake account locator"
+  type        = string
+}
+
+variable "airflow_public_key" {
+  description = "Public key for Airflow service user"
+  type        = string
+}
+
+variable "dbt_public_key" {
+  description = "Public key for dbt Cloud service user"
+  type        = string
+}
+
+variable "github_ci_public_key" {
+  description = "Public key for GitHub CI service user"
+  type        = string
+}
+
+############################
+#         Providers        #
+############################
+
 terraform {
   backend "s3" {
   }
@@ -40,6 +73,10 @@ provider "snowflake" {
   account = var.locator
   role    = "USERADMIN"
 }
+
+############################
+#       Environment        #
+############################
 
 module "elt" {
   source = "./modules/elt"
