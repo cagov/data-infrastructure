@@ -106,11 +106,16 @@ def load_data() -> None:
         .astype("string[python]")  # type: ignore
         .rename(columns={"1": "L1", "2": "L2", "3": "L3"})
     )
+
+    DB = conn.database
+    SCHEMA = "STATE_ENTITIES"
+    conn.cursor().execute(f"CREATE SCHEMA IF NOT EXISTS {DB}.{SCHEMA}")
+
     write_pandas(
         conn,
         df,
-        database="RAW",
-        schema="STATE_ENTITIES",
+        database=DB,
+        schema=SCHEMA,
         table_name="BASE_ENTITIES",
         auto_create_table=True,
     )
