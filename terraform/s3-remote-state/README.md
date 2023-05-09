@@ -42,14 +42,17 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_environment"></a> [environment](#input\_environment) | Deployment environment of the resource | `string` | `"dev"` | no |
+| <a name="input_environment"></a> [environment](#input\_environment) | Deployment environment of the resource | `string` | n/a | yes |
 | <a name="input_owner"></a> [owner](#input\_owner) | Owner of the resource | `string` | `"dse"` | no |
-| <a name="input_project"></a> [project](#input\_project) | Name of the project the resource is serving | `string` | `"infra"` | no |
-| <a name="input_region"></a> [region](#input\_region) | Region for AWS resources | `string` | `"us-west-1"` | no |
+| <a name="input_project"></a> [project](#input\_project) | Name of the project the resource is serving | `string` | n/a | yes |
+| <a name="input_region"></a> [region](#input\_region) | AWS Region | `string` | `"us-west-2"` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_state"></a> [state](#output\_state) | Resources from terraform-state |
+| <a name="output_bucket"></a> [bucket](#output\_bucket) | State bucket |
+| <a name="output_dynamodb_table"></a> [dynamodb\_table](#output\_dynamodb\_table) | State lock |
+| <a name="output_key"></a> [key](#output\_key) | State object key |
+| <a name="output_region"></a> [region](#output\_region) | AWS Region |
 <!-- END_TF_DOCS -->
