@@ -39,6 +39,9 @@ terraform {
     }
   }
   required_version = ">= 1.0"
+
+  backend "s3" {
+  }
 }
 
 # This provider is intentionally low-permission. In Snowflake, object creators are
