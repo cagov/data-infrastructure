@@ -1,25 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "4.56.0"
-    }
-  }
-  required_version = ">= 1.0"
-}
-
-provider "aws" {
-  region = var.region
-
-  default_tags {
-    tags = {
-      Owner       = var.owner
-      Project     = var.project
-      Environment = var.environment
-    }
-  }
-}
-
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "${local.prefix}-terraform-state"
 

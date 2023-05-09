@@ -7,17 +7,15 @@ variable "owner" {
 variable "project" {
   description = "Name of the project the resource is serving"
   type        = string
-  default     = "snowflake"
 }
 
 variable "environment" {
   description = "Deployment environment of the resource"
   type        = string
-  default     = "dev"
 }
 
 variable "region" {
-  description = "Region for AWS resources"
+  description = "AWS Region"
   type        = string
   default     = "us-west-2"
 }
