@@ -162,6 +162,20 @@ should be regularly reviewed by account administrators.
 
 We provision our Snowflake account using [terraform](https://github.com/Snowflake-Labs/terraform-provider-snowflake).
 
+The infrastructure is organized into three modules, two lower level ones and one application-level one:
+
+* **database**: A module which creates a Snowflake database and access roles for it.
+
+* **warehouse**: A module which creates a Snowflake warehouse and access roles for it.
+
+* **elt**: A module which creates several **database** and **warehouse** objects and implements the above architecture for them.
+
+The **elt** module is then consumed by two different terraform deployments:
+
+* **dev** for dev infrastructure
+* **prd** for production infrastructure.
+
+The **elt** module has the following configuration:
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
