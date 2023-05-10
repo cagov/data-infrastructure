@@ -1,0 +1,4 @@
+bucket = "dse-snowflake-prd-terraform-state"
+dynamodb_table = "dse-snowflake-prd-terraform-state-lock"
+key = "dse-snowflake-prd.tfstate"
+region = "us-west-2"

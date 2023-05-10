@@ -60,25 +60,31 @@ def crawl_ebudget_site(year="2022-23"):
         columns=camel_to_snake
     )
 
-    print("Loading agencies")
     hook = SnowflakeHook(snowflake_conn_id="raw")
     conn = hook.get_conn()
 
+    DB = conn.database
+    SCHEMA = "STATE_ENTITIES"
+    conn.cursor().execute(f"CREATE SCHEMA IF NOT EXISTS {DB}.{SCHEMA}")
+
+    print("Loading agencies")
     write_pandas(
         conn,
         agencies_df,
-        database="RAW",
-        schema="STATE_ENTITIES",
+        database=DB,
+        schema=SCHEMA,
         table_name="EBUDGET_AGENCY_AND_DEPARTMENT_BUDGETS",
+        auto_create_table=True,
     )
 
     print("Loading programs")
     write_pandas(
         conn,
         programs_df,
-        database="RAW",
-        schema="STATE_ENTITIES",
+        database=DB,
+        schema=SCHEMA,
         table_name="EBUDGET_PROGRAM_BUDGETS",
+        auto_create_table=True,
     )
 
 

@@ -15,15 +15,15 @@ dse_bigquery:
       threads: 4
 
 dse_snowflake:
-  target: snowflake_prd
+  target: snowflake_dev
   outputs:
-    snowflake_prd:
+    snowflake_dev:
       type: snowflake
       account: heb41095
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
-      role: READER
-      warehouse: REPORTING
-      database: ANALYTICS
+      role: READER_DEV
+      warehouse: REPORTING_DEV
+      database: ANALYTICS_DEV
       schema: ci_should_not_create_this_schema
       threads: 4

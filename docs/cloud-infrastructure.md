@@ -91,19 +91,31 @@ The current state is tracked in a JSON document,
 which can be stored in any of a number of locations (including local files).
 
 This project stores remote state using the [S3 backend](https://developer.hashicorp.com/terraform/language/settings/backends/s3).
-Before you can stand up the main infrastructure, you must first prep the remote state backend:
+
+Different applications or environments can be isolated from each other by using
+different S3 buckets for holding their state.
+We reuse a terraform configuration (`terraform/s3-remote-state`) for setting up the S3 backend
+
+!!! note
+    The S3 remote state configuration is not a proper module because it contains
+    a provider block. Different deployments of the configuration are controlled
+    by giving it different `tfvars` files, and capturing the outputs for use in
+    a `tfbackend` file.
+
+Here is an example set of commands for bootstrapping a new S3 backend for a deployment.
+Suppose the deployment is a QA environment of our Snowflake project:
 
 ```bash
+cd terraform/snowflake/environments/qa  # Go to the new environment directory
+mkdir remote-state  # Create a remote-state directory
 cd remote-state
-terraform init
-terraform apply
-```
+ln -s ../../../s3-remote-state/main.tf main.tf  # symlink the s3 configuration
+terraform init  # initialize the remote state backend
+terraform apply -var="owner=dse" -var="environment=qa" -var="project=snowflake"  # Create the infrastructure
+terraform output > ../dse-snowflake-qa.tfbackend  # Pipe the outputs to a .tfbackend
 
-With the remote state infrastructure deployed, you should be able to initialize the main project.
-From this directory, run:
-
-```bash
-terraform init -backend-config=./remote-state/dse-infra-dev.tfbackend
+cd ..
+terraform init -backend-config=./dse-snowflake-qa.tfbackend  # Configure the deployment with the new backend.
 ```
 
 ## Deploying Infrastructure

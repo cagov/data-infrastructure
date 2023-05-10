@@ -4,10 +4,10 @@
 
 resource "snowflake_user" "dbt" {
   provider = snowflake.useradmin
-  name     = "DBT_SVC_USER_DEV"
+  name     = "DBT_CLOUD_SVC_USER_${var.environment}"
   comment  = "Service user for dbt Cloud"
 
-  default_warehouse = snowflake_warehouse.transforming.name
+  default_warehouse = module.transforming.name
   default_role      = snowflake_role.transformer.name
 
   must_change_password = false
@@ -17,10 +17,10 @@ resource "snowflake_user" "dbt" {
 
 resource "snowflake_user" "airflow" {
   provider = snowflake.useradmin
-  name     = "AIRFLOW_SVC_USER_DEV"
+  name     = "MWAA_SVC_USER_${var.environment}"
   comment  = "Service user for Airflow"
 
-  default_warehouse = snowflake_warehouse.loading.name
+  default_warehouse = module.loading.name
   default_role      = snowflake_role.loader.name
 
   must_change_password = false
@@ -30,10 +30,10 @@ resource "snowflake_user" "airflow" {
 
 resource "snowflake_user" "github_ci" {
   provider = snowflake.useradmin
-  name     = "GITHUB_CI_SVC_USER_DEV"
+  name     = "GITHUB_ACTIONS_SVC_USER_${var.environment}"
   comment  = "Service user for GitHub CI"
 
-  default_warehouse = snowflake_warehouse.reporting.name
+  default_warehouse = module.reporting.name
   default_role      = snowflake_role.reader.name
 
   must_change_password = false

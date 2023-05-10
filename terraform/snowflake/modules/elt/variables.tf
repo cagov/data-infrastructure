@@ -1,5 +1,5 @@
-variable "locator" {
-  description = "Snowflake account locator"
+variable "environment" {
+  description = "Environment suffix"
   type        = string
 }
 

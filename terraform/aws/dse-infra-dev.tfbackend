@@ -1,4 +1,4 @@
 bucket = "dse-infra-dev-terraform-state"
+dynamodb_table = "dse-infra-dev-terraform-state-lock"
 key = "dse-infra-dev.tfstate"
 region = "us-west-1"
-dynamodb_table = "dse-infra-dev-terraform-state-lock"

@@ -70,8 +70,7 @@ as
 $$
 ;
 
-create or replace temp function
-    {{ target.schema }}_{{ model.config.schema }}.extract_name(name string)
+create or replace temp function {{ model.config.schema }}.extract_name(name string)
 returns string
 language javascript
 as $$
