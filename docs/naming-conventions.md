@@ -109,22 +109,7 @@ Most of the time this doesn't matter, but occasionally requires thought if you h
 
 ### dbt
 
-Models in a data warehouse do not follow the same naming conventions as raw cloud resources,
-as their most frequent consumers are analytics engineers and data analysts.
-
-**Dimension tables** are prefixed with `dim_`.
-
-**Fact tables** are prefixed with `fct_`.
-
-**Staging tables** are prefixed with `stg_`.
-
-**Intermediate tables** are prefixed with `int_`.
-
-We may adopt additional conventions for denoting aggregations, column data types, etc. in the future.
-
-Feature branches in dbt are tested in separate schemas within the cloud data warehouse.
-When a developer uses dbt locally or in dbt Cloud, they choose a name for the development schema.
-By convention, this is `dbt_{username}`, where `username` is the first initial of their given name followed by their surname.
+Our dbt naming conventions are described [here](./dbt.md#naming-conventions).
 
 ### Fivetran
 
