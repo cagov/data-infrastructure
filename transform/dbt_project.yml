@@ -24,19 +24,19 @@ clean-targets: # directories to be removed by `dbt clean`
 models:
   dse_analytics:
     staging:
-      +database: TRANSFORM_DEV
+      +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
       department_of_finance:
         +schema: department_of_finance
 
     intermediate:
-      +database: TRANSFORM_DEV
+      +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
       state_entities:
         +schema: state_entities
 
     marts:
-      # All marts models as tables to avoid needing write access to TRANSFORM_DEV
+      # All marts models as tables to avoid needing write access to TRANSFORM
       # https://community.snowflake.com/s/article/SQL-compilation-error-Failure-during-expansion-of-view-mySecureView
       +materialized: table
-      +database: ANALYTICS_DEV
+      +database: "{{ env_var('DBT_ANALYTICS_DB', 'ANALYTICS_DEV') }}"
       state_entities:
         +schema: state_entities

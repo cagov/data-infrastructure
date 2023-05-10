@@ -15,9 +15,9 @@ dse_bigquery:
       threads: 4
 
 dse_snowflake:
-  target: snowflake_prd
+  target: snowflake_dev
   outputs:
-    snowflake_prd:
+    snowflake_dev:
       type: snowflake
       account: heb41095
       user: "{{ env_var('SNOWFLAKE_USER') }}"

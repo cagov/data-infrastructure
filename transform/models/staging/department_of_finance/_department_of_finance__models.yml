@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: state_entities
-    database: RAW_DEV
+    database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
     description: Dataset for state entities data modeling and reporting
     tables:
       - name: base_entities
