@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from jobs.utils.snowflake import gdf_to_snowflake
 
-SCHEMA = "GEO_REFERENCE"
-
 
 def load_state_footprints(conn) -> None:
     """Load Microsoft state building footprints dataset for California."""
@@ -14,11 +12,12 @@ def load_state_footprints(conn) -> None:
         "https://usbuildingdata.blob.core.windows.net/usbuildings-v2/Alaska.geojson.zip"
     )
 
-    print("Writing data to gbq")
+    print("Writing data to snowflake")
     gdf_to_snowflake(
         gdf,
         conn,
         table_name="ALASKA_BUILDING_FOOTPRINTS",
+        cluster=True,
     )
 
 
@@ -30,10 +29,10 @@ if __name__ == "__main__":
     conn = snowflake.connector.connect(
         account=os.environ["SNOWFLAKE_ACCOUNT"],
         user=os.environ["SNOWFLAKE_USER"],
-        password=os.environ["MY_SNOWFLAKE_PASSWORD"],
-        warehouse="LOADING_DEV",
-        database="RAW_DEV",
+        password=os.environ["SNOWFLAKE_PASSWORD"],
+        warehouse=os.environ["SNOWFLAKE_WAREHOUSE"],
+        database=os.environ["SNOWFLAKE_DATABASE"],
         schema="GEO_REFERENCE",
-        role="LOADER_DEV",
+        role=os.environ["SNOWFLAKE_ROLE"],
     )
     load_state_footprints(conn)
