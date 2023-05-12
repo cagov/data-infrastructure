@@ -17,7 +17,7 @@ def load_state_footprints(conn) -> None:
         gdf,
         conn,
         table_name="ALASKA_BUILDING_FOOTPRINTS",
-        cluster=True,
+        cluster=False,
     )
 
 

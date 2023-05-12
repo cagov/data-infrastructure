@@ -67,6 +67,13 @@ def gdf_to_snowflake(
             cluster_names = [gdf.geometry.name]
         elif isinstance(cluster, str):
             cluster_names = [cluster]
+        if any(
+            isinstance(gdf[n].dtype, geopandas.array.GeometryDtype)
+            for n in cluster_names
+        ):
+            raise ValueError(
+                "Snowflake does not support clustering on geospatial types"
+            )
         cluster_names = [f'"{n}"' for n in cluster_names]
 
         # Write the initial table with the geometry columns as bytes. We can convert to
@@ -96,7 +103,8 @@ def gdf_to_snowflake(
             else:
                 cols.append(f'"{c}"')
 
-        sql = f"""CREATE OR REPLACE TABLE {database}.{schema}.{table_name}"""
+        conn.cursor().execute(f"DROP TABLE IF EXISTS {database}.{schema}.{table_name}")
+        sql = f"""CREATE TABLE {database}.{schema}.{table_name}"""
 
         if cluster:
             sql = sql + f"\nCLUSTER BY ({','.join(cluster_names)})"
