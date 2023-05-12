@@ -20,6 +20,7 @@ def gdf_to_snowflake(
     database: str | None = None,
     schema: str | None = None,
     cluster: bool | str = False,
+    chunk_size: int | None = None,
 ):
     """
     Load a GeoDataFrame to Snowflake.
@@ -88,6 +89,7 @@ def gdf_to_snowflake(
             table_type="temp",
             database=database,
             schema=schema,
+            chunk_size=chunk_size,
             auto_create_table=True,
             quote_identifiers=True,
         )
@@ -103,8 +105,7 @@ def gdf_to_snowflake(
             else:
                 cols.append(f'"{c}"')
 
-        conn.cursor().execute(f"DROP TABLE IF EXISTS {database}.{schema}.{table_name}")
-        sql = f"""CREATE TABLE {database}.{schema}.{table_name}"""
+        sql = f"""CREATE OR REPLACE TABLE {database}.{schema}.{table_name}"""
 
         if cluster:
             sql = sql + f"\nCLUSTER BY ({','.join(cluster_names)})"
