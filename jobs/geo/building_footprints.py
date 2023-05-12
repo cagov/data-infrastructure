@@ -34,5 +34,6 @@ if __name__ == "__main__":
         database=os.environ["SNOWFLAKE_DATABASE"],
         schema="GEO_REFERENCE",
         role=os.environ["SNOWFLAKE_ROLE"],
+        client_session_keep_alive=True,  # This can be a slow job! Keep the session alive
     )
     load_state_footprints(conn)
