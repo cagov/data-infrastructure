@@ -47,6 +47,40 @@ resource "aws_iam_policy" "s3_scratch_policy" {
 }
 
 
+# Snowpipe bucket
+resource "aws_s3_bucket" "snowpipe_test" {
+  bucket = "${local.prefix}-${var.region}-snowpipe_test"
+}
+
+data "aws_iam_policy_document" "snowpipe_test" {
+  statement {
+    actions = [
+      "s3:ListBucket",
+      "s3:GetBucketLocation",
+    ]
+    resources = [aws_s3_bucket.snowpipe_test.arn]
+    condition {
+      test     = "StringLike"
+      variable = "s3:prefix"
+      values   = ["*"]
+    }
+
+  }
+  statement {
+    actions = [
+      "s3:GetObject",
+      "s3:GetObjectVersion",
+    ]
+    resources = ["${aws_s3_bucket.scratch.arn}/*"]
+  }
+}
+
+resource "aws_iam_policy" "snowpipe_bucket_policy" {
+  name        = "${local.prefix}-${var.region}-snowpipe-test-bucket-policy"
+  description = "Policy allowing read/write for snowpipe-test bucket"
+  policy      = data.aws_iam_policy_document.snowpipe_test.json
+}
+
 # MWAA bucket
 resource "aws_s3_bucket" "mwaa" {
   bucket = "${local.prefix}-${var.region}-mwaa"
