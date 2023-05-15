@@ -114,7 +114,10 @@ resource "aws_iam_role" "snowflake_storage_integration" {
   )
 }
 
-
+resource "aws_iam_role_policy_attachment" "snowflake_storage_integration" {
+  role       = aws_iam_role.snowflake_storage_integration.name
+  policy_arn = aws_iam_policy.snowpipe_bucket_policy.arn
+}
 
 
 ##################################

@@ -71,7 +71,7 @@ data "aws_iam_policy_document" "snowpipe_test" {
       "s3:GetObject",
       "s3:GetObjectVersion",
     ]
-    resources = ["${aws_s3_bucket.scratch.arn}/*"]
+    resources = ["${aws_s3_bucket.snowpipe_test.arn}/*"]
   }
 }
 
