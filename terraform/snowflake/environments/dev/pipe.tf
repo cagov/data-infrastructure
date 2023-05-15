@@ -46,6 +46,6 @@ resource "snowflake_pipe" "pipe" {
   name     = "TEST_PIPE"
 
   #https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/533#issuecomment-1171442286
-  copy_statement = "copy into RAW_${var.environment}.TEST_PIPE.TEST_TABLE from @${snowflake_stage.this.database}.${snowflake_stage.this.schema}.${snowflake_stage.this.name} file_format = (type = 'CSV');"
+  copy_statement = "copy into RAW_${var.environment}.TEST_PIPE.TEST_TABLE from @${snowflake_stage.this.database}.${snowflake_stage.this.schema}.${snowflake_stage.this.name} file_format = (type='CSV', SKIP_HEADER=1);"
   auto_ingest    = true
 }
