@@ -201,6 +201,7 @@ No modules.
 | [aws_s3_bucket.mwaa](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket.scratch](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket.snowpipe_test](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_notification.snowpipe_test](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket_notification) | resource |
 | [aws_s3_bucket_public_access_block.mwaa](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_bucket_versioning.dsa_project](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket_versioning) | resource |
 | [aws_s3_bucket_versioning.mwaa](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/s3_bucket_versioning) | resource |
@@ -233,6 +234,7 @@ No modules.
 | <a name="input_owner"></a> [owner](#input\_owner) | Owner of the resource | `string` | `"dse"` | no |
 | <a name="input_project"></a> [project](#input\_project) | Name of the project the resource is serving | `string` | `"infra"` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region for AWS resources | `string` | `"us-west-2"` | no |
+| <a name="input_snowflake_snowpipe_sqs_queue"></a> [snowflake\_snowpipe\_sqs\_queue](#input\_snowflake\_snowpipe\_sqs\_queue) | n/a | `string` | n/a | yes |
 | <a name="input_snowflake_storage_aws_external_id"></a> [snowflake\_storage\_aws\_external\_id](#input\_snowflake\_storage\_aws\_external\_id) | n/a | `string` | n/a | yes |
 | <a name="input_snowflake_storage_aws_iam_user_arn"></a> [snowflake\_storage\_aws\_iam\_user\_arn](#input\_snowflake\_storage\_aws\_iam\_user\_arn) | n/a | `string` | n/a | yes |
 

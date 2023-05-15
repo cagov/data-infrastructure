@@ -30,6 +30,10 @@ variable "snowflake_storage_aws_external_id" {
   type = string
 }
 
+variable "snowflake_snowpipe_sqs_queue" {
+  type = string
+}
+
 locals {
   prefix = "${var.owner}-${var.project}-${var.environment}"
 }

@@ -81,6 +81,14 @@ resource "aws_iam_policy" "snowpipe_bucket_policy" {
   policy      = data.aws_iam_policy_document.snowpipe_test.json
 }
 
+resource "aws_s3_bucket_notification" "snowpipe_test" {
+  bucket = aws_s3_bucket.snowpipe_test.bucket
+  queue {
+    queue_arn = var.snowflake_snowpipe_sqs_queue
+    events    = ["s3:ObjectCreated:*"]
+  }
+}
+
 # MWAA bucket
 resource "aws_s3_bucket" "mwaa" {
   bucket = "${local.prefix}-${var.region}-mwaa"
