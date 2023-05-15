@@ -88,6 +88,36 @@ resource "aws_iam_user_policy_attachment" "batch_cd_bot_policy_attachment" {
 }
 
 ##################################
+#       IAM Service Roles        #
+##################################
+
+resource "aws_iam_role" "snowflake_storage_integration" {
+  name = "${local.prefix}-snowflake-storage-integration"
+
+  assume_role_policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Effect" : "Allow",
+        "Principal" : {
+          "AWS" : aws_iam_user.cd_bot.arn
+        },
+        "Action" : "sts:AssumeRole",
+        "Condition" : {
+          "StringEquals" : {
+            "sts:ExternalId" : "0000"
+          }
+        }
+      }
+    ]
+    }
+  )
+}
+
+
+
+
+##################################
 #         IAM Human Users        #
 ##################################
 
