@@ -53,6 +53,13 @@ provider "snowflake" {
   role    = "PUBLIC"
 }
 
+# Snowflake provider for account administration
+provider "snowflake" {
+  alias   = "accountadmin"
+  account = var.locator
+  role    = "ACCOUNTADMIN"
+}
+
 # Snowflake provider for creating databases, warehouses, etc.
 provider "snowflake" {
   alias   = "sysadmin"
