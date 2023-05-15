@@ -22,6 +22,14 @@ variable "region" {
   default     = "us-west-2"
 }
 
+variable "snowflake_storage_aws_iam_user_arn" {
+  type = string
+}
+
+variable "snowflake_storage_aws_external_id" {
+  type = string
+}
+
 locals {
   prefix = "${var.owner}-${var.project}-${var.environment}"
 }

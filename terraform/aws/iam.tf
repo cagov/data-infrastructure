@@ -100,12 +100,12 @@ resource "aws_iam_role" "snowflake_storage_integration" {
       {
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : aws_iam_user.cd_bot.arn
+          "AWS" : var.snowflake_storage_aws_iam_user_arn
         },
         "Action" : "sts:AssumeRole",
         "Condition" : {
           "StringEquals" : {
-            "sts:ExternalId" : "0000"
+            "sts:ExternalId" : var.snowflake_storage_aws_external_id
           }
         }
       }
