@@ -44,19 +44,10 @@ Even if one can take issue with specific conventions or rules,
 having them used consistently within a team pays big dividends over time.
 
 Many of our projects use `pre-commit` to enforce the linter and formatter conventions.
-To set up your pre-commit environment locally (requires a python development environment), run
+To set up your pre-commit environment locally (requires a [Python development environment](./setup.md#install-dependencies), run
 
 ```bash
-python -m pip install pre-commit
 pre-commit install
-
-```
-
-Mac users: Install [Homebrew](https://brew.sh/) and necessary packages
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install terraform terraform-docs tflint go
 ```
 
 The next time you make a commit, the pre-commit hooks will run on the contents of your commit
