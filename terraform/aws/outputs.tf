@@ -9,3 +9,10 @@ output "state" {
     batch_job_definition = aws_batch_job_definition.default.name
   }
 }
+
+output "snowflake" {
+  value = {
+    storage_integration_role = aws_iam_role.snowflake_storage_integration.arn
+    external_stage           = aws_s3_bucket.snowpipe_test.id
+  }
+}

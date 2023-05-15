@@ -49,7 +49,7 @@ resource "aws_iam_policy" "s3_scratch_policy" {
 
 # Snowpipe bucket
 resource "aws_s3_bucket" "snowpipe_test" {
-  bucket = "${local.prefix}-${var.region}-snowpipe_test"
+  bucket = "${local.prefix}-${var.region}-snowpipe-test"
 }
 
 data "aws_iam_policy_document" "snowpipe_test" {
