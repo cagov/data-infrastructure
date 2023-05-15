@@ -94,6 +94,7 @@ resource "aws_iam_user_policy_attachment" "batch_cd_bot_policy_attachment" {
 resource "aws_iam_role" "snowflake_storage_integration" {
   name = "${local.prefix}-snowflake-storage-integration"
 
+  # https://docs.snowflake.com/user-guide/data-load-snowpipe-auto-s3#step-5-grant-the-iam-user-permissions-to-access-bucket-objects
   assume_role_policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [

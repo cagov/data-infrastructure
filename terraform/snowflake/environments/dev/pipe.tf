@@ -45,7 +45,9 @@ resource "snowflake_pipe" "pipe" {
   schema   = "TEST_PIPE"
   name     = "TEST_PIPE"
 
-  #https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/533#issuecomment-1171442286
+  # We have to fully specify the stage name, even though it is also in the pipe parameters:
+  # https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/533#issuecomment-1171442286
+  # We also have to skip headers for CSVs loaded by Snowpipe.
   copy_statement = "copy into RAW_${var.environment}.TEST_PIPE.TEST_TABLE from @${snowflake_stage.this.database}.${snowflake_stage.this.schema}.${snowflake_stage.this.name} file_format = (type='CSV', SKIP_HEADER=1);"
   auto_ingest    = true
 }

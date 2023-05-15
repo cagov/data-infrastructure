@@ -52,6 +52,7 @@ resource "aws_s3_bucket" "snowpipe_test" {
   bucket = "${local.prefix}-${var.region}-snowpipe-test"
 }
 
+# From https://docs.snowflake.com/user-guide/data-load-snowpipe-auto-s3#creating-an-iam-policy
 data "aws_iam_policy_document" "snowpipe_test" {
   statement {
     actions = [
