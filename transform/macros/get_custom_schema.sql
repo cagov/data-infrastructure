@@ -14,7 +14,9 @@
     #}
 {%- if custom_schema_name is none -%} {{ target.schema.lower() | trim }}
 
-{%- else -%} {{ custom_schema_name.lower() | trim }}
+{%- elif target.name == 'prd' -%} {{ custom_schema_name.lower() | trim }}
+
+{%- else -%} {{ target.schema.lower() | trim }}_{{ custom_schema_name | trim }}
 
 {%- endif -%}
 

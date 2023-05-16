@@ -140,9 +140,9 @@ A minimal version of a `profiles.yml` for dbt development with is:
 
 ```yml
 dse_snowflake:
-  target: snowflake_dev
+  target: dev
   outputs:
-    snowflake_dev:
+    dev:
       type: snowflake
       account: <account-locator>
       user: <your-username>
