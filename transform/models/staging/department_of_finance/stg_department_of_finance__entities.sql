@@ -1,15 +1,13 @@
 {{ config(materialized="table") }}
 
-{% set udf_schema = schema %}
+{% set udf_schema = "PUBLIC" %}
 
 {% call set_sql_header(config) %}
 
 -- Warning! The SQL header is rendered separately from the rest of the template,
--- And as a result the "schema" variable does not appear to be correct.
--- As a workaround, call generate_schema_name within the header to regenerate it.
--- This is likely brittle, and may need to be revisited. For more reading:
+-- so we redefine the udf_schema in this block:
 -- https://github.com/dbt-labs/dbt-core/issues/2793
-{% set udf_schema = generate_schema_name(model.config.schema, model) %}
+{% set udf_schema = "PUBLIC" %}
 
 create or replace temp function
     {{ udf_schema }}.reorder_name_for_alphabetization(name string)
@@ -70,7 +68,7 @@ as
 $$
 ;
 
-create or replace temp function {{ model.config.schema }}.extract_name(name string)
+create or replace temp function {{ udf_schema }}.extract_name(name string)
 returns string
 language javascript
 as $$

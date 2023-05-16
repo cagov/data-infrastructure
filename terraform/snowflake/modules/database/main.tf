@@ -197,6 +197,17 @@ resource "snowflake_schema_grant" "this" {
   depends_on             = [snowflake_role.this]
 }
 
+resource "snowflake_schema_grant" "public" {
+  provider               = snowflake.securityadmin
+  database_name          = snowflake_database.this.name
+  schema_name            = "PUBLIC"
+  for_each               = { for p in local.schema_permissions : "${p.type}-${p.privilege}" => p }
+  privilege              = each.value.privilege
+  enable_multiple_grants = true
+  roles                  = ["${snowflake_database.this.name}_${each.value.type}"]
+  depends_on             = [snowflake_role.this]
+}
+
 # Table grants
 resource "snowflake_table_grant" "this" {
   provider               = snowflake.securityadmin
