@@ -34,6 +34,7 @@ It is described in more detail in our [Snowflake docs](./snowflake.md#architectu
 
 dbt's default method for generating [custom schema names](https://docs.getdbt.com/docs/build/custom-schemas)
 works well for a single-database setup:
+
 * It allows development work to occur in a separate schema from production models.
 * It allows analytics engineers to develop side-by-side without stepping on each others toes.
 
@@ -43,12 +44,15 @@ which may not be an ideal naming convention for end-users.
 Because our architecture separates development and production databases,
 and has strict permissions protecting the `RAW` database,
 there is less danger of breaking production models.
-So we use our own custom schema name following the [approach of the GitLab Data Team](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/utils/override/generate_schema_name.sql).
-Each schema is just the custom schema name without any prefix.
+So we use our own custom schema name following the modified from the
+[approach of the GitLab Data Team](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/utils/override/generate_schema_name.sql).
 
-The above does not solve the issue of analytics engineers and CI bots simultaneously running into each other in the dev environment.
-When our team grows large enough that this is an issue,
-we will revisit this approach.
+In production, each schema is just the custom schema name without any prefix.
+In non-production environments the default is used, where analytics engineers
+get the custom schema name prefixed with their target schema name (i.e. `dbt_username_schemaname`),
+and CI runs get the custom schema name prefixed with a CI job name.
+
+This approach may be reevaluated as the project matures.
 
 ## Developing against production data
 

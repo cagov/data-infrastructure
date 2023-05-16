@@ -118,6 +118,7 @@ def load_data() -> None:
         schema=SCHEMA,
         table_name="BASE_ENTITIES",
         auto_create_table=True,
+        overwrite=True,
     )
 
 

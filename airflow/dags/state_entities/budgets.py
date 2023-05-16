@@ -75,6 +75,7 @@ def crawl_ebudget_site(year="2022-23"):
         schema=SCHEMA,
         table_name="EBUDGET_AGENCY_AND_DEPARTMENT_BUDGETS",
         auto_create_table=True,
+        overwrite=True,
     )
 
     print("Loading programs")
@@ -85,6 +86,7 @@ def crawl_ebudget_site(year="2022-23"):
         schema=SCHEMA,
         table_name="EBUDGET_PROGRAM_BUDGETS",
         auto_create_table=True,
+        overwrite=True,
     )
 
 
