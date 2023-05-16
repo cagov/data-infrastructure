@@ -50,3 +50,25 @@ show_error_codes = true
 warn_redundant_casts = true
 warn_unused_ignores = false
 warn_unreachable = true
+
+[tool.poetry]
+name = "data-infrastructure"
+version = "0.1.0"
+description = "\"CalData Data Services and Engineering Infrastructure\""
+authors = ["Ian Rose <ian.rose@innovation.ca.gov>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+mkdocs-material = "~9.1.3"
+dbt-core = "~1.4.0"
+dbt-bigquery = "~1.4.0"
+dbt-snowflake = "~1.4.0"
+pre-commit = "^3.3.1"
+awscliv2 = "^2.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

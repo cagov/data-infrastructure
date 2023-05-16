@@ -26,6 +26,7 @@ markdown_extensions:
 
 nav:
   - Introduction: index.md
+  - Project Setup: setup.md
   - Code Review: code-review.md
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
