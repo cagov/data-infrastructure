@@ -65,6 +65,26 @@ If you are a conda user on any architecture, you should be able to install these
 conda install -c conda-forge terraform go-terraform-docs tflint
 ```
 
+## Configure Snowflake
+
+In order to use Snowflake (as well as the terraform validators for the Snowflake configuration)
+you should set some default local environment variables in your environment.
+This will depend on your operating system and shell. For Linux and Mac OS systems,
+as well as users of Windows subsystem for Linux (WSL) it's often set in
+`~/.zshrc`, `~/.bashrc`, or `~/.bash_profile`.
+
+If you use zsh or bash, open your shell configuration file, and add the lines:
+
+```bash
+export SNOWFLAKE_ACCOUNT=<account-locator>
+export SNOWFLAKE_USER=<your-username>
+export SNOWFLAKE_PASSWORD=<your-password>
+export SNOWFLAKE_ROLE=TRANSFORMER_DEV
+export SNOWFLAKE_WAREHOUSE=TRANSFORMING_DEV
+```
+
+Then open a new-terminal and verify that the environment variables are set.
+
 ## Configure AWS and GCP (optional)
 
 ### AWS
