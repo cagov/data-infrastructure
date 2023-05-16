@@ -154,15 +154,23 @@ dse_snowflake:
       threads: 4
 ```
 
+!!! note
+    The target name (`dev`) in the above example can be anything.
+    However, we treat targets named `prd` differently in generating
+    custom dbt schema names (see [here](./dbt.md#custom-schema-names)).
+    We recommend naming your local development target `dev`, and only
+    include a `prd` target in your profiles under rare circumstances.
+
+
 ### BigQuery project
 
 A minimal version of a `profiles.yml` for dbt development with BigQuery is:
 
 ```yml
 dse_bigquery:
-  target: bigquery_dev
+  target: dev
   outputs:
-    bigquery_dev:
+    dev:
       type: bigquery
       method: oauth
       project: <project-id>  # Project ID to use
