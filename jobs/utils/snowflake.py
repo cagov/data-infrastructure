@@ -1,6 +1,7 @@
 """Snowflake utilities."""
 from __future__ import annotations
 
+import os
 import random
 import string
 from typing import TYPE_CHECKING
@@ -10,6 +11,103 @@ if TYPE_CHECKING:
     import snowflake.connector
 
 WGS84 = 4326  # EPSG for geography
+
+
+def snowflake_connection_from_environment(**kwargs):
+    """
+    Create a Snowflake Connection object based on environment variables.
+
+    The following are required to be set:
+
+        SNOWFLAKE_ACCOUNT
+        SNOWFLAKE_USER
+
+    You must supply exactly one authentication mechanism of the following:
+
+        SNOWFLAKE_PASSWORD
+        SNOWFLAKE_PRIVATE_KEY
+        SNOWFLAKE_PRIVATE_KEY_PATH
+
+    If using private key authentication and it is encrypted, you must supply
+
+        SNOWFLAKE_PRIVATE_KEY_PASSPHRASE
+
+    Other parameters which may be a good idea to set in environment variables are:
+
+        SNOWFLAKE_ROLE
+        SNOWFLAKE_WAREHOUSE
+        SNOWFLAKE_DATABASE
+        SNOWFLAKE_SCHEMA
+
+    Keyword args are passed on to ``snowflake.connector.connect``.
+    """
+    import snowflake.connector
+
+    # Required parameters
+    account = os.environ["SNOWFLAKE_ACCOUNT"]
+    user = os.environ["SNOWFLAKE_USER"]
+
+    # Optional parameters
+    warehouse = os.environ.get("SNOWFLAKE_WAREHOUSE")
+    database = os.environ.get("SNOWFLAKE_DATABASE")
+    schema = os.environ.get("SNOWFLAKE_SCHEMA")
+    role = os.environ.get("SNOWFLAKE_ROLE")
+
+    # Sensitive stuff
+    password = os.environ.get("SNOWFLAKE_PASSWORD")
+    private_key: str | None = os.environ.get("SNOWFLAKE_PRIVATE_KEY")
+    private_key_path = os.environ.get("SNOWFLAKE_PRIVATE_KEY_PATH")
+    private_key_passphrase = os.environ.get("SNOWFLAKE_PRIVATE_KEY_PASSPHRASE")
+
+    parameters = {
+        "account": account,
+        "user": user,
+        "warehouse": warehouse,
+        "database": database,
+        "schema": schema,
+        "role": role,
+    }
+
+    # Check that there is only one authentication mechanism implied between
+    # password, private key, and private key path.
+    if sum([bool(password), bool(private_key), bool(private_key_path)]) != 1:
+        raise ValueError(
+            "Must set exactly one of SNOWFLAKE_PASSWORD, SNOWFLAKE_PRIVATE_KEY, or"
+            "SNOWFLAKE_PRIVATE_KEY_PATH"
+        )
+
+    if password:
+        parameters["password"] = password
+    else:
+        # Based on https://community.snowflake.com/s/article/How-To-Connect-to-Snowflake
+        # -using-key-pair-authentication-directly-using-the-private-key-incode-with-the-
+        # Python-Connector
+        from cryptography.hazmat.backends import default_backend
+        from cryptography.hazmat.primitives import serialization
+
+        if private_key_path:
+            with open(private_key_path) as keyfile:
+                private_key = keyfile.read()
+        assert private_key
+        p_key = serialization.load_pem_private_key(
+            private_key.encode(),
+            password=private_key_passphrase.encode()
+            if private_key_passphrase
+            else None,
+            backend=default_backend(),
+        )
+
+        pkb = p_key.private_bytes(
+            encoding=serialization.Encoding.DER,
+            format=serialization.PrivateFormat.PKCS8,
+            encryption_algorithm=serialization.NoEncryption(),
+        )
+        parameters["private_key"] = pkb
+
+    # Apply user overrides
+    parameters.update(kwargs)
+
+    return snowflake.connector.connect(**parameters)
 
 
 def gdf_to_snowflake(
@@ -105,16 +203,14 @@ def gdf_to_snowflake(
             else:
                 cols.append(f'"{c}"')
 
+        # Create the final table, selecting from the temp table.
         sql = f"""CREATE OR REPLACE TABLE {database}.{schema}.{table_name}"""
-
         if cluster:
             sql = sql + f"\nCLUSTER BY ({','.join(cluster_names)})"
-
         sql = (
             sql
             + f"""\nAS SELECT \n{",".join(cols)} \nFROM {database}.{schema}.{tmp_table}"""
         )
-        print(sql)
 
         conn.cursor().execute(sql)
     finally:
