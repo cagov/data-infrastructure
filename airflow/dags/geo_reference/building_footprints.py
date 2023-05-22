@@ -43,6 +43,8 @@ def building_footprints_dag():
                 },
                 {"name": "SNOWFLAKE_ROLE", "value": "{{ conn.raw.extra_dejson.role }}"},
                 {
+                    # THIS LEAKS A PRIVATE KEY in the AWS Console!
+                    # Need to come up with a better solution.
                     "name": "SNOWFLAKE_PRIVATE_KEY",
                     "value": "{{ conn.raw.extra_dejson.private_key_content }}",
                 },
@@ -50,6 +52,10 @@ def building_footprints_dag():
                     "name": "SNOWFLAKE_PRIVATE_KEY_PASSPHRASE",
                     "value": "{{ conn.raw.password }}",
                 },
+            ],
+            "resourceRequirements": [
+                {"type": "VCPU", "value": "8"},
+                {"type": "MEMORY", "value": "32768"},
             ],
         },
         region_name="us-west-2",  # TODO: can we make this unnecessary?

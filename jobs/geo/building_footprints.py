@@ -9,14 +9,14 @@ def load_state_footprints(conn) -> None:
 
     print("Downloading data")
     gdf = geopandas.read_file(
-        "https://usbuildingdata.blob.core.windows.net/usbuildings-v2/Alaska.geojson.zip"
+        "https://usbuildingdata.blob.core.windows.net/usbuildings-v2/California.geojson.zip"
     )
 
     print("Writing data to snowflake")
     gdf_to_snowflake(
         gdf,
         conn,
-        table_name="ALASKA_BUILDING_FOOTPRINTS",
+        table_name="CALIFORNIA_BUILDING_FOOTPRINTS",
         cluster=False,
     )
 
