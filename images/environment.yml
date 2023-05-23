@@ -4,7 +4,6 @@ channels:
   - nodefaults
 dependencies:
   - python=3.10
+  - geopandas
   - pip:
       - snowflake-connector-python[pandas]
-      - geopandas
-      - fiona
