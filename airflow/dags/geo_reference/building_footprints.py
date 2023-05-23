@@ -26,33 +26,7 @@ def building_footprints_dag():
         job_queue=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_QUEUE"],
         job_definition=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_DEFINITION"],
         overrides={
-            "command": ["python", "-m", "jobs.geo.building_footprints"],
-            "environment": [
-                {
-                    "name": "SNOWFLAKE_ACCOUNT",
-                    "value": "{{ conn.raw.extra_dejson.account }}",
-                },
-                {"name": "SNOWFLAKE_USER", "value": "{{ conn.raw.login }}"},
-                {
-                    "name": "SNOWFLAKE_DATABASE",
-                    "value": "{{ conn.raw.extra_dejson.database }}",
-                },
-                {
-                    "name": "SNOWFLAKE_WAREHOUSE",
-                    "value": "{{ conn.raw.extra_dejson.warehouse }}",
-                },
-                {"name": "SNOWFLAKE_ROLE", "value": "{{ conn.raw.extra_dejson.role }}"},
-                {
-                    # THIS LEAKS A PRIVATE KEY in the AWS Console!
-                    # Need to come up with a better solution.
-                    "name": "SNOWFLAKE_PRIVATE_KEY",
-                    "value": "{{ conn.raw.extra_dejson.private_key_content }}",
-                },
-                {
-                    "name": "SNOWFLAKE_PRIVATE_KEY_PASSPHRASE",
-                    "value": "{{ conn.raw.password }}",
-                },
-            ],
+            "command": ["echo", "$SNOWFLAKE_USER"],
             "resourceRequirements": [
                 {"type": "VCPU", "value": "8"},
                 {"type": "MEMORY", "value": "32768"},

@@ -67,6 +67,11 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_access_secrets" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.access_secrets.arn
+}
+
 resource "aws_iam_role" "batch_job_role" {
   name               = "${local.prefix}-${var.region}-batch-job-role"
   description        = "Role for AWS batch jobs"
@@ -95,7 +100,7 @@ resource "aws_batch_job_definition" "default" {
   ]
 
   container_properties = jsonencode({
-    command = ["python", "-m", "jobs.test"]
+    command = ["echo", "$SNOWFLAKE_USER", "$SNOWFLAKE_ROLE"]
     image   = "${aws_ecr_repository.default.repository_url}:latest"
     fargatePlatformConfiguration = {
       platformVersion = "LATEST"
@@ -103,6 +108,36 @@ resource "aws_batch_job_definition" "default" {
     resourceRequirements = [
       { type = "VCPU", value = "0.25" },
       { type = "MEMORY", value = "512" }
+    ]
+    secrets = [
+      {
+        name      = "SNOWFLAKE_ACCOUNT"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:account::"
+      },
+      {
+        name      = "SNOWFLAKE_USER"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:user::"
+      },
+      {
+        name      = "SNOWFLAKE_DATABASE"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:database::"
+      },
+      {
+        name      = "SNOWFLAKE_WAREHOUSE"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:warehouse::"
+      },
+      {
+        name      = "SNOWFLAKE_ROLE"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:role::"
+      },
+      {
+        name      = "SNOWFLAKE_PRIVATE_KEY"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:private_key::"
+      },
+      {
+        name      = "SNOWFLAKE_PRIVATE_KEY_PASSPHRASE"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:private_key_passphrase::"
+      },
     ]
     networkConfiguration = {
       assignPublicIp : "ENABLED"
