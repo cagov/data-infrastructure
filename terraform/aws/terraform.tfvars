@@ -1,0 +1,5 @@
+owner            = "dse"
+project          = "infra"
+environment      = "dev"
+region           = "us-west-2"
+snowflake_secret = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd"

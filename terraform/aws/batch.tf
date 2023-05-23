@@ -2,6 +2,10 @@
 #          AWS Batch             #
 ##################################
 
+locals {
+  snowflake_data = ["account", "user", "database", "warehouse", "role", "password"]
+}
+
 data "aws_iam_policy_document" "aws_batch_service_policy" {
   statement {
     actions = [
@@ -109,31 +113,13 @@ resource "aws_batch_job_definition" "default" {
       { type = "VCPU", value = "0.25" },
       { type = "MEMORY", value = "512" }
     ]
+    # TODO: Figure out how to properly pass in a private key rather than a password.
+    # Ran into some issues with properly encoding it as an environment variable.
     secrets = [
-      {
-        name      = "SNOWFLAKE_ACCOUNT"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:account::"
-      },
-      {
-        name      = "SNOWFLAKE_USER"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:user::"
-      },
-      {
-        name      = "SNOWFLAKE_DATABASE"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:database::"
-      },
-      {
-        name      = "SNOWFLAKE_WAREHOUSE"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:warehouse::"
-      },
-      {
-        name      = "SNOWFLAKE_ROLE"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:role::"
-      },
-      {
-        name      = "SNOWFLAKE_PASSWORD"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:password::"
-      },
+      for s in local.snowflake_data : {
+        name      = "SNOWFLAKE_${upper(s)}",
+        valueFrom = var.snowflake_secret != null ? "${var.snowflake_secret}:${s}::" : ""
+      }
     ]
     networkConfiguration = {
       assignPublicIp : "ENABLED"

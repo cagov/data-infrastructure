@@ -2,3 +2,5 @@
 *.tfstate
 *.tfstate.backup
 *.tfstate.*.backup
+# Created by pre-commit, but not intended to be a stand-alone module.
+s3-remote-state/.terraform.lock.hcl

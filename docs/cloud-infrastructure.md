@@ -231,6 +231,7 @@ No modules.
 | <a name="input_owner"></a> [owner](#input\_owner) | Owner of the resource | `string` | `"dse"` | no |
 | <a name="input_project"></a> [project](#input\_project) | Name of the project the resource is serving | `string` | `"infra"` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region for AWS resources | `string` | `"us-west-2"` | no |
+| <a name="input_snowflake_secret"></a> [snowflake\_secret](#input\_snowflake\_secret) | ARN for SecretsManager login info to Snowflake with loader role | `string` | `null` | no |
 
 ## Outputs
 

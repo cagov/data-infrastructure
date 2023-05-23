@@ -22,6 +22,12 @@ variable "region" {
   default     = "us-west-2"
 }
 
+variable "snowflake_secret" {
+  description = "ARN for SecretsManager login info to Snowflake with loader role"
+  type        = string
+  default     = null
+}
+
 locals {
   prefix = "${var.owner}-${var.project}-${var.environment}"
 }
