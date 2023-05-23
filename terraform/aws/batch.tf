@@ -71,9 +71,9 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_access_secrets" {
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_access_snowflake_loader" {
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.access_secrets.arn
+  policy_arn = aws_iam_policy.access_snowflake_loader.arn
 }
 
 resource "aws_iam_role" "batch_job_role" {
@@ -118,7 +118,7 @@ resource "aws_batch_job_definition" "default" {
     secrets = [
       for s in local.snowflake_data : {
         name      = "SNOWFLAKE_${upper(s)}",
-        valueFrom = var.snowflake_secret != null ? "${var.snowflake_secret}:${s}::" : ""
+        valueFrom = var.snowflake_loader_secret != null ? "${var.snowflake_loader_secret}:${s}::" : ""
       }
     ]
     networkConfiguration = {

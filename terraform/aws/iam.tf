@@ -65,19 +65,19 @@ resource "aws_iam_policy" "self_manage_credentials" {
   policy      = data.aws_iam_policy_document.self_manage_credentials.json
 }
 
-data "aws_iam_policy_document" "access_secrets" {
+data "aws_iam_policy_document" "access_snowflake_loader" {
   statement {
     actions = ["secretsmanager:GetSecretValue"]
     resources = [
-      "arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:*",
+      var.snowflake_loader_secret
     ]
   }
 }
 
-resource "aws_iam_policy" "access_secrets" {
-  name        = "${local.prefix}-access-secrets"
-  description = "Allow a user/role to access secrets in SecretsManager"
-  policy      = data.aws_iam_policy_document.access_secrets.json
+resource "aws_iam_policy" "access_snowflake_loader" {
+  name        = "${local.prefix}-access-snowflake-loader"
+  description = "Allow a user/role to access Snowflake loader role in SecretsManager"
+  policy      = data.aws_iam_policy_document.access_snowflake_loader.json
 }
 
 ##################################

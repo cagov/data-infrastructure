@@ -22,7 +22,7 @@ variable "region" {
   default     = "us-west-2"
 }
 
-variable "snowflake_secret" {
+variable "snowflake_loader_secret" {
   description = "ARN for SecretsManager login info to Snowflake with loader role"
   type        = string
   default     = null
