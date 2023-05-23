@@ -7,3 +7,4 @@ dependencies:
   - pip:
       - snowflake-connector-python[pandas]
       - geopandas
+      - fiona

@@ -131,12 +131,8 @@ resource "aws_batch_job_definition" "default" {
         valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:role::"
       },
       {
-        name      = "SNOWFLAKE_PRIVATE_KEY"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:private_key::"
-      },
-      {
-        name      = "SNOWFLAKE_PRIVATE_KEY_PASSPHRASE"
-        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:private_key_passphrase::"
+        name      = "SNOWFLAKE_PASSWORD"
+        valueFrom = "arn:aws:secretsmanager:us-west-2:676096391788:secret:airflow/connections/snowflake_raw-0s8MWd:password::"
       },
     ]
     networkConfiguration = {
