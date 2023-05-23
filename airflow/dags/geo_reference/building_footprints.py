@@ -37,6 +37,7 @@ def building_footprints_dag():
     _ = BatchSensor(
         task_id="wait_for_batch_job",
         job_id=submit_batch_job.output,
+        region_name="us-west-2",  # TODO: can we make this unnecessary?
     )
 
 
