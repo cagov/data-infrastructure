@@ -163,6 +163,7 @@ No modules.
 | [aws_iam_group_policy_attachment.aae_dsa_project](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_group_policy_attachment) | resource |
 | [aws_iam_group_policy_attachment.aae_list_all_my_buckets](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_group_policy_attachment) | resource |
 | [aws_iam_group_policy_attachment.aae_self_manage_creentials](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_group_policy_attachment) | resource |
+| [aws_iam_policy.access_snowflake_loader](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.batch_submit_policy](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.default_ecr_policy](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_policy) | resource |
 | [aws_iam_policy.mwaa](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_policy) | resource |
@@ -175,6 +176,7 @@ No modules.
 | [aws_iam_role.ecs_task_execution_role](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role) | resource |
 | [aws_iam_role.mwaa](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.aws_batch_service_role](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.ecs_task_execution_access_snowflake_loader](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.ecs_task_execution_role_policy](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.mwaa_batch_submit_role](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.mwaa_execution_role](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/resources/iam_role_policy_attachment) | resource |
@@ -209,6 +211,7 @@ No modules.
 | [random_id.public_subnet](https://registry.terraform.io/providers/hashicorp/random/3.4.3/docs/resources/id) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/data-sources/availability_zones) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/data-sources/caller_identity) | data source |
+| [aws_iam_policy_document.access_snowflake_loader](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.assume](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.assume_role_policy](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.aws_batch_service_policy](https://registry.terraform.io/providers/hashicorp/aws/4.56.0/docs/data-sources/iam_policy_document) | data source |
@@ -228,6 +231,7 @@ No modules.
 | <a name="input_owner"></a> [owner](#input\_owner) | Owner of the resource | `string` | `"dse"` | no |
 | <a name="input_project"></a> [project](#input\_project) | Name of the project the resource is serving | `string` | `"infra"` | no |
 | <a name="input_region"></a> [region](#input\_region) | Region for AWS resources | `string` | `"us-west-2"` | no |
+| <a name="input_snowflake_loader_secret"></a> [snowflake\_loader\_secret](#input\_snowflake\_loader\_secret) | ARN for SecretsManager login info to Snowflake with loader role | `string` | `null` | no |
 
 ## Outputs
 

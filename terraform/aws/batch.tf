@@ -2,6 +2,10 @@
 #          AWS Batch             #
 ##################################
 
+locals {
+  snowflake_data = ["account", "user", "database", "warehouse", "role", "password"]
+}
+
 data "aws_iam_policy_document" "aws_batch_service_policy" {
   statement {
     actions = [
@@ -67,6 +71,11 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_access_snowflake_loader" {
+  role       = aws_iam_role.ecs_task_execution_role.name
+  policy_arn = aws_iam_policy.access_snowflake_loader.arn
+}
+
 resource "aws_iam_role" "batch_job_role" {
   name               = "${local.prefix}-${var.region}-batch-job-role"
   description        = "Role for AWS batch jobs"
@@ -95,7 +104,7 @@ resource "aws_batch_job_definition" "default" {
   ]
 
   container_properties = jsonencode({
-    command = ["python", "-m", "jobs.test"]
+    command = ["echo", "$SNOWFLAKE_USER", "$SNOWFLAKE_ROLE"]
     image   = "${aws_ecr_repository.default.repository_url}:latest"
     fargatePlatformConfiguration = {
       platformVersion = "LATEST"
@@ -103,6 +112,14 @@ resource "aws_batch_job_definition" "default" {
     resourceRequirements = [
       { type = "VCPU", value = "0.25" },
       { type = "MEMORY", value = "512" }
+    ]
+    # TODO: Figure out how to properly pass in a private key rather than a password.
+    # Ran into some issues with properly encoding it as an environment variable.
+    secrets = [
+      for s in local.snowflake_data : {
+        name      = "SNOWFLAKE_${upper(s)}",
+        valueFrom = var.snowflake_loader_secret != null ? "${var.snowflake_loader_secret}:${s}::" : ""
+      }
     ]
     networkConfiguration = {
       assignPublicIp : "ENABLED"
