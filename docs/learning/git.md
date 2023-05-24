@@ -19,19 +19,6 @@ and social networking.
 There are a number of web platforms which have similar features and goals as GitHub
 (including Bitbucket and GitLab), but GitHub is the most commonly used.
 
-## Setting up a GitHub account
-
-We use GitHub as part of the modern data stack. If you already have an account, great! If not, go ahead and set one up by going to [GitHub's pricing page](https://github.com/pricing) and selecting the option for a free account. Then:
-
-1. Enter a username
-2. Enter your email (we suggest work email, you can associate other emails later if you like)
-3. Enter a password
-4. Verify that you're human by solving a puzzle
-5. Click create account
-6. An email will be sent to you for verification. Verify your email following those instructions
-
-You'll use this account or one you already have to participate in the modern data stack accelerator.
-
 ## Learning git
 
 There are many high-quality resources for learning git online. Here are a few:

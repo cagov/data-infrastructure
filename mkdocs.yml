@@ -37,6 +37,7 @@ nav:
   - dbt Snowflake Project: /dbt_docs_snowflake/index.html
   - dbt BigQuery Project: /dbt_docs_bigquery/index.html
   - Learning:
+      - MDSA Training: learning/training.md
       - MDSA Glossary: learning/glossary.md
       - git: learning/git.md
       - dbt: learning/dbt.md
