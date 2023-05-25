@@ -184,7 +184,6 @@ def gdf_to_snowflake(
             conn,
             gdf.to_wkb(),
             table_name=tmp_table,
-            table_type="temp",
             database=database,
             schema=schema,
             chunk_size=chunk_size,
