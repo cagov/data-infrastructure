@@ -30,10 +30,7 @@ def load_geo_data(conn, url: str, table: str) -> None:
 
 if __name__ == "__main__":
     conn = snowflake_connection_from_environment(
-        warehouse="LOADING_DEV",
-        database="RAW_DEV",
         schema="GEO_REFERENCE",
-        role="LOADER_DEV",
         client_session_keep_alive=True,
     )
 
