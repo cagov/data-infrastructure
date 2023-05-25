@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - load_county_data
 
 jobs:
   deploy:
