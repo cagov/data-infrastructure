@@ -179,7 +179,7 @@ def gdf_to_snowflake(
         # geography or geometry later. This is one more step than I would like, but the
         # write_pandas utility has some nice features that I don't want to reimplement,
         # like chunked uploading to stages as parquet.
-        conn.cursor().execute(f"CREATE SCHEMA IF NOT EXISTS {database}.{schema}")
+        conn.cursor().execute(f'CREATE SCHEMA IF NOT EXISTS "{database}"."{schema}"')
         write_pandas(
             conn,
             gdf.to_wkb(),
@@ -204,14 +204,16 @@ def gdf_to_snowflake(
                 cols.append(f'"{c}"')
 
         # Create the final table, selecting from the temp table.
-        sql = f"""CREATE OR REPLACE TABLE {database}.{schema}.{table_name}"""
+        sql = f'''CREATE OR REPLACE TABLE "{database}"."{schema}"."{table_name}"'''
         if cluster:
             sql = sql + f"\nCLUSTER BY ({','.join(cluster_names)})"
         sql = (
             sql
-            + f"""\nAS SELECT \n{",".join(cols)} \nFROM {database}.{schema}.{tmp_table}"""
+            + f'''\nAS SELECT \n{",".join(cols)} \nFROM "{database}"."{schema}"."{tmp_table}"'''
         )
 
         conn.cursor().execute(sql)
     finally:
-        conn.cursor().execute(f"DROP TABLE IF EXISTS {database}.{schema}.{tmp_table}")
+        conn.cursor().execute(
+            f'DROP TABLE IF EXISTS "{database}"."{schema}"."{tmp_table}"'
+        )

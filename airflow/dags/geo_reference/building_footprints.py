@@ -19,7 +19,7 @@ from airflow.providers.amazon.aws.sensors.batch import BatchSensor
     catchup=False,
 )
 def building_footprints_dag():
-    """Test DAG."""
+    """DAG for loading MS Building footprints dataset."""
     submit_batch_job = BatchOperator(
         task_id="load_footprints",
         job_name="california_building_footprints",
