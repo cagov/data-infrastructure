@@ -12,12 +12,12 @@ from airflow.providers.amazon.aws.operators.batch import BatchOperator
 from airflow.providers.amazon.aws.sensors.batch import BatchSensor
 
 REFERENCE_DATA = {
-    "incorporated_cities": (
+    "CALIFORNIA_CITIES": (
         "https://gis.data.ca.gov/datasets/CALFIRE-Forestry"
         "::california-incorporated-cities-1.geojson"
         "?outSR=%7B%22latestWkid%22%3A3857%2C%22wkid%22%3A102100%7D"
     ),
-    "counties": (
+    "CALIFORNIA_COUNTIES": (
         "https://gis.data.ca.gov/datasets/CALFIRE-Forestry"
         "::california-county-boundaries.geojson"
         "?outSR=%7B%22latestWkid%22%3A3857%2C%22wkid%22%3A102100%7D"
