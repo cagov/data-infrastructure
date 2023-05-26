@@ -80,7 +80,7 @@ export SNOWFLAKE_ACCOUNT=<account-locator>
 export SNOWFLAKE_USER=<your-username>
 export SNOWFLAKE_PASSWORD=<your-password>
 export SNOWFLAKE_ROLE=TRANSFORMER_DEV
-export SNOWFLAKE_WAREHOUSE=TRANSFORMING_DEV
+export SNOWFLAKE_WAREHOUSE=TRANSFORMING_XS_DEV
 ```
 
 Then open a new-terminal and verify that the environment variables are set.
@@ -149,7 +149,7 @@ dse_snowflake:
       password: <your-password>
       role: TRANSFORMER_DEV
       database: TRANSFORM_DEV
-      warehouse: TRANSFORMING_DEV
+      warehouse: TRANSFORMING_XS_DEV
       schema: DBT_<your-name>   # Test schema for development
       threads: 4
 ```

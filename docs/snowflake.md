@@ -6,7 +6,13 @@ We use Snowflake as our primary data warehouse.
 
 The setup of our account is adapted from the approach described in
 [this dbt blog post](https://www.getdbt.com/blog/how-we-configure-snowflake/),
-which we summarize here:
+which we summarize here.
+
+!!! note
+    We have development and production environments, which we denote with `_DEV`
+    and `_PRD` suffixes on Snowflake objects. For that reason, some of the names here
+    are not exactly what exists in our deployment, but are given in the un-suffixed
+    form for clarity.
 
 ```mermaid
 flowchart LR
@@ -53,25 +59,30 @@ flowchart LR
 
 We have three primary databases in our account:
 
-1. **`RAW`**: This holds raw data loaded from tools like Fivetran or Airflow. It is strictly permissioned, and only loader tools should have the ability to load or change data.
-1. **`TRANSFORM`**: This holds intermediate results, including staging data, joined datasets, and aggregations. It is the primary database where development/analytics engineering happens.
-1. **`ANALYTICS`**: This holds analysis/BI-ready datasets. This is the "marts" database.
+1. **`RAW_{env}`**: This holds raw data loaded from tools like Fivetran or Airflow. It is strictly permissioned, and only loader tools should have the ability to load or change data.
+1. **`TRANSFORM_{env}`**: This holds intermediate results, including staging data, joined datasets, and aggregations. It is the primary database where development/analytics engineering happens.
+1. **`ANALYTICS_{env}`**: This holds analysis/BI-ready datasets. This is the "marts" database.
 
-### Three warehouses
+### Three warehouse groups
 
-There are three primary warehouses for processing data in the databases, corresponding to the primary purposes of the above databases:
+There are warehouse groups for processing data in the databases,
+corresponding to the primary purposes of the above databases.
+They are available in a few different sizes, depending upon the needs of the the data processing job,
+X-small (denoted by (`XS`), X-Large (denoted by (`XL`), and 4X-Large (denoted by `4XL`).
+Most jobs on small data should use the relevant X-small warehouse.
 
-1. **`LOADING`**: This warehouse is for loading data to `RAW`.
-1. **`TRANSFORMING`**: This warehouse is for transforming data in `TRANSFORM` and `ANALYTICS`.
-1. **`REPORTING`**: This warehouse is the role for BI tools and other end-users of the data.
+1. **`LOADING_{size}_{env}`**: These warehouse is for loading data to `RAW`.
+1. **`TRANSFORMING_{size}_{env}`**: This warehouse is for transforming data in `TRANSFORM` and `ANALYTICS`.
+1. **`REPORTING_{size}_{env}`**: This warehouse is the role for BI tools and other end-users of the data.
 
 ### Four roles
 
 There are four primary functional roles:
-1. **`LOADER`**: This role is for tooling like Fivetran or Airflow to load raw data in to the `RAW` database.
-1. **`TRANSFORMER`**: This is the analytics engineer/dbt role, for transforming raw data into something analysis-ready. It has read/write/control access to both `TRANSFORM` and `ANALYTICS`, and read access to `RAW`.
-1. **`REPORTER`**: This role read access to `ANALYTICS`, and is intended for BI tools and other end-users of the data.
-1. **`READER`**: This role has read access to all three databases, and is intended for CI service accounts to generate documentation.
+
+1. **`LOADER_{env}`**: This role is for tooling like Fivetran or Airflow to load raw data in to the `RAW` database.
+1. **`TRANSFORMER_{env}`**: This is the analytics engineer/dbt role, for transforming raw data into something analysis-ready. It has read/write/control access to both `TRANSFORM` and `ANALYTICS`, and read access to `RAW`.
+1. **`REPORTER_{env}`**: This role read access to `ANALYTICS`, and is intended for BI tools and other end-users of the data.
+1. **`READER_{env}`**: This role has read access to all three databases, and is intended for CI service accounts to generate documentation.
 
 ## Access Roles vs Functional Roles
 
