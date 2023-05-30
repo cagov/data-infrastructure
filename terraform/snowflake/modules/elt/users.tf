@@ -11,7 +11,6 @@ resource "snowflake_user" "dbt" {
   default_role      = snowflake_role.transformer.name
 
   must_change_password = false
-  rsa_public_key       = var.dbt_public_key
 }
 
 
@@ -24,8 +23,6 @@ resource "snowflake_user" "airflow" {
   default_role      = snowflake_role.loader.name
 
   must_change_password = false
-  rsa_public_key       = var.airflow_public_key
-
 }
 
 resource "snowflake_user" "github_ci" {
@@ -37,7 +34,6 @@ resource "snowflake_user" "github_ci" {
   default_role      = snowflake_role.reader.name
 
   must_change_password = false
-  rsa_public_key       = var.github_ci_public_key
 }
 
 ######################################

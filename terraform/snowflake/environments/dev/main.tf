@@ -12,21 +12,6 @@ variable "locator" {
   type        = string
 }
 
-variable "airflow_public_key" {
-  description = "Public key for Airflow service user"
-  type        = string
-}
-
-variable "dbt_public_key" {
-  description = "Public key for dbt Cloud service user"
-  type        = string
-}
-
-variable "github_ci_public_key" {
-  description = "Public key for GitHub CI service user"
-  type        = string
-}
-
 ############################
 #         Providers        #
 ############################
@@ -86,8 +71,5 @@ module "elt" {
     snowflake.useradmin     = snowflake.useradmin,
   }
 
-  environment          = var.environment
-  airflow_public_key   = var.airflow_public_key
-  dbt_public_key       = var.dbt_public_key
-  github_ci_public_key = var.github_ci_public_key
+  environment = var.environment
 }
