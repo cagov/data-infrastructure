@@ -73,7 +73,9 @@ This will depend on your operating system and shell. For Linux and Mac OS system
 as well as users of Windows subsystem for Linux (WSL) it's often set in
 `~/.zshrc`, `~/.bashrc`, or `~/.bash_profile`.
 
-If you use zsh or bash, open your shell configuration file, and add the lines:
+If you use zsh or bash, open your shell configuration file, and add the following lines:
+
+**Default Transformer role**
 
 ```bash
 export SNOWFLAKE_ACCOUNT=<account-locator>
@@ -83,7 +85,21 @@ export SNOWFLAKE_ROLE=TRANSFORMER_DEV
 export SNOWFLAKE_WAREHOUSE=TRANSFORMING_XS_DEV
 ```
 
-Then open a new-terminal and verify that the environment variables are set.
+This will enable you to perform transforming activities which is needed for dbt.
+Open a new terminal and verify that the environment variables are set.
+
+**Switch to Loader role**
+
+```bash
+export SNOWFLAKE_ACCOUNT=<account-locator>
+export SNOWFLAKE_USER=<your-username>
+export SNOWFLAKE_PASSWORD=<your-password>
+export SNOWFLAKE_ROLE=LOADER_DEV
+export SNOWFLAKE_WAREHOUSE=LOADING_XS_DEV
+```
+
+This will enable you to perform loading activities and is needed to which is needed for Airflow or Fivetran.
+Again, open a new terminal and verify that the environment variables are set.
 
 ## Configure AWS and GCP (optional)
 
