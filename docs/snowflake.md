@@ -155,10 +155,12 @@ The following are steps for creating a new service account with key pair authent
   Most of the time, you should create a key pair with encryption enabled for the private key.
 1. Add the private key to the CalData 1Password vault, along with the intended service account user name and passphrase (if applicable)
 1. Create a new user in the Snowflake Terraform configuration (`users.tf`) and assign it the appropriate functional role.
-  The public key of the key pair should be attached to the user using the property `rsa_public_key`.
+  Once the user is created, add its public key in the Snowflake UI:
+  ```sql
+  ALTER USER <USERNAME> SET RSA_PUBLIC_KEY='MII...'
+  ```
   Note that we need to remove the header and trailer (i.e. `-- BEGIN PUBLIC KEY --`) as well as any line breaks
   in order for Snowflake to accept the public key as valid.
-  It is okay for this public key to be in version control.
 1. Add the *private* key for the user to whatever system needs to access Snowflake.
 
 Service accounts should not be shared across different applications,
