@@ -9,13 +9,7 @@ and are authored using [markdown](https://docs.github.com/en/get-started/writing
 ## Local Development
 
 To write documentation for this project, make sure that the build tools are installed.
-In a Python environment run:
-
-```bash
-python -m pip install -r requirements-docs.txt
-```
-
-You should then be able to start a local server for the docs:
+In a Python environment and in the data-infrastructure repo, you should be able to start a local server for the docs by running:
 
 ```bash
 mkdocs serve
