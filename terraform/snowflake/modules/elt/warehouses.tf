@@ -4,9 +4,9 @@
 
 locals {
   sizes = {
-    "XS"  = "x-small",
-    "XL"  = "x-large",
-    "4XL" = "4x-large",
+    "XS"  = "X-SMALL",
+    "XL"  = "X-LARGE",
+    "4XL" = "4X-LARGE",
   }
 }
 

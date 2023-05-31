@@ -11,7 +11,6 @@ resource "snowflake_user" "dbt" {
   default_role      = snowflake_role.transformer.name
 
   must_change_password = false
-  rsa_public_key       = var.dbt_public_key
 }
 
 
@@ -24,8 +23,17 @@ resource "snowflake_user" "airflow" {
   default_role      = snowflake_role.loader.name
 
   must_change_password = false
-  rsa_public_key       = var.airflow_public_key
+}
 
+resource "snowflake_user" "fivetran" {
+  provider = snowflake.useradmin
+  name     = "FIVETRAN_SVC_USER_${var.environment}"
+  comment  = "Service user for Fivetran"
+
+  default_warehouse = module.loading["XS"].name
+  default_role      = snowflake_role.loader.name
+
+  must_change_password = false
 }
 
 resource "snowflake_user" "github_ci" {
@@ -37,7 +45,6 @@ resource "snowflake_user" "github_ci" {
   default_role      = snowflake_role.reader.name
 
   must_change_password = false
-  rsa_public_key       = var.github_ci_public_key
 }
 
 ######################################
@@ -56,6 +63,13 @@ resource "snowflake_role_grants" "loader_to_airflow" {
   role_name              = snowflake_role.loader.name
   enable_multiple_grants = true
   users                  = [snowflake_user.airflow.name]
+}
+
+resource "snowflake_role_grants" "loader_to_fivetran" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.loader.name
+  enable_multiple_grants = true
+  users                  = [snowflake_user.fivetran.name]
 }
 
 resource "snowflake_role_grants" "reader_to_github_ci" {
