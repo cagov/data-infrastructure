@@ -320,33 +320,33 @@ tox = ["tox"]
 
 [[package]]
 name = "dbt-bigquery"
-version = "1.4.3"
+version = "1.5.1"
 description = "The Bigquery adapter plugin for dbt"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "dbt-bigquery-1.4.3.tar.gz", hash = "sha256:af85c41cdf7efd71eee9a460f5b51d8c59ca903efbd2c6974d1e159c3e871489"},
-    {file = "dbt_bigquery-1.4.3-py3-none-any.whl", hash = "sha256:7f6a7bf40492e68c2782410cf8e118321c4f3844c577d2e7c3c0b79acb307add"},
+    {file = "dbt-bigquery-1.5.1.tar.gz", hash = "sha256:af85c41cdf7efd71eee9a460f5b51d8c59ca903efbd2c6974d1e159c3e871489"},
+    {file = "dbt_bigquery-1.5.1-py3-none-any.whl", hash = "sha256:7f6a7bf40492e68c2782410cf8e118321c4f3844c577d2e7c3c0b79acb307add"},
 ]
 
 [package.dependencies]
 agate = ">=1.6.3,<1.7.0"
-dbt-core = ">=1.4.0,<1.5.0"
+dbt-core = ">=1.5"
 google-cloud-bigquery = ">=3.0,<4.0"
 google-cloud-dataproc = ">=5.0,<6.0"
 google-cloud-storage = ">=2.4,<3.0"
 
 [[package]]
 name = "dbt-core"
-version = "1.4.6"
+version = "1.5"
 description = "With dbt, data analysts and engineers can build analytics the way engineers build applications."
 category = "main"
 optional = false
 python-versions = ">=3.7.2"
 files = [
-    {file = "dbt-core-1.4.6.tar.gz", hash = "sha256:2cf0388530d6fae724b64447c1e93682cb4fe4cd27d170472c983c19a3395cf9"},
-    {file = "dbt_core-1.4.6-py3-none-any.whl", hash = "sha256:836a63ea5026fec207b4f083f851fc8b9bb79f6d7965ccb7dc5b022b68a96742"},
+    {file = "dbt-core-1.5.tar.gz", hash = "sha256:2cf0388530d6fae724b64447c1e93682cb4fe4cd27d170472c983c19a3395cf9"},
+    {file = "dbt_core-1.5-py3-none-any.whl", hash = "sha256:836a63ea5026fec207b4f083f851fc8b9bb79f6d7965ccb7dc5b022b68a96742"},
 ]
 
 [package.dependencies]
@@ -401,18 +401,18 @@ files = [
 
 [[package]]
 name = "dbt-snowflake"
-version = "1.4.2"
+version = "1.5.1"
 description = "The Snowflake adapter plugin for dbt"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "dbt-snowflake-1.4.2.tar.gz", hash = "sha256:455b80262b35e2cd50045a9ed3465efbcf2b2a0971d7677f232357e05a791210"},
-    {file = "dbt_snowflake-1.4.2-py3-none-any.whl", hash = "sha256:a65e91d47ba75d9baa5e01a8e13433a6251d93a5e8991899b4a680ee55e9b7d1"},
+    {file = "dbt-snowflake-1.5.1.tar.gz", hash = "sha256:455b80262b35e2cd50045a9ed3465efbcf2b2a0971d7677f232357e05a791210"},
+    {file = "dbt_snowflake-1.5.1-py3-none-any.whl", hash = "sha256:a65e91d47ba75d9baa5e01a8e13433a6251d93a5e8991899b4a680ee55e9b7d1"},
 ]
 
 [package.dependencies]
-dbt-core = ">=1.4.0,<1.5.0"
+dbt-core = ">=1.5"
 snowflake-connector-python = {version = ">=3.0,<4.0", extras = ["secure-local-storage"]}
 
 [[package]]
