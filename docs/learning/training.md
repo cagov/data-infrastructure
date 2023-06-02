@@ -70,7 +70,37 @@ Data engineers should go through this training,
 ### 1. Take Snowflake's [Data Warehousing Workshop](https://learn.snowflake.com/en/courses/uni-essdww101/)
 
 This covers the fundamentals of the Snowflake Data Warehouse.
-It should take 6-8 hours.
+It should take 6-8 hours. Below are notes we compiled after recently completing the training.
+
+**Always check your ROLE and WAREHOUSE at the top right**. For the training there is only one warehouse and you will only switch between two roles, ACCOUNTADMIN and SYSADMIN. There may be one exercise in the very beginning where they ask you to switch between all the roles just to see what changes.
+
+**Always check your Worksheet Context settings**, what database and schema are you working with? If it’s not the right one switch it, you can also force these settings in your worksheet by writing the following code:
+
+```sql
+use database DEMO_DB;
+use schema PUBLIC;
+use role ACCOUNTADMIN;
+use warehouse COMPUTE_WH;
+```
+
+Objects in Snowflake are as follows and in no particular order:
+
+| Tables | Functions | Sequences |
+| Stages | Databases | File formats |
+
+**All of these objects, including ones not listed have ownership**, so the *ROLE* you use to create them will be the role that owns it. Most objects during the training will be created with *SYSADMIN*.
+
+If you accidentally select a role other than that or *ACCOUNTADMIN* to create an object do not fret! You have two options. Switch to the role that created the object and transfer ownership to the right role, delete and recreate the object with the right role
+
+**Object Pickers**, as mentioned in *Lesson 3: Data Commands* in the *Running SHOW Commands* section are a part of the UI – when you literally use your mouse or trackpad to select one of the objects listed above or another you are using “Object picker”. The Snowsight UI is rapidly evolving so there will be differences between the UI in the training gifs, videos, and screenshots and the UI you are logged in to. Rest assured that you can 100% get through the training despite these differences. Elements that are referenced, while spatially and visually different between UIs, are still there and intuitive to find. Concepts mentioned still hold true. Trust yourself and your ability to find things.
+
+In later lessons when you are asked to load data or copy into a table you will use this code:
+
+```sql
+FROM @garden_plants.veggies.like_a_window_into_an_s3_bucket/file_name.file_type;
+```
+
+Replace *file_name* and *file_type*, e.g. *my_cool_file.csv*
 
 ### 2. Tour your Snowflake account
 
