@@ -72,8 +72,15 @@ Data engineers should go through this training,
 This covers the fundamentals of the Snowflake Data Warehouse.
 It should take 6-8 hours.
 
-### 2. Tour your Snowflake warehouse
+### 2. Tour your Snowflake account
 
+The Snowflake account for your project should have already been created.
+Review the [architecture](../snowflake.md) of the account.
+In particular, make sure you have an understanding of
+
+* The different databases (`RAW`, `TRANSFORM`, `ANALYTICS`)
+* The different functional roles, and how they map onto the databases.
+* Which roles to assume depending upon what kind of work you are doing.
 
 ## dbt
 
@@ -86,6 +93,45 @@ It should take 6-8 hours.
 Data engineers and data analysts should go through this training,
 as it represents the core workflow for transforming raw datasets into reporting-ready models.
 
+
 ### 1. Take the [dbt fundamentals](https://courses.getdbt.com/courses/fundamentals) course.
 
-### 2.
+This course is intended to give you an overview of what "analytics engineering" means
+in a dbt context, and how to build models using the dbt Cloud user interface.
+
+You will be able to to follow along with the course using CalData's dbt Cloud account
+as well as the project Snowflake account.
+There are a few differences between CalData's environment and that assumed by the course to be aware of:
+
+1. **Database names**: In the course there are two databases, `raw` and `analytics`.
+    In the project Snowflake account we have both development and production databases,
+    which are suffixed with `dev` and `prd`, respectively. As you are taking the course,
+    you will need to substitute the suffixed form of the names (e.g., where you see `raw`, use `raw_dev`).
+1. **Development credentials**: When setting up dbt Cloud you will need to give it your
+    development credentials. These will be the same as what's described in [these docs](../snowflake.md#snowflake-project):
+    * **Account**: `<your-account-locator>`
+    * **Role**: `TRANSFORMER_DEV`
+    * **Database**: `TRANSFORM_DEV`
+    * **Warehouse**: `TRANSFORMING_DEV`
+    * **Auth method**: Choose "Username and Password" for now.
+    * **Username**: `<your-username>`
+    * **Password**: `<your-password>`
+    * **Schema**: `DBT_<your-name>`
+    * **Target Name**: The profile listed in `transform/dbt_project.yml`
+1. **Project setup**: During the "Set up dbt Cloud" portion of the course,
+    it will direct you to a separate [Loading data into Snowflake](https://docs.getdbt.com/docs/get-started/getting-started/getting-set-up/setting-up-snowflake#load-data)
+    quickstart. You will be able to skip much of the setup as the project should already be configured.
+    Start with step 7: "Build your first model".
+
+### 2. Go through a pull request cycle in GitHub
+
+Once you are done with the dbt fundamentals course, you should have a series of
+data models, tests, and documentation for your code.
+Open a pull request on GitHub with this new code.
+If you are going through this training path with others,
+review each other's pull requests, discuss any differences,
+correct any errors, and merge them.
+
+Congratulations! The above represents the analytics engineering workflow,
+where you took raw data in Snowflake, created some derived data models using dbt,
+and reviewed and merged your changes using GitHub.
