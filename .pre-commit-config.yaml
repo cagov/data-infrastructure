@@ -18,7 +18,7 @@ repos:
       - id: terraform_validate
         # Exclude modules to work around
         # https://github.com/hashicorp/terraform/issues/28490
-        exclude: "terraform/snowflake/modules/[^/]+/[^/]+$"
+        exclude: "terraform/[^/]+/modules/[^/]+/[^/]+$"
       - id: terraform_tflint
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.16.0
