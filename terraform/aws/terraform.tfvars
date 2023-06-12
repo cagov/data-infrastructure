@@ -1,5 +1,0 @@
-owner                   = "dse"
-project                 = "infra"
-environment             = "dev"
-region                  = "us-west-2"
-snowflake_loader_secret = "arn:aws:secretsmanager:us-west-2:676096391788:secret:dse-snowflake-dev-us-west-2-loader-q1kChm"
