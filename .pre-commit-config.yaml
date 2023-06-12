@@ -30,9 +30,9 @@ repos:
         name: Document cloud infrastructure in mkdocs
         args:
           [
-            "./terraform/aws",
+            "./terraform/aws/modules/infra/",
             "--output-file",
-            "../../docs/cloud-infrastructure.md",
+            "../../../../docs/cloud-infrastructure.md",
           ]
       - id: terraform-docs-go
         name: Document Snowflake account infrastructure in mkdocs
