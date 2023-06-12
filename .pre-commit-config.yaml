@@ -18,7 +18,7 @@ repos:
       - id: terraform_validate
         # Exclude modules to work around
         # https://github.com/hashicorp/terraform/issues/28490
-        exclude: "terraform/snowflake/modules/[^/]+/[^/]+$"
+        exclude: "terraform/[^/]+/modules/[^/]+/[^/]+$"
       - id: terraform_tflint
   - repo: https://github.com/terraform-docs/terraform-docs
     rev: v0.16.0
@@ -30,9 +30,9 @@ repos:
         name: Document cloud infrastructure in mkdocs
         args:
           [
-            "./terraform/aws",
+            "./terraform/aws/modules/infra/",
             "--output-file",
-            "../../docs/cloud-infrastructure.md",
+            "../../../../docs/cloud-infrastructure.md",
           ]
       - id: terraform-docs-go
         name: Document Snowflake account infrastructure in mkdocs
