@@ -58,13 +58,20 @@ This approach may be reevaluated as the project matures.
 
 Our Snowflake architecture allows for reasonably safe `SELECT`ing from the production `RAW` database while developing models.
 While this could be expensive for large tables,
-it also allows for faster model development.
+it also allows for faster and more reliable model development.
 
-To develop against production `RAW` data, first you need someone with the `SECURITYADMIN` role to grant rights to the `TRANSFORMER_DEV` role (this need only be done once, and can be revoked later):
+To develop against production `RAW` data, first you need someone with the `USERADMIN` role to grant rights to the `TRANSFORMER_DEV` role
+(this need only be done once, and can be revoked later):
 
 ```sql
-GRANT ROLE RAW_DEV_READ TO ROLE TRANSFORMER_PRD;
+USE ROLE USERADMIN;
+GRANT ROLE RAW_PRD_READ TO ROLE TRANSFORMER_DEV;
 ```
+
+!!! note
+    This grant is not managed via terraform in order to keep the configurations of
+    different environments as logically separate as possible. We may revisit this
+    decision should the manual grant cause problems.
 
 You can then run dbt locally and specify the `RAW` database manually:
 
