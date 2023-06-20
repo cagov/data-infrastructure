@@ -12,6 +12,8 @@ have high-quality (and free) data loaders.
 Models in a data warehouse do not follow the same naming conventions as [raw cloud resources](./naming-conventions.md#general-approach),
 as their most frequent consumers are analytics engineers and data analysts.
 
+The following conventions are used where appropriate:
+
 **Dimension tables** are prefixed with `dim_`.
 
 **Fact tables** are prefixed with `fct_`.
@@ -21,6 +23,8 @@ as their most frequent consumers are analytics engineers and data analysts.
 **Intermediate tables** are prefixed with `int_`.
 
 We may adopt additional conventions for denoting aggregations, column data types, etc. in the future.
+If during the course of a project's model development we determine that simpler human-readable names
+work better for our partners or downstream consumers, we may drop the above prefixing conventions.
 
 ## Architecture
 
