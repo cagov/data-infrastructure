@@ -12,6 +12,8 @@ have high-quality (and free) data loaders.
 Models in a data warehouse do not follow the same naming conventions as [raw cloud resources](./naming-conventions.md#general-approach),
 as their most frequent consumers are analytics engineers and data analysts.
 
+The following conventions are used where appropriate:
+
 **Dimension tables** are prefixed with `dim_`.
 
 **Fact tables** are prefixed with `fct_`.
@@ -21,6 +23,8 @@ as their most frequent consumers are analytics engineers and data analysts.
 **Intermediate tables** are prefixed with `int_`.
 
 We may adopt additional conventions for denoting aggregations, column data types, etc. in the future.
+If during the course of a project's model development we determine that simpler human-readable names
+work better for our partners or downstream consumers, we may drop the above prefixing conventions.
 
 ## Architecture
 
@@ -58,13 +62,20 @@ This approach may be reevaluated as the project matures.
 
 Our Snowflake architecture allows for reasonably safe `SELECT`ing from the production `RAW` database while developing models.
 While this could be expensive for large tables,
-it also allows for faster model development.
+it also allows for faster and more reliable model development.
 
-To develop against production `RAW` data, first you need someone with the `SECURITYADMIN` role to grant rights to the `TRANSFORMER_DEV` role (this need only be done once, and can be revoked later):
+To develop against production `RAW` data, first you need someone with the `USERADMIN` role to grant rights to the `TRANSFORMER_DEV` role
+(this need only be done once, and can be revoked later):
 
 ```sql
-GRANT ROLE RAW_DEV_READ TO ROLE TRANSFORMER_PRD;
+USE ROLE USERADMIN;
+GRANT ROLE RAW_PRD_READ TO ROLE TRANSFORMER_DEV;
 ```
+
+!!! note
+    This grant is not managed via terraform in order to keep the configurations of
+    different environments as logically separate as possible. We may revisit this
+    decision should the manual grant cause problems.
 
 You can then run dbt locally and specify the `RAW` database manually:
 
