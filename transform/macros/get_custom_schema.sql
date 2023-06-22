@@ -12,12 +12,12 @@
         dev, we may want to restore prefixes there (while maintaining a prefix-free
         lifestyle in prod).
     #}
-{%- if custom_schema_name is none -%} {{ target.schema.lower() | trim }}
+    {%- if custom_schema_name is none -%} {{ target.schema.lower() | trim }}
 
 {%- elif target.name == 'prd' -%} {{ custom_schema_name.lower() | trim }}
 
 {%- else -%} {{ target.schema.lower() | trim }}_{{ custom_schema_name | trim }}
 
-{%- endif -%}
+    {%- endif -%}
 
 {%- endmacro %}

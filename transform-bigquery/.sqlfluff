@@ -1,0 +1,20 @@
+[sqlfluff]
+dialect = bigquery
+templater = dbt
+max_line_length = 88
+
+# I decide the column ordering!
+exclude_rules = structure.column_order
+
+# Probably a controversial exclusion, so adding some justification here:
+# This disables the rule that prevents unreserved keywords from being
+# used as column aliases. The rule is intended to prevent accidental shadowing
+# of SQL keywords, which, honestly, sounds like a good idea! **However**,
+# this can result in some awkward contortions in final dataset column names,
+# which are intended for end users who shouldn't care about our query language
+# limitations. Since SQL tends to have quite a long list of keywords, the
+# restriction actually prevents some quite natural column names, preventing
+# legibility for end users (e.g., date, timestamp, name).
+[sqlfluff:rules:references.keywords]
+quoted_identifiers_policy = none
+unquoted_identifiers_policy = none

@@ -80,11 +80,6 @@ repos:
     hooks:
       - id: yamllint
         args: []
-  - repo: https://github.com/tconbeer/sqlfmt
-    rev: v0.13.0
-    hooks:
-      - id: sqlfmt
-        language_version: python
   - repo: local
     hooks:
       - name: Dbt deps
@@ -101,11 +96,13 @@ repos:
     rev: 2.0.3
     hooks:
       - id: sqlfluff-lint
+        entry: bash -c 'cd transform && sqlfluff lint --processes 1'
         additional_dependencies:
           - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
           - dbt-core==1.4.5
       - id: sqlfluff-fix
+        entry: bash -c 'cd transform && sqlfluff fix --processes 1'
         additional_dependencies:
           - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
