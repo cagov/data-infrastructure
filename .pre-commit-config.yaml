@@ -92,6 +92,13 @@ repos:
         additional_dependencies:
           - dbt-snowflake==1.4.2
           - dbt-core==1.4.5
+  # Note: for SQLFluff we override the entrypoint for two reasons:
+  #   1. dbt cloud looks for config in the dbt project directory, so we put it in
+  #      transform/, however sqlfluff requires the templater config to be in the
+  #      current working directory. So we have to cd to transform/ to properly set the
+  #      templater config.
+  #   2. Some machines (such as ODI Macs) seem to struggle with sqlfluff's
+  #      multiprocessing implementation, so we force it to be single-process.
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 2.0.3
     hooks:
