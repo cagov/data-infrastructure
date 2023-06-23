@@ -80,11 +80,6 @@ repos:
     hooks:
       - id: yamllint
         args: []
-  - repo: https://github.com/tconbeer/sqlfmt
-    rev: v0.13.0
-    hooks:
-      - id: sqlfmt
-        language_version: python
   - repo: local
     hooks:
       - name: Dbt deps
@@ -97,15 +92,24 @@ repos:
         additional_dependencies:
           - dbt-snowflake==1.4.2
           - dbt-core==1.4.5
+  # Note: for SQLFluff we override the entrypoint for two reasons:
+  #   1. dbt cloud looks for config in the dbt project directory, so we put it in
+  #      transform/, however sqlfluff requires the templater config to be in the
+  #      current working directory. So we have to cd to transform/ to properly set the
+  #      templater config.
+  #   2. Some machines (such as ODI Macs) seem to struggle with sqlfluff's
+  #      multiprocessing implementation, so we force it to be single-process.
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 2.0.3
     hooks:
       - id: sqlfluff-lint
+        entry: bash -c 'cd transform && sqlfluff lint --processes 1'
         additional_dependencies:
           - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
           - dbt-core==1.4.5
       - id: sqlfluff-fix
+        entry: bash -c 'cd transform && sqlfluff fix --processes 1'
         additional_dependencies:
           - dbt-snowflake==1.4.2
           - sqlfluff-templater-dbt==2.0.3
