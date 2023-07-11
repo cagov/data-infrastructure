@@ -90,8 +90,8 @@ repos:
         pass_filenames: false
         types: [sql]
         additional_dependencies:
-          - dbt-snowflake==1.4.2
-          - dbt-core==1.4.5
+          - dbt-snowflake==1.5.1
+          - dbt-core==1.5.2
   # Note: for SQLFluff we override the entrypoint for two reasons:
   #   1. dbt cloud looks for config in the dbt project directory, so we put it in
   #      transform/, however sqlfluff requires the templater config to be in the
@@ -100,17 +100,17 @@ repos:
   #   2. Some machines (such as ODI Macs) seem to struggle with sqlfluff's
   #      multiprocessing implementation, so we force it to be single-process.
   - repo: https://github.com/sqlfluff/sqlfluff
-    rev: 2.0.3
+    rev: 2.1.2
     hooks:
       - id: sqlfluff-lint
         entry: bash -c 'cd transform && sqlfluff lint --processes 1'
         additional_dependencies:
-          - dbt-snowflake==1.4.2
-          - sqlfluff-templater-dbt==2.0.3
-          - dbt-core==1.4.5
+          - dbt-snowflake==1.5.1
+          - sqlfluff-templater-dbt==2.1.2
+          - dbt-core==1.5.2
       - id: sqlfluff-fix
         entry: bash -c 'cd transform && sqlfluff fix --processes 1'
         additional_dependencies:
-          - dbt-snowflake==1.4.2
-          - sqlfluff-templater-dbt==2.0.3
-          - dbt-core==1.4.5
+          - dbt-snowflake==1.5.1
+          - sqlfluff-templater-dbt==2.1.2
+          - dbt-core==1.5.2
