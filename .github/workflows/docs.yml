@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - upgrade_dbt
 permissions:
   contents: write
 
