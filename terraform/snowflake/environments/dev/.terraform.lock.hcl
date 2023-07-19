@@ -2,18 +2,18 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/snowflake-labs/snowflake" {
-  version     = "0.61.0"
-  constraints = "~> 0.61"
+  version     = "0.68.2"
+  constraints = "~> 0.61, ~> 0.68, 0.68.2"
   hashes = [
-    "h1:+7wwZ5nQJCUUDEBF4dSysNtdyBYb92xDO8S1rqTH6QM=",
-    "h1:mN4MMG74G0GW0pBnudVIfzBEIBtCOci/DQNrHzWadek=",
-    "h1:mR7J21jMjTKKkmbpiHQJdtLt8hFDghsep+Y3alrtc78=",
-    "zh:0b4a2ce832a43d87dbaff693e80ee0c9e8bd158b6db40c02d131c3232297c45c",
-    "zh:3d06a98e51697b9dbf8be62145f06ffdc8a5d0fb7e78b8987e9ae619b555a88b",
-    "zh:5bcebd8019d94d2b7eb989a4b004eb6034ad3583093192a47ab7b181aacb9ff8",
-    "zh:6071e25b52ad1f30db5972be40c93b7b1df7df58365d25a5260c8724c7b18ce9",
-    "zh:8bc3677156ff7a6e9712febbbda9579c5838b21b70e94e53ea66f0c8027f54da",
-    "zh:d6b826d476959ac31ef41510f6ef2c56255a98b4e86a006dfbed2330670797c6",
+    "h1:JAzq/Rny++ogUlVe13VTRwiw2MoHR6xIbN3KueKjwbs=",
+    "zh:12d78a622ca647a84b78f3051d08422be1a5f937338f59026ede9d0a18a8f83c",
+    "zh:262b973ce4e6f29437df22611bbaf64eaa2e5cf78c2d6fc90d4366b807ef81a3",
+    "zh:29d79683cbdf2818cdf6c6dbe1ddf3c3225ebcd7e2c33f0fdb2ae8091815af3c",
+    "zh:5306a47817e3f27250b2fbfd706be8456cebaa7f9b10a9aa96ed640f30f13227",
+    "zh:85e8a274bd662d6195ca314aa91664a5142e480332856a415c91852513afedff",
+    "zh:b764b9773bb361d55a0fab18b27bffb68aff40562b629a5c2f15c3f67473678b",
+    "zh:d45809bf772a9a7ae0d23e62c91168a031726f9e2bc2d9427dcd59f08e4e060d",
+    "zh:e96d706d879092b78b1d597bad6e2bdb02ffbf78e8f1fa573febf2db7d6f9946",
     "zh:f569b65999264a9416862bca5cd2a6177d94ccb0424f3a4ef424428912b9cb3c",
   ]
 }
