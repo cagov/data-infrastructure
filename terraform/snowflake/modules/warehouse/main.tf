@@ -6,7 +6,7 @@ terraform {
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
-      version = "~> 0.61"
+      version = "~> 0.88"
       configuration_aliases = [
         snowflake.securityadmin,
         snowflake.sysadmin,
@@ -71,11 +71,13 @@ resource "snowflake_role_grants" "this_to_sysadmin" {
 #       Warehouse Grants        #
 #################################
 
-resource "snowflake_warehouse_grant" "this" {
-  provider          = snowflake.securityadmin
-  for_each          = toset(local.warehouse.MOU)
-  warehouse_name    = snowflake_warehouse.this.name
-  privilege         = each.key
-  roles             = [snowflake_role.this.name]
+resource "snowflake_grant_privileges_to_role" "this" {
+  provider   = snowflake.securityadmin
+  privileges = local.warehouse.MOU
+  role_name  = snowflake_role.this.name
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = snowflake_warehouse.this.name
+  }
   with_grant_option = false
 }
