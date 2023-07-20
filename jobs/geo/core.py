@@ -5,7 +5,6 @@ from jobs.utils.snowflake import gdf_to_snowflake, snowflake_connection_from_env
 
 def load_geo_data(conn, state: str, year: str, table: str) -> None:
     """Load general geospatial data. Given a URL, load geospatial data into Snowflake."""
-    import pygris
     from pygris import counties
 
     print(f"Downloading data {table} for {state} in year {year}")
@@ -14,8 +13,8 @@ def load_geo_data(conn, state: str, year: str, table: str) -> None:
     # can be cranky about reading from them (issues with range requests and other
     # weird errors). So instead we load the data first into a text blob using
     # requests, then hand it off to geopandas.
-    
-    c = counties(state = state, year = year, cache = True)
+
+    c = counties(state=state, year=year, cache=True)
 
     print(f"Writing {table} to snowflake")
     gdf_to_snowflake(
