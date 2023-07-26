@@ -138,4 +138,3 @@ if __name__ == "__main__":
         len(sys.argv) == N_ARGS
     ), "Expecting 1 argument: year (four digits)"
     load_geo_data(conn, sys.argv[1])
-    
