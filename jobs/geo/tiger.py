@@ -33,58 +33,86 @@ def load_geo_data(conn, year: int) -> None:
     print(f"Downloading data for CA in year {year}")
 
     ca_loaders = {
-        f"COUNTIES_{year}": counties,
-        f"TRACTS_{year}": tracts,
-        f"BLOCK_GROUPS_{year}": block_groups,
-        f"BLOCKS_{year}": blocks,
-        f"PLACES_{year}": places,
-        f"PUMAS_{year}": pumas,
-        f"COUNTY_SUBDIVISIONS_{year}": county_subdivisions,
-        f"PRIMARY_SECONDARY_ROADS_{year}": primary_secondary_roads,
+        "COUNTIES": counties,
+        "TRACTS": tracts,
+        "BLOCK_GROUPS": block_groups,
+        "BLOCKS": blocks,
+        "PLACES": places,
+        "PUMAS": pumas,
+        "COUNTY_SUBDIVISIONS": county_subdivisions,
+        "PRIMARY_SECONDARY_ROADS": primary_secondary_roads,
     }
 
     us_loaders = {
-        f"COASTLINE_{year}": coastline,
-        f"DIVISIONS_{year}": divisions,
-        f"NATION_{year}": nation,
-        f"NATIVE_AREAS_{year}": native_areas,
-        f"PRIMARY_ROADS_{year}": primary_roads,
-        f"RAILS_{year}": rails,
-        f"REGIONS_{year}": regions,
-        f"STATES_{year}": states,
-        f"TRIBAL_BLOCK_GROUPS_{year}": tribal_block_groups,
-        f"TRIBAL_SUBDIVISIONS_NATIONAL_{year}": tribal_subdivisions_national,
-        f"URBAN_AREAS_{year}": urban_areas,
-        f"CORE_BASED_STATISTICAL_AREAS_{year}": core_based_statistical_areas,
-        f"COMBINED_STATISTICAL_AREAS_{year}": combined_statistical_areas,
+        "COASTLINE": coastline,
+        "DIVISIONS": divisions,
+        "NATION": nation,
+        "NATIVE_AREAS": native_areas,
+        "PRIMARY_ROADS": primary_roads,
+        "RAILS": rails,
+        "REGIONS": regions,
+        "STATES": states,
+        "TRIBAL_BLOCK_GROUPS": tribal_block_groups,
+        "TRIBAL_SUBDIVISIONS_NATIONAL": tribal_subdivisions_national,
+        "URBAN_AREAS": urban_areas,
+        "CORE_BASED_STATISTICAL_AREAS": core_based_statistical_areas,
+        "COMBINED_STATISTICAL_AREAS": combined_statistical_areas,
     }
 
     state = "CA"
 
-    try:
-        for table_name, loader in ca_loaders.items():
+    for table_name, loader in ca_loaders.items():
+        try:
             gdf_to_snowflake(
-                loader(state=state, year=year).reset_index(drop=True),
+                loader(state=state, year=year)
+                .reset_index(drop=True)
+                .to_crs(
+                    epsg=4326
+                ),  # using .reset_index(drop=True) to address the following UserWarning:
+                # Pandas Dataframe has non-standard index of type <class 'pandas.core.indexes.base.Index'> which will not be written. Consider changing the
+                # index to pd.RangeIndex(start=0,...,step=1) or call reset_index() to keep index as column(s)
                 conn,
                 table_name=table_name,
                 cluster=False,
             )
+        except ValueError as value_error:
+            print(
+                f"This ValueError: {value_error} This pertains to this CA loader: {table_name}"
+            )
+            continue
 
-        for table_name, loader in us_loaders.items():
+        except DriverError as driver_error:
+            print(
+                f"This DriverError: {driver_error} This pertains to this CA loader: {table_name}"
+            )
+            continue
+
+    for table_name, loader in us_loaders.items():
+        try:
             gdf_to_snowflake(
-                loader(year=year).reset_index(drop=True),
+                loader(year=year)
+                .reset_index(drop=True)
+                .to_crs(
+                    epsg=4326
+                ),  # using .reset_index(drop=True) to address the following UserWarning:
+                # Pandas Dataframe has non-standard index of type <class 'pandas.core.indexes.base.Index'> which will not be written. Consider changing the
+                # index to pd.RangeIndex(start=0,...,step=1) or call reset_index() to keep index as column(s)
                 conn,
                 table_name=table_name,
                 cluster=False,
             )
-    except ValueError:
-        pass
+        except ValueError as value_error:
+            print(
+                f"This ValueError: {value_error} This pertains to this US loader: {table_name}"
+            )
+            continue
 
-    except DriverError:
-        pass
+        except DriverError as driver_error:
+            print(
+                f"This DriverError: {driver_error} This pertains to this US loader: {table_name}"
+            )
+            continue
 
-
-# using .reset_index(drop=True) to address the following UserWarning: Pandas Dataframe has non-standard index of type <class 'pandas.core.indexes.base.Index'> which will not be written. Consider changing the index to pd.RangeIndex(start=0,...,step=1) or call reset_index() to keep index as column(s)
 
 if __name__ == "__main__":
     # TODO: perhaps make a real CLI here.
