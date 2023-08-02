@@ -5,7 +5,6 @@ from jobs.utils.snowflake import gdf_to_snowflake, snowflake_connection_from_env
 
 def load_geo_data(conn, year: int) -> None:
     """Load CA Census geo data into Snowflake."""
-    from fiona.errors import DriverError
     from pygris import (
         block_groups,
         blocks,
@@ -79,13 +78,6 @@ def load_geo_data(conn, year: int) -> None:
             print(
                 f"This ValueError: {value_error} This pertains to this CA loader: {table_name}"
             )
-            continue
-
-        except DriverError as driver_error:
-            print(
-                f"This DriverError: {driver_error} This pertains to this CA loader: {table_name}"
-            )
-            continue
 
     for table_name, loader in us_loaders.items():
         try:
@@ -105,13 +97,6 @@ def load_geo_data(conn, year: int) -> None:
             print(
                 f"This ValueError: {value_error} This pertains to this US loader: {table_name}"
             )
-            continue
-
-        except DriverError as driver_error:
-            print(
-                f"This DriverError: {driver_error} This pertains to this US loader: {table_name}"
-            )
-            continue
 
 
 if __name__ == "__main__":
