@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: tiger_2022
+    database: raw_dev
+    schema: tiger_2022
+    tables:
+      - name: blocks
+      - name: places
