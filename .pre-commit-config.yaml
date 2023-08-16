@@ -89,9 +89,6 @@ repos:
         always_run: false
         pass_filenames: false
         types: [sql]
-        additional_dependencies:
-          - dbt-snowflake==1.5.1
-          - dbt-core==1.5.2
   # Note: for SQLFluff we don't use the default pre-commit hook for a few reasons:
   #   1. dbt cloud looks for config in the dbt project directory, so we put it in
   #      transform/, however sqlfluff requires the templater config to be in the
