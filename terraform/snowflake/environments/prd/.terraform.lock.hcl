@@ -5,6 +5,8 @@ provider "registry.terraform.io/snowflake-labs/snowflake" {
   version     = "0.69.0"
   constraints = "~> 0.61, ~> 0.68, 0.69.0"
   hashes = [
+    "h1:0CSDES330nTqimmmNwQxxp24dDkRGYTrz46wjJDBG9M=",
+    "h1:S57eACfdn03/8yUFRcSA52BsBsuEIJ0KwP5jhdoKMuY=",
     "h1:rB052GXnpNuUR9ZeGgiY8imkQqPWkI32PtiqWTORJXQ=",
     "zh:05c38443ecce2a74568a182eb8a796db5d333846552d75c16b158f5034e824a3",
     "zh:38b549a2e09b911709c85340222533cff9fde9c0de3e83cb906891822b340279",
