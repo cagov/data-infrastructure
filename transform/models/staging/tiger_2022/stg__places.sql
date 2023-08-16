@@ -4,10 +4,13 @@ with source as (
 
 staged as (
     select
+        "PLACEFP" as "place_fp",
+        "PLACENS" as "place_ns",
         "GEOID" as "geo_id",
         "NAME" as "name",
-        "CLASSFP" as "class_fp",
-        "MTFCC" as "maf_tiger_feature_class_code"
+        "CLASSFP" as "class_fp_code",
+        "MTFCC" as "maf_tiger_feature_class_code",
+        "geometry"
     from source
 )
 

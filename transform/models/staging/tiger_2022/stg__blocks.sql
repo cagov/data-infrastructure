@@ -9,9 +9,11 @@ staged as (
         "BLOCKCE20" as "block_ce",
         "GEOID20" as "geo_id",
         "NAME20" as "name",
+        "MTFCC20" as "maf_tiger_feature_class_code",
         "UR20" as "urban_rural_area",
         "HOUSING20" as "housing_unit_count",
-        "HOUSING20" as "pop_count"
+        "POP20" as "pop_count",
+        "geometry"
     from source
 )
 

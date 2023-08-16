@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: int_geo_reference_blocks__mapped
+    description: |
+      Census blocks are statistical areas bounded on all sides by visible features
+      (e.g., streets, roads, streams, and railroad tracks), and by non-visible
+      boundaries (e.g., city, town, township, county limits, and short
+      line-of-sight extensions of streets and roads).
+    columns:
+      - name: county_fp
+        description: 2020 Census county FIPS code
+      - name: tract_ce
+        description: 2020 Census tract code
+      - name: block_ce
+        description: 2020 Census tabulation block number
+      - name: geo_id
+        description: >
+          Census block identifier; a concatenation of 2020 Census
+          state FIPS code, 2020 Census county FIPS code, 2020
+          Census tract code, and 2020 Census block number
+      - name: name
+        description: >
+          2020 Census tabulation block name; a concatenation of 'Block'
+          and the tabulation block number
+      - name: maf_tiger_feature_class_code
+        description: MAF/TIGER Feature Class Code
+      - name: urban_rural_area
+        description: >
+          Reserved for 2020 Census urban/rural indicator
+          (2020 Urban Areas are not yet defined)
+      - name: housing_unit_count
+        description: 2020 Census housing unit count
+      - name: pop_count
+        description: 2020 Census population count
+      - name: geometry
+        description: The spatial component of geographic features
+  - name: int_geo_reference_places__mapped
+    description: |
+      The 2022 TIGER/Line Shapefiles include both Incorporated Places
+      (legal entities) and Census Designated Places (statistical entities).
+    columns:
+      - name: place_fp
+        description: Current place FIPS code
+      - name: place_ns
+        description: Current place GNIS code
+      - name: geo_id
+        description: >
+          Place identifier; a concatenation of the current
+          state FIPS code and place FIPS code
+      - name: name
+        description: >
+          Current name and the translated
+          legal/statistical area description for place
+      - name: class_fp_code
+        description: Current FIPS class code
+      - name: maf_tiger_feature_class_code
+        description: Incorporated Place and Census Designated Place codes
+      - name: geometry
+        description: The spatial component of geographic features
