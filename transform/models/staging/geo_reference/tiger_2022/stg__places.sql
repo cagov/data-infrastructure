@@ -1,5 +1,5 @@
 with source as (
-    select * from {{source('tiger_2022', 'places')}}
+    select * from {{ source('tiger_2022', 'places') }}
 ),
 
 staged as (
