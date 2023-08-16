@@ -128,6 +128,17 @@ terraform apply
 
 This will output the changes to the infrastructure that will be made, and prompt you for confirmation.
 
+## Updating terraform dependencies
+
+Terraform deployments include a lockfile with hashes of installed packages.
+Because we have mixed development environments (i.e., Macs locally, Linux in CI),
+it is helpful to include both Mac and Linux builds of terraform packages in the lockfile.
+This needs to be done every time package versions are updated:
+
+```bash
+terraform init -upgrade  # Upgrade versions
+terraform providers lock -platform=linux_amd64 -platform=darwin_amd64  # include Mac and Linux binaries
+```
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
