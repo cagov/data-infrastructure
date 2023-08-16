@@ -108,7 +108,7 @@ repos:
         types: [sql]
         require_serial: true
         entry: >
-          python -c "import os, subprocess; os.chdir('transform'); subprocess.run(
-          ['sqlfluff', 'fix', '--force', '--processes', '1', '--nocolor',
+          poetry run python -c "import os, subprocess; os.chdir('transform');
+          subprocess.run(['sqlfluff', 'fix', '--force', '--processes', '1', '--nocolor',
           '--show-lint-violations', '--disable-progress-bar'], check=True,
           )"
