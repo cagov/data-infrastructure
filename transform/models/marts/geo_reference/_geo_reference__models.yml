@@ -1,0 +1,70 @@
+version: 2
+
+sources:
+  - name: building_footprints
+    database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
+    schema: geo_reference
+    tables:
+      - name: california_building_footprints
+  - name: tiger_2022
+    database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
+    schema: tiger_2022
+    tables:
+      - name: blocks
+      - name: places
+
+models:
+  - name: geo_reference__building_footprints_with_blocks
+    description: |
+      This data table is a join of the TIGER shapefile, Blocks,
+      with the Microsoft Building Footprints data for the state of CA.
+    columns:
+      - name: release
+        description: The version of the data
+      - name: capture_dates_range
+        description: Each building footprint has a capture date tag from 2019-2020
+      - name: county_fips
+        description: 2020 Census county FIPS code
+      - name: tract
+        description: 2020 Census tract code
+      - name: block
+        description: 2020 Census tabulation block number
+      - name: geoid
+        description: >
+          Census block identifier; a concatenation of 2020 Census state FIPS code, 2020
+          Census county FIPS code, 2020 Census tract code, and 2020 Census block number
+      - name: name
+        description: >
+          2020 Census tabulation block name; a concatenation of 'Block'
+          and the tabulation block number
+      - name: geometry
+        description: The spatial component of geographic features
+  - name: geo_reference__building_footprints_with_places
+    description: |
+      This data table is a join of the TIGER shapefile
+      , Places, with the Microsoft Building Footprints
+      data for the state of CA.
+    columns:
+      - name: release
+        description: The version of the data
+      - name: capture_dates_range
+        description: >
+          Each building footprint has a capture date tag associated from 2019-2020
+      - name: place_fp
+        description: Current place FIPS code
+      - name: place_ns
+        description: Current place GNIS code
+      - name: geoid
+        description: >
+          Place identifier; a concatenation of the current state
+          FIPS code and place FIPS code
+      - name: name
+        description: >
+          Current name and the translated legal/statistical
+          area description for place
+      - name: class_fips_code
+        description: Current FIPS class code
+      - name: class_fips
+        description: Current FIPS class definition
+      - name: geometry
+        description: The spatial component of geographic features
