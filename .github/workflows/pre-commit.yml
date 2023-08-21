@@ -19,6 +19,9 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
       - uses: actions/setup-python@v3
+      - uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v2
         with:
@@ -37,9 +40,11 @@ jobs:
           # at some point, we should revisit the service account permissions.
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
           export_environment_variables: true
-      - uses: actions/setup-python@v3
         # TODO: once we are on dbt-snowflake 1.5, no need to pipe to a file, we can
         # just use $SNOWFLAKE_PRIVATE_KEY
       - name: Set up private key
         run: echo "$PRIVATE_KEY" > $SNOWFLAKE_PRIVATE_KEY_PATH
+      - name: Install dependencies
+        run: |
+          poetry install
       - uses: pre-commit/action@v3.0.0
