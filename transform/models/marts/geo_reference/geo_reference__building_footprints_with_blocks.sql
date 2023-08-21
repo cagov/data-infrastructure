@@ -10,28 +10,15 @@ blocks_source as (
     select * from {{ source('tiger_2022', 'blocks') }}
 ),
 
-blocks_renamed as (
+blocks as (
     select
         "COUNTYFP20" as "county_fips",
         "TRACTCE20" as "tract",
         "BLOCKCE20" as "block",
         "GEOID20" as "geoid",
         "NAME20" as "name",
-        "UR20" as "urban_rural_area",
         "geometry"
     from blocks_source
-),
-
-blocks as (
-    select
-        "county_fips",
-        "tract",
-        "block",
-        "geoid",
-        "name",
-        "urban_rural_area",
-        "geometry"
-    from blocks_renamed
 ),
 
 footprints_and_blocks_joined as (

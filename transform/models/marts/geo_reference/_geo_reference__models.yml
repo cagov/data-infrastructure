@@ -2,19 +2,19 @@ version: 2
 
 sources:
   - name: building_footprints
-    database: raw_dev
-    schema: building_footprints
+    database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
+    schema: geo_reference
     tables:
       - name: california_building_footprints
   - name: tiger_2022
-    database: raw_dev
+    database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
     schema: tiger_2022
     tables:
       - name: blocks
       - name: places
 
 models:
-  - name: geo_reference__blocks_joined
+  - name: geo_reference__building_footprints_with_blocks
     description: |
       This data table is a join of the TIGER shapefile, Blocks,
       with the Microsoft Building Footprints data for the state of CA.
@@ -37,28 +37,9 @@ models:
         description: >
           2020 Census tabulation block name; a concatenation of 'Block'
           and the tabulation block number
-      - name: maf_tiger_feature_class_code
-        description: MAF/TIGER Feature Class Code
-      - name: maf_tiger_feature_class
-        description: >
-          The lowest-order census defined statistical area. It is an area,
-          such as a city block, bounded primarily by physical features but
-          sometimes by invisible city or property boundaries. A tabulation
-          block boundary does not cross the boundary of any other geographic
-          area for which the Census Bureau tabulates data. The subtypes of
-          this feature are Count Question Resolution (CQR), current, and
-          tabulation census.
-      - name: urban_rural_area
-        description: >
-          Reserved for 2020 Census urban/rural indicator
-          (2020 Urban Areas are not yet defined)
-      - name: housing_unit_count
-        description: 2020 Census housing unit count
-      - name: pop_count
-        description: 2020 Census population count
       - name: geometry
         description: The spatial component of geographic features
-  - name: geo_reference__places_joined
+  - name: geo_reference__building_footprints_with_places
     description: |
       This data table is a join of the TIGER shapefile
       , Places, with the Microsoft Building Footprints
@@ -85,17 +66,5 @@ models:
         description: Current FIPS class code
       - name: class_fips
         description: Current FIPS class definition
-      - name: maf_tiger_feature_class_code
-        description: MAF/TIGER Feature Class Code
-      - name: maf_tiger_feature_class
-        description: >
-          1) A legal entity incorporated under state law to provide
-          general-purpose governmental services to a concentration
-          of population. Incorporated places are generally designated
-          as a city, borough, municipality, town, village, or, in a
-          few instances, have a different legal description. 2) A
-          statistical area that is defined for a named concentration
-          of population and is the statistical counterpart of an
-          incorporated place.
       - name: geometry
         description: The spatial component of geographic features
