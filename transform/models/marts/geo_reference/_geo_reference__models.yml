@@ -14,7 +14,7 @@ sources:
       - name: places
 
 models:
-  - name: dim_geo_reference_footprints_blocks__joined
+  - name: geo_reference__blocks_joined
     description: |
       This data table is a join of the TIGER shapefile, Blocks,
       with the Microsoft Building Footprints data for the state of CA.
@@ -58,7 +58,7 @@ models:
         description: 2020 Census population count
       - name: geometry
         description: The spatial component of geographic features
-  - name: dim_geo_reference_footprints_places__joined
+  - name: geo_reference__places_joined
     description: |
       This data table is a join of the TIGER shapefile
       , Places, with the Microsoft Building Footprints
