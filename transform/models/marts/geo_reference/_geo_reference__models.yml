@@ -1,5 +1,18 @@
 version: 2
 
+sources:
+  - name: building_footprints
+    database: raw_dev
+    schema: building_footprints
+    tables:
+      - name: california_building_footprints
+  - name: tiger_2022
+    database: raw_dev
+    schema: tiger_2022
+    tables:
+      - name: blocks
+      - name: places
+
 models:
   - name: dim_geo_reference_footprints_blocks__joined
     description: |
@@ -10,13 +23,13 @@ models:
         description: The version of the data
       - name: capture_dates_range
         description: Each building footprint has a capture date tag from 2019-2020
-      - name: county_fp
+      - name: county_fips
         description: 2020 Census county FIPS code
-      - name: tract_ce
+      - name: tract
         description: 2020 Census tract code
-      - name: block_ce
+      - name: block
         description: 2020 Census tabulation block number
-      - name: geo_id
+      - name: geoid
         description: >
           Census block identifier; a concatenation of 2020 Census state FIPS code, 2020
           Census county FIPS code, 2020 Census tract code, and 2020 Census block number
@@ -60,7 +73,7 @@ models:
         description: Current place FIPS code
       - name: place_ns
         description: Current place GNIS code
-      - name: geo_id
+      - name: geoid
         description: >
           Place identifier; a concatenation of the current state
           FIPS code and place FIPS code
@@ -68,21 +81,21 @@ models:
         description: >
           Current name and the translated legal/statistical
           area description for place
-      - name: class_fp_code
+      - name: class_fips_code
         description: Current FIPS class code
-      - name: class_fp
+      - name: class_fips
         description: Current FIPS class definition
       - name: maf_tiger_feature_class_code
         description: MAF/TIGER Feature Class Code
       - name: maf_tiger_feature_class
         description: >
-          A legal entity incorporated under state law to provide general-purpose
-          governmental services to a concentration of population. Incorporated
-          places are generally designated as a city, borough, municipality, town,
-          village, or, in a few instances, have a different legal description.
-          - and -
-          A statistical area that is defined for a named concentration of
-          population and is the statistical counterpart of an
+          1) A legal entity incorporated under state law to provide
+          general-purpose governmental services to a concentration
+          of population. Incorporated places are generally designated
+          as a city, borough, municipality, town, village, or, in a
+          few instances, have a different legal description. 2) A
+          statistical area that is defined for a named concentration
+          of population and is the statistical counterpart of an
           incorporated place.
       - name: geometry
         description: The spatial component of geographic features

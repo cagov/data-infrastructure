@@ -1,8 +1,0 @@
-version: 2
-
-sources:
-  - name: building_footprints
-    database: raw_dev
-    schema: building_footprints
-    tables:
-      - name: california_building_footprints
