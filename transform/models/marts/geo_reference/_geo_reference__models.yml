@@ -39,6 +39,9 @@ models:
           and the tabulation block number
       - name: geometry
         description: The spatial component of geographic features
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: source('building_footprints', 'california_building_footprints')
   - name: geo_reference__building_footprints_with_places
     description: |
       This data table is a join of the TIGER shapefile
