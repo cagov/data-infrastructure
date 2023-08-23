@@ -71,3 +71,6 @@ models:
         description: Current FIPS class definition
       - name: geometry
         description: The spatial component of geographic features
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: source('building_footprints', 'california_building_footprints')
