@@ -69,6 +69,57 @@ resource "aws_s3_bucket_public_access_block" "mwaa" {
 }
 
 ##################################
+#     DSE MDSA Project Buckets   #
+##################################
+
+resource "aws_s3_bucket" "dof_demographics_public" {
+  bucket = "dof-demographics-${var.environment}-${var.region}-public"
+  tags = {
+    Owner   = "dof"
+    Project = "demographics"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "dof_demographics_public" {
+  bucket = aws_s3_bucket.dof_demographics_public.bucket
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+data "aws_iam_policy_document" "dof_demographics_public_read_access" {
+  statement {
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket",
+    ]
+
+    resources = [
+      aws_s3_bucket.dof_demographics_public.arn,
+      "${aws_s3_bucket.dof_demographics_public.arn}/*",
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "dof_demographics_public_read_access" {
+  bucket = aws_s3_bucket.dof_demographics_public.id
+  policy = data.aws_iam_policy_document.dof_demographics_public_read_access.json
+}
+
+resource "aws_s3_bucket_public_access_block" "dof_demographics_public" {
+  bucket = aws_s3_bucket.dof_demographics_public.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+##################################
 #     AAE DSA Project Buckets    #
 ##################################
 
