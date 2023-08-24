@@ -5,13 +5,16 @@ from jobs.utils.snowflake import snowflake_connection_from_environment
 
 def write_building_footprints(conn):
     """Grab Microsoft state building footprint data for California from Snowflake and write to an S3 bucket."""
+    import os
+    from zipfile import ZipFile
+
     import geopandas
     import shapely
 
-    sql_transform = """
+    sql_alter = """
     alter session set GEOGRAPHY_OUTPUT_FORMAT='WKB';
     """
-    conn.cursor().execute(sql_transform)
+    conn.cursor().execute(sql_alter)
 
     sql_table = """
     SELECT *
@@ -28,10 +31,23 @@ def write_building_footprints(conn):
     counties = gdf.county_fips.unique()
 
     for x in counties:
-        gdf[gdf.county_fips == x].to_parquet(f"test_{x}.parquet")
+        gdf[gdf.county_fips == x].to_parquet(f"county_fips_{x}.parquet")
         gdf[gdf.county_fips == x].to_file(
-            f"test_{x}.shp"
-        )  # this currently outputs .cpg, .dbf, .shx files in addition to .shp, not sure if that is intended
+            f"county_fips_{x}.shp", driver="ESRI Shapefile"
+        )
+
+        with ZipFile(f"county_fips_{x}_shape_files.zip", "w") as zipped:
+            zipped.write(f"county_fips_{x}.cpg")
+            os.remove(f"county_fips_{x}.cpg")
+
+            zipped.write(f"county_fips_{x}.dbf")
+            os.remove(f"county_fips_{x}.dbf")
+
+            zipped.write(f"county_fips_{x}.shp")
+            os.remove(f"county_fips_{x}.shp")
+
+            zipped.write(f"county_fips_{x}.shx")
+            os.remove(f"county_fips_{x}.shx")
 
 
 if __name__ == "__main__":
