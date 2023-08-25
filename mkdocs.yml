@@ -32,6 +32,7 @@ nav:
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
   - dbt: dbt.md
+  - dbt Performance: dbt-performance.md
   - Snowflake: snowflake.md
   - Writing Documentation: writing-documentation.md
   - dbt Snowflake Project: dbt_docs_snowflake/index.html
