@@ -20,7 +20,7 @@ This is not to say performance tuning of individual queries is never worth it bu
 It is extremely important to balance time spent in optimizing model performance with compute costs and other concerns. If it takes you a day to optimize a model to run only a few seconds faster and save a few pennies per run, it's not likely worth the effort. Similarly, the use of incremental materilization can certainly reduce build time but introduce complexity and require a degree of monitoring to ensure integrity.
 
 ## Analyzing Performance in dbt
-With every dbt run or build several artifacts are generated in the target/ directory, including the run_results.json file. This includes detailed information on run execution and many people parse this to create dashboards to report on dbt performance and help with optimization and cost monitoring. There is an important caveate here: simply knowing how long a model took to run is important to uncover which models might need optimization, but cannot tell you anything about why they are performing poorly.
+With every dbt run or build several artifacts are generated in the target/ directory, including the run_results.json file. This includes detailed information on run execution and many people parse this to create dashboards to report on dbt performance and help with optimization and cost monitoring. There is an important caveat here: simply knowing how long a model took to run is important to uncover which models might need optimization, but cannot tell you anything about why they are performing poorly.
 
 ### Getting model timing: Local Development
 Every time you run a model dbt outputs timing, information which you can easily use identify non-performance models. The output will look like:
