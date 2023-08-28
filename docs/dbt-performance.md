@@ -2,10 +2,10 @@
 
 
 ## Considerations: When Does Performance Matter?
-In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if for example you need to run models every hour than the entire job cannot take longer than an hour to run. In general compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.
+In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if you need to run models every hour then the entire job cannot take longer than an hour to run. In general compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.
 
 ### Costs
-Although compute time is relatively cheap, it's sometimes possible with larger data sets that need to be frequently refreshed to optimize performance to save enough costs to be worth the time to optimize. In Snowflake you can easily monitor costs in the Admin/Usage section of the Snowflake UI, where you can see credits used by warehouse and role.
+Although compute time is relatively cheap, it's sometimes possible with larger datasets that need to be frequently refreshed to optimize performance to save enough costs to be worth the time to optimize. In Snowflake you can easily monitor costs in the Admin/Usage section of the Snowflake UI, where you can see credits used by warehouse and role.
 Snowflake also provides several tables with meta information that can be used to derive exact costs for each query - an approach to this, with a ready-use-query can be found in the Select.dev blog post ["Calculating cost per query in Snowflake"](https://select.dev/posts/cost-per-query)
 
 Typically, unless model performance is obviously very poor you are better off adjusting the frequency of runs (end users almost always over-state their desire for data freshness) or reducing data set size either by limiting what you provide or by using incremental models.
