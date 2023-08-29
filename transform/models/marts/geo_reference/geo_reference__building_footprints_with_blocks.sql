@@ -53,6 +53,7 @@ footprints_and_blocks_joined_dedupe as (
         max_by("geoid", _tmp_intersection) as "geoid",
         max_by("name", _tmp_intersection) as "name"
     from footprints_and_blocks_joined
+    where "county_fips" is not null
     group by _tmp_id
 )
 

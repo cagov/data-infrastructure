@@ -16,8 +16,8 @@ places_source as (
 
 places as (
     select
-        "PLACEFP" as "place_fp",
-        "PLACENS" as "place_ns",
+        "PLACEFP" as "place_fips",
+        "PLACENS" as "place_gnis",
         "GEOID" as "geoid",
         "NAME" as "name",
         "CLASSFP" as "class_fips_code",
@@ -48,14 +48,16 @@ footprints_and_places_joined_dedupe as (
         -- Fortunately, we know that the geometries are identical when partitioned
         -- by _tmp_id, so we can just choose any_value.
         any_value("geometry") as "geometry",
-        max_by("place_fp", _tmp_intersection) as "place_fp",
-        max_by("place_ns", _tmp_intersection) as "place_ns",
+        max_by("place_fips", _tmp_intersection) as "place_fips",
+        max_by("place_gnis", _tmp_intersection) as "place_gnis",
         max_by("name", _tmp_intersection) as "name",
         max_by("geoid", _tmp_intersection) as "geoid",
         max_by("class_fips_code", _tmp_intersection) as "class_fips_code",
         max_by("class_fips", _tmp_intersection) as "class_fips"
     from footprints_and_places_joined
+    where "place_fips" is not null
     group by _tmp_id
+
 )
 
 select * from footprints_and_places_joined_dedupe
