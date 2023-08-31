@@ -2,10 +2,10 @@
 
 
 ## Considerations: When Does Performance Matter?
-In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if for example you need to run models every hour than the entire job cannot take longer than an hour to run. In general compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.
+In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if you need to run models every hour then the entire job cannot take longer than an hour to run. In general compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.
 
 ### Costs
-Although compute time is relatively cheap, it's sometimes possible with larger data sets that need to be frequently refreshed to optimize performance to save enough costs to be worth the time to optimize. In Snowflake you can easily monitor costs in the Admin/Usage section of the Snowflake UI, where you can see credits used by warehouse and role.
+Although compute time is relatively cheap, it's sometimes possible with larger datasets that need to be frequently refreshed to optimize performance to save enough costs to be worth the time to optimize. In Snowflake you can easily monitor costs in the Admin/Usage section of the Snowflake UI, where you can see credits used by warehouse and role.
 Snowflake also provides several tables with meta information that can be used to derive exact costs for each query - an approach to this, with a ready-use-query can be found in the Select.dev blog post ["Calculating cost per query in Snowflake"](https://select.dev/posts/cost-per-query)
 
 Typically, unless model performance is obviously very poor you are better off adjusting the frequency of runs (end users almost always over-state their desire for data freshness) or reducing data set size either by limiting what you provide or by using [incremental models](#2-materialization-matters).
@@ -20,7 +20,7 @@ This is not to say performance tuning of individual queries is never worth it bu
 It is extremely important to balance time spent in optimizing model performance with compute costs and other concerns. If it takes you a day to optimize a model to run only a few seconds faster and save a few pennies per run, it's not likely worth the effort. Similarly, the use of incremental materilization can certainly reduce build time but introduce complexity and require a degree of monitoring to ensure integrity. See also [Materialization Matters](#2-materialization-matters) below.
 
 ## Analyzing Performance in dbt
-With every dbt run or build several artifacts are generated in the target/ directory, including the run_results.json file. This includes detailed information on run execution and many people parse this to create dashboards to report on dbt performance and help with optimization and cost monitoring. There is an important caveate here: simply knowing how long a model took to run is important to uncover which models might need optimization, but cannot tell you anything about why they are performing poorly.
+With every dbt run or build several artifacts are generated in the target/ directory, including the run_results.json file. This includes detailed information on run execution and many people parse this to create dashboards to report on dbt performance and help with optimization and cost monitoring. There is an important caveat here: simply knowing how long a model took to run is important to uncover which models might need optimization, but cannot tell you anything about why they are performing poorly.
 
 ### Getting model timing: Local Development
 Every time you run a model dbt outputs timing, information which you can easily use identify non-performance models. The output will look like:
