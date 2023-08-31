@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+import s3fs
+
 from jobs.utils.snowflake import snowflake_connection_from_environment
 
 
 def write_building_footprints(conn):
     """Grab Microsoft state building footprint data for California from Snowflake and write to an S3 bucket."""
-    import os
-    from zipfile import ZipFile
-
     import geopandas
     import shapely
 
@@ -16,38 +15,42 @@ def write_building_footprints(conn):
     """
     conn.cursor().execute(sql_alter)
 
-    sql_table = """
-    SELECT *
+    counties = """
+    SELECT DISTINCT "county_fips"
     FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_BLOCKS
     """
 
-    df = conn.cursor().execute(sql_table).fetch_pandas_all()
-    gdf = geopandas.GeoDataFrame(
-        df.assign(geometry=df.geometry.apply(shapely.wkb.loads))
-    )
+    counties = conn.cursor().execute(counties).fetchall()
+    counties = [x[0] for x in counties if x[0] is not None]
 
-    # write parquet and shape files for every single county locally
-
-    counties = gdf.county_fips.unique()
-
-    for x in counties:
-        gdf[gdf.county_fips == x].to_parquet(f"county_fips_{x}.parquet")
-        gdf[gdf.county_fips == x].to_file(
-            f"county_fips_{x}.shp", driver="ESRI Shapefile"
+    for county in counties:
+        sql_table = f"""
+        SELECT *
+        FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_BLOCKS
+        WHERE "county_fips" = {county}
+        """
+        df = conn.cursor().execute(sql_table).fetch_pandas_all()
+        gdf = geopandas.GeoDataFrame(
+            df.assign(geometry=df.geometry.apply(shapely.wkb.loads))
         )
+        gdf.to_parquet(f"footprints_with_blocks_for_county_fips_{county}.parquet")
+        gdf.to_file(
+            f"footprints_with_blocks_for_county_fips_{county}.shp.zip",
+            driver="ESRI Shapefile",
+        )
+        print(f"loading footprints_with_blocks_for_county_fips_{county}")
 
-        with ZipFile(f"county_fips_{x}_shape_files.zip", "w") as zipped:
-            zipped.write(f"county_fips_{x}.cpg")
-            os.remove(f"county_fips_{x}.cpg")
-
-            zipped.write(f"county_fips_{x}.dbf")
-            os.remove(f"county_fips_{x}.dbf")
-
-            zipped.write(f"county_fips_{x}.shp")
-            os.remove(f"county_fips_{x}.shp")
-
-            zipped.write(f"county_fips_{x}.shx")
-            os.remove(f"county_fips_{x}.shx")
+        s3 = s3fs.S3FileSystem(anon=False)
+        s3.put(
+            f"footprints_with_blocks_for_county_fips_{county}.parquet",
+            "dof-demographics-dev-us-west-2-public/",
+            recursive=True,
+        )
+        s3.put(
+            f"footprints_with_blocks_for_county_fips_{county}.shp.zip",
+            "dof-demographics-dev-us-west-2-public/",
+            recursive=True,
+        )
 
 
 if __name__ == "__main__":
