@@ -17,8 +17,6 @@ blocks as (
     from blocks_source
 ),
 
-
-
 footprints_and_blocks_joined as (
     {{ spatial_join_with_deduplication(
        "footprints",
