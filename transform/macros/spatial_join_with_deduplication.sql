@@ -1,3 +1,9 @@
+{# Macro to perform a spatial join between two relations with deduplication of the
+   geometries in the left table. For all left geometries that satisfy the predicate for
+   more than one geometry in the right table, we compute their intersection and then
+   choose the left geometry with the greatest intersection.
+#}
+
 {% macro spatial_join_with_deduplication(left_model, right_model, left_cols, right_cols, left_geom="geometry", right_geom="geometry", op="st_intersects", kind="left", prefix="") %}
 
 with {{ prefix }}_left_model_with_id as (
@@ -11,12 +17,12 @@ with {{ prefix }}_left_model_with_id as (
 
 {{ prefix }}_joined as (
     select
-      {% for lcol in left_cols %}
+      {% for lcol in left_cols -%}
       {{ prefix }}_left_model_with_id.{{ lcol }},
-      {% endfor %}
-      {% for rcol in right_cols %}
+      {% endfor -%}
+      {% for rcol in right_cols -%}
       {{ right_model }}.{{ rcol }},
-      {% endfor %}
+      {% endfor -%}
       {{ prefix }}_left_model_with_id.{{ left_geom }},
       /* We don't actually need the intersection for every geometry, only for the
        ones that intersect more than one. However, in order to establish which
@@ -39,12 +45,12 @@ with {{ prefix }}_left_model_with_id as (
       -- Fortunately, we know that the geometries are identical when partitioned
       -- by _tmp_sjoin_id, so we can just choose any_value.
       any_value({{ left_geom }}) as {{ left_geom }},
-      {% for lcol in left_cols %}
+      {% for lcol in left_cols -%}
       max_by({{ lcol }}, _tmp_sjoin_intersection) as {{ lcol }},
-      {% endfor %}
-      {% for rcol in right_cols %}
+      {% endfor -%}
+      {% for rcol in right_cols -%}
       max_by({{ rcol }}, _tmp_sjoin_intersection) as {{ rcol }}{{ "," if not loop.last }}
-      {% endfor %}
+      {% endfor -%}
     from {{ prefix }}_joined
     group by _tmp_sjoin_id
 )

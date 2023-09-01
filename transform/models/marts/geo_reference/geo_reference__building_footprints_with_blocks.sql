@@ -1,3 +1,6 @@
+/* Columns selected and renamed from footprints, blocks, and places
+are reused in several places. To avoid repeating them with the possibility
+for errors, we set them in lists/dictionaries where appropriate. */
 {%- set footprint_cols = ['"release"', '"capture_dates_range"'] -%}
 
 {%- set block_cols = {
@@ -5,12 +8,11 @@
       '"TRACTCE20"': '"tract"',
       '"BLOCKCE20"': '"block"',
       '"GEOID20"': '"block_geoid"',
-      '"NAME20"': '"block_name"',
   }
 -%}
 
 {%- set place_cols = {
-     '"PLACEFP"': '"place_fp"',
+     '"PLACEFP"': '"place_fips"',
      '"PLACENS"': '"place_ns"',
      '"GEOID"': '"place_geoid"',
      '"NAME"': '"place_name"',
@@ -32,18 +34,18 @@ places_source as (
 
 blocks as (
     select
-        {% for k, v in block_cols.items() %}
+        {% for k, v in block_cols.items() -%}
             {{ k }} as {{ v }},
-        {% endfor %}
+        {% endfor -%}
         "geometry"
     from blocks_source
 ),
 
 places as (
     select
-        {% for k, v in place_cols.items() %}
+        {% for k, v in place_cols.items() -%}
             {{ k }} as {{ v }},
-        {% endfor %}
+        {% endfor -%}
         {{ map_class_fips("CLASSFP") }} as "class_fips",
         "geometry"
     from places_source

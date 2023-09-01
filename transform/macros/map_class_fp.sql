@@ -12,10 +12,10 @@
 } -%}
 
 case
-    {% for k, v in class_fips_dict.items() %}
+    {% for k, v in class_fips_dict.items() -%}
     when "{{ class_fips }}" = '{{ k }}'
     then '{{ v }}'
-    {% endfor %}
+    {% endfor -%}
 end
 
 {%- endmacro %}
