@@ -59,6 +59,7 @@ footprints_with_blocks as (
        block_cols.values(),
        left_geom='"geometry"',
        right_geom='"geometry"',
+       kind="inner",
        prefix="b",
     ) }}
 ),
@@ -71,6 +72,7 @@ footprints_with_blocks_and_places as (
        place_cols.values() | list + ['"class_fips"'],
        left_geom='"geometry"',
        right_geom='"geometry"',
+       kind="left",
        prefix="p",
     ) }}
 )
