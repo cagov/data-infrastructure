@@ -14,10 +14,10 @@ sources:
       - name: places
 
 models:
-  - name: geo_reference__building_footprints_with_blocks
+  - name: geo_reference__building_footprints_with_tiger
     description: |
-      This data table is a join of the TIGER shapefile, Blocks,
-      with the Microsoft Building Footprints data for the state of CA.
+      This data table is a join of the TIGER data for blocks, tracts, counties, and
+      places with the Microsoft Building Footprints data for the state of CA.
     columns:
       - name: release
         description: The version of the data
@@ -29,36 +29,19 @@ models:
         description: 2020 Census tract code
       - name: block
         description: 2020 Census tabulation block number
-      - name: geoid
+      - name: block_geoid
         description: >
           Census block identifier; a concatenation of 2020 Census state FIPS code, 2020
           Census county FIPS code, 2020 Census tract code, and 2020 Census block number
-      - name: name
-        description: >
-          2020 Census tabulation block name; a concatenation of 'Block'
-          and the tabulation block number
-      - name: geometry
-        description: The spatial component of geographic features
-  - name: geo_reference__building_footprints_with_places
-    description: |
-      This data table is a join of the TIGER shapefile
-      , Places, with the Microsoft Building Footprints
-      data for the state of CA.
-    columns:
-      - name: release
-        description: The version of the data
-      - name: capture_dates_range
-        description: >
-          Each building footprint has a capture date tag associated from 2019-2020
-      - name: place_fp
+      - name: place_fips
         description: Current place FIPS code
       - name: place_ns
         description: Current place GNIS code
-      - name: geoid
+      - name: place_geoid
         description: >
           Place identifier; a concatenation of the current state
           FIPS code and place FIPS code
-      - name: name
+      - name: place_name
         description: >
           Current name and the translated legal/statistical
           area description for place
@@ -67,7 +50,4 @@ models:
       - name: class_fips
         description: Current FIPS class definition
       - name: geometry
-        description: The spatial component of geographic features
-    tests:
-      - dbt_utils.equal_rowcount:
-          compare_model: source('building_footprints', 'california_building_footprints')
+        description: The footprint geometry
