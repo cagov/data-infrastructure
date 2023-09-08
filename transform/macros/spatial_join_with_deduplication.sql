@@ -46,10 +46,14 @@ with {{ prefix }}_left_model_with_id as (
       -- by _tmp_sjoin_id, so we can just choose any_value.
       any_value({{ left_geom }}) as {{ left_geom }},
       {% for lcol in left_cols -%}
-      max_by({{ lcol }}, _tmp_sjoin_intersection) as {{ lcol }},
+      -- max_by returns null if all the values in a group are null. So if we have a left
+      -- join, we need to guard against nulls with a coalesce to return the single value
+      max_by({{ lcol }}, coalesce(_tmp_sjoin_intersection, 1.0)) as {{ lcol }},
       {% endfor -%}
       {% for rcol in right_cols -%}
-      max_by({{ rcol }}, _tmp_sjoin_intersection) as {{ rcol }}{{ "," if not loop.last }}
+      -- max_by returns null if all the values in a group are null. So if we have a left
+      -- join, we need to guard against nulls with a coalesce to return the single value
+      max_by({{ rcol }}, coalesce(_tmp_sjoin_intersection, 1.0)) as {{ rcol }}{{ "," if not loop.last }}
       {% endfor -%}
     from {{ prefix }}_joined
     group by _tmp_sjoin_id
