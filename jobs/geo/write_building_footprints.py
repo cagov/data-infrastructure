@@ -18,7 +18,7 @@ def write_building_footprints(conn):
 
     counties = """
     SELECT DISTINCT "county_fips"
-    FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_BLOCKS
+    FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_TIGER
     ORDER BY 1 ASC
     """
 
@@ -28,7 +28,7 @@ def write_building_footprints(conn):
     for index, county in enumerate(counties):
         sql_table = f"""
         SELECT *
-        FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_BLOCKS
+        FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_TIGER
         WHERE "county_fips" = {county}
         """
         df = conn.cursor().execute(sql_table).fetch_pandas_all()
