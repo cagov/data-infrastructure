@@ -1,0 +1,45 @@
+version: 2
+
+macros:
+  - name: spatial_join_with_deduplication
+    description: |
+      Macro to perform a spatial join between two relations with deduplication of the
+      geometries in the left table. For all left geometries that satisfy the predicate
+      for more than one geometry in the right table, we compute their intersection and
+      then choose the left geometry with the greatest intersection.
+    arguments:
+      - name: left_model
+        type: string
+        description: The left model to join. Can be a relation or CTE.
+      - name: right_model
+        type: string
+        description: The right model to join. Can be a relation or CTE.
+      - name: left_cols
+        type: list of strings
+        description: |
+          List columns to keep from the left table
+          (excluding the geometry column, which is always retained)
+      - name: right_cols
+        type: list of strings
+        description: |
+          List of columns to keep from the right table
+          (excluding the geometry column, which is never retained).
+          Cannot share any names with left_cols
+      - name: left_geom
+        type: string
+        description: The name of the left geometry column, defaults to "geometry"
+      - name: right_geom
+        type: string
+        description: The name of the right geometry column, defaults to "geometry"
+      - name: op
+        description: |
+          The spatial predicate function to choose,
+          defaults to "st_intersects"
+      - name: kind
+        type: string
+        description: The kind of join, either "left" or "inner". Defaults to "left"
+      - name: prefix
+        type: string
+        description: |
+          An optional prefix to give to temporary CTEs to improve legibility and
+          avoid name collisions.

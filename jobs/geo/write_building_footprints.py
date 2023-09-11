@@ -38,7 +38,7 @@ def write_building_footprints(conn):
 
         gdf = gdf[gdf.geometry.geom_type != "GeometryCollection"]
 
-        file_prefix = f"footprints_with_blocks_for_county_fips_{county}"
+        file_prefix = f"footprints_with_tiger_for_county_fips_{county}"
         gdf.to_parquet(f"{file_prefix}.parquet")
         gdf.to_file(f"{file_prefix}.shp.zip")
 

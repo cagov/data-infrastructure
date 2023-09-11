@@ -26,7 +26,7 @@ def building_footprints_dag():
         job_queue=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_QUEUE"],
         job_definition=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_DEFINITION"],
         overrides={
-            "command": ["python", "-m", "jobs.geo.building_footprints"],
+            "command": ["python", "-m", "jobs.geo.load_building_footprints"],
             "resourceRequirements": [
                 {"type": "VCPU", "value": "8"},
                 {"type": "MEMORY", "value": "32768"},
