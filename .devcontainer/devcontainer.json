@@ -10,7 +10,10 @@
 		"vscode": {
 			"settings": {
 				"python.defaultInterpreterPath": ".venv/bin/python"
-			}
+			},
+			"extensions": [
+				"innoverio.vscode-dbt-power-user"
+			]
 		}
 	},
 	"secrets": {
