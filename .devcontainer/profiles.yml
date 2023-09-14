@@ -8,7 +8,7 @@ dse_snowflake:
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
       role: TRANSFORMER_DEV
-      warehouse: TRANSFORMING_DEV
+      warehouse: TRANSFORMING_XS_DEV
       database: TRANSFORM_DEV
       schema: "{{ env_var('DBT_SCHEMA') }}"
       threads: 4
