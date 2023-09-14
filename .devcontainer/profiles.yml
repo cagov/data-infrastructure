@@ -1,0 +1,14 @@
+dse_snowflake:
+  target: snowflake_dev
+  outputs:
+    snowflake_dev:
+      type: snowflake
+      account: heb41095
+      authenticator: username_password_mfa
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: TRANSFORMER_DEV
+      warehouse: TRANSFORMING_DEV
+      database: TRANSFORM_DEV
+      schema: "{{ env_var('DBT_SCHEMA') }}"
+      threads: 4

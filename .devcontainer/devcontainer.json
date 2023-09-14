@@ -12,5 +12,5 @@
 			}
 		}
 	},
-	"postCreateCommand": "poetry config virtualenvs.in-project true && poetry install && pre-commit install"
+	"postCreateCommand": "poetry config virtualenvs.in-project true && poetry install && pre-commit install && mkdir -p ~/.dbt && cp ./profiles.yml ~/.dbt"
 }
