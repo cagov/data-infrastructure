@@ -5,8 +5,12 @@
 		"ghcr.io/devcontainers-contrib/features/poetry:2": {},
 		"ghcr.io/devcontainers/features/terraform:1": {}
 	},
-	"settings": {
-		"python.defaultInterpreterPath": ".venv/bin/python"
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": ".venv/bin/python"
+			}
+		}
 	},
 	"postCreateCommand": "poetry config virtualenvs.in-project true && poetry install && pre-commit install"
 }
