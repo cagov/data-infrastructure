@@ -9,6 +9,8 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
+				"dbt.queryLimit": 50,
+				"git.allowNoVerifyCommit": true,
 				"python.defaultInterpreterPath": ".venv/bin/python"
 			},
 			"extensions": [
