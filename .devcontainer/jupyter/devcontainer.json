@@ -1,5 +1,6 @@
 {
     "name": "Jupyter",
     "image": "mcr.microsoft.com/devcontainers/miniconda",
-    "features": {}
+    "features": {},
+    "postCreateCommand": "conda env update -n base -f images/environment.yml && pip install jupyterlab"
 }
