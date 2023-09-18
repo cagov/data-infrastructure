@@ -1,0 +1,5 @@
+{
+    "name": "Jupyter",
+    "image": "mcr.microsoft.com/devcontainers/miniconda",
+    "features": {}
+}
