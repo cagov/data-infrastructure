@@ -1,6 +1,6 @@
 with footprints as (
     select
-        1 as "height",
+        "height",
         "geometry"
     from {{ source('building_footprints', 'global_ml_building_footprints') }}
 ),

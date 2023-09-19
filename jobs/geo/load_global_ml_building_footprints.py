@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import os
+
 from jobs.utils.snowflake import gdf_to_snowflake, snowflake_connection_from_environment
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 def load_state_footprints(conn) -> None:
@@ -17,12 +21,15 @@ def load_state_footprints(conn) -> None:
         dtype={"QuadKey": "str"},  # Don't use an int, since there are leading zeros!
     )
 
-    # TODO: use better source, perhaps the TIGER source, or include a california geojson in the repo
-    states = geopandas.read_file(
-        "https://github.com/PublicaMundi/MappingAPI/raw/master/data/geojson/us-states.json"
+    # Get the shape of California so that we can identify the quadkeys which intersect
+    california = (
+        geopandas.read_file(os.path.join(HERE, "data", "california.geojson"))
+        .iloc[0]
+        .geometry
     )
-    california = states[states.id == "06"].iloc[0].geometry
 
+    # As a first pass, find all the tiles which intersect the bounding box,
+    # since that's what mercantile knows how to do.
     features = []
     for tile in mercantile.tiles(*california.bounds, zooms=9):
         features.append(
@@ -34,12 +41,15 @@ def load_state_footprints(conn) -> None:
             }
         )
 
+    # As a second pass, prune out the tiles which don't actually intersect California
     quadkeys = geopandas.GeoDataFrame.from_records(features)
     california_quadkeys = quadkeys[quadkeys.intersects(california)]
 
+    # Now get a list of all the URLs which have a quadkey intersecting California
     california_data = df[
         df.QuadKey.isin(california_quadkeys.quadkey) & (df.Location == "UnitedStates")
     ]
+
     overwrite = True  # For the first subset, overwrite any existing table
     for _, row in california_data.iterrows():
         print(f"Reading quadkey {row.QuadKey}")
