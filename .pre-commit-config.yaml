@@ -85,7 +85,7 @@ repos:
       - name: Dbt deps
         id: dbt-deps
         language: python
-        entry: dbt deps --project-dir=transform
+        entry: poetry run dbt deps --project-dir=transform
         always_run: false
         pass_filenames: false
         types: [sql]
