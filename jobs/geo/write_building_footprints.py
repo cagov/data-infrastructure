@@ -9,7 +9,7 @@ def write_building_footprints(conn):
 
     import geopandas
     import s3fs
-    import shapely
+    import shapely.wkb
 
     sql_alter = """
     alter session set GEOGRAPHY_OUTPUT_FORMAT='WKB';
@@ -33,7 +33,8 @@ def write_building_footprints(conn):
         """
         df = conn.cursor().execute(sql_table).fetch_pandas_all()
         gdf = geopandas.GeoDataFrame(
-            df.assign(geometry=df.geometry.apply(shapely.wkb.loads))
+            df.assign(geometry=df.geometry.apply(shapely.wkb.loads)),
+            crs="EPSG:4326",
         )
 
         gdf = gdf[gdf.geometry.geom_type != "GeometryCollection"]
