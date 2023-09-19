@@ -120,13 +120,22 @@ def gdf_to_snowflake(
     cluster: bool | str = False,
     chunk_size: int | None = None,
     overwrite: bool = True,
+    strict_geometries: bool = True,
 ):
     """
     Load a GeoDataFrame to Snowflake.
 
     If the table and schema don't exist, this creates them.
+
     ``cluster`` can be a boolean, string, or list of strings,
     and sets clustering keys for the resulting table.
+
+    ``overwrite`` sets whether to overwrite existing tables or append to them.
+
+    ``strict_geometries`` determines how strict to be when loading geometries.
+    If it is set to ``True``, Snowflake's TO_GEOMETRY/TO_GEOGRAPHY functions are used.
+    If it is set to ``False``, TRY_TO_GEOMETRY/TRY_TO_GEOGRAPHY are used.
+
     """
     import geopandas.array
     import shapely.ops
@@ -198,9 +207,13 @@ def gdf_to_snowflake(
         for c, dtype in gdf.dtypes.to_dict().items():
             if type(dtype) == geopandas.array.GeometryDtype:
                 if epsg == WGS84:
-                    cols.append(f'TO_GEOGRAPHY("{c}") AS "{c}"')
+                    cols.append(
+                        f'{"TRY_" if strict_geometries else ""}TO_GEOGRAPHY("{c}") AS "{c}"'
+                    )
                 else:
-                    cols.append(f'TO_GEOMETRY("{c}", {epsg}) AS "{c}"')
+                    cols.append(
+                        f'{"TRY_" if strict_geometries else ""}TO_GEOMETRY("{c}", {epsg}) AS "{c}"'
+                    )
             else:
                 cols.append(f'"{c}"')
 

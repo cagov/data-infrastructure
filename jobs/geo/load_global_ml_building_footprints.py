@@ -54,6 +54,7 @@ def load_state_footprints(conn) -> None:
             conn,
             table_name="GLOBAL_ML_BUILDING_FOOTPRINTS",
             overwrite=overwrite,
+            strict_geometries=False,
         )
         overwrite = False  # For all subsequent gdfs, append
 
