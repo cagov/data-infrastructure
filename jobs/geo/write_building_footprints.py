@@ -41,7 +41,8 @@ def write_building_footprints(conn):
 
         file_prefix = f"footprints_with_tiger_for_county_fips_{county}"
         gdf.to_parquet(f"{file_prefix}.parquet")
-        gdf.to_file(f"{file_prefix}.shp.zip")
+        # .shz suffix triggers GDAL to write zipped shapefile
+        gdf.to_file(f"{file_prefix}.shz")
 
         print(
             f"Loading {file_prefix}. This is number {index+1} out of {len(counties)} counties."
@@ -52,12 +53,14 @@ def write_building_footprints(conn):
             f"{file_prefix}.parquet",
             "s3://dof-demographics-dev-us-west-2-public/parquet/",
         )
+        # Esri doesn't like .shp.zip or .shz, so rename to just be .zip.
         s3.put(
-            f"{file_prefix}.shp.zip", "s3://dof-demographics-dev-us-west-2-public/shp/"
+            f"{file_prefix}.shz",
+            f"s3://dof-demographics-dev-us-west-2-public/shp/{file_prefix}.zip",
         )
 
         os.remove(f"{file_prefix}.parquet")
-        os.remove(f"{file_prefix}.shp.zip")
+        os.remove(f"{file_prefix}.shz")
 
 
 if __name__ == "__main__":
