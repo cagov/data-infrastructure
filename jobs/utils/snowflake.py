@@ -119,6 +119,7 @@ def gdf_to_snowflake(
     schema: str | None = None,
     cluster: bool | str = False,
     chunk_size: int | None = None,
+    overwrite: bool = True,
 ):
     """
     Load a GeoDataFrame to Snowflake.
@@ -127,8 +128,8 @@ def gdf_to_snowflake(
     ``cluster`` can be a boolean, string, or list of strings,
     and sets clustering keys for the resulting table.
     """
-    import geopandas
-    import shapely
+    import geopandas.array
+    import shapely.ops
     from snowflake.connector.pandas_tools import write_pandas
 
     # Database and schema might be set on the connection object
@@ -203,14 +204,24 @@ def gdf_to_snowflake(
             else:
                 cols.append(f'"{c}"')
 
-        # Create the final table, selecting from the temp table.
-        sql = f'''CREATE OR REPLACE TABLE "{database}"."{schema}"."{table_name}"'''
-        if cluster:
-            sql = sql + f"\nCLUSTER BY ({','.join(cluster_names)})"
-        sql = (
-            sql
-            + f'''\nAS SELECT \n{",".join(cols)} \nFROM "{database}"."{schema}"."{tmp_table}"'''
-        )
+        if overwrite:
+            # Create the final table, selecting from the temp table.
+            sql = f'''CREATE OR REPLACE TABLE "{database}"."{schema}"."{table_name}"'''
+            if cluster:
+                sql = sql + f"\nCLUSTER BY ({','.join(cluster_names)})"
+            sql = (
+                sql
+                + f'''\nAS SELECT \n{",".join(cols)} \nFROM "{database}"."{schema}"."{tmp_table}"'''
+            )
+        else:
+            if cluster:
+                raise ValueError(
+                    "Clustering on existing table (overwrite=False) not supported"
+                )
+            sql = (
+                f'''INSERT INTO "{database}"."{schema}"."{table_name}"'''
+                f'''\nSELECT \n{",".join(cols)} \nFROM "{database}"."{schema}"."{tmp_table}"'''
+            )
 
         conn.cursor().execute(sql)
     finally:

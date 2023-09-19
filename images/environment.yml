@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python=3.10
   - geopandas
+  - mercantile
   - pip
   - pip:
       - snowflake-connector-python[pandas]
