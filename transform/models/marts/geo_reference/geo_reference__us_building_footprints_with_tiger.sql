@@ -3,7 +3,7 @@ with footprints as (
         "release",
         "capture_dates_range",
         "geometry"
-    from {{ source('building_footprints', 'california_building_footprints') }}
+    from {{ source('building_footprints', 'us_building_footprints') }}
 ),
 
 blocks_source as (
