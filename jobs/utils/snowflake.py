@@ -208,11 +208,11 @@ def gdf_to_snowflake(
             if type(dtype) == geopandas.array.GeometryDtype:
                 if epsg == WGS84:
                     cols.append(
-                        f'{"TRY_" if strict_geometries else ""}TO_GEOGRAPHY("{c}") AS "{c}"'
+                        f'{"" if strict_geometries else "TRY_"}TO_GEOGRAPHY("{c}") AS "{c}"'
                     )
                 else:
                     cols.append(
-                        f'{"TRY_" if strict_geometries else ""}TO_GEOMETRY("{c}", {epsg}) AS "{c}"'
+                        f'{"" if strict_geometries else "TRY_"}TO_GEOMETRY("{c}", {epsg}) AS "{c}"'
                     )
             else:
                 cols.append(f'"{c}"')
