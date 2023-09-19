@@ -5,6 +5,7 @@ from jobs.utils.snowflake import gdf_to_snowflake, snowflake_connection_from_env
 
 def load_state_footprints(conn) -> None:
     """Load Microsoft Global ML building footprints dataset for California."""
+    import fsspec
     import geopandas
     import mercantile
     import pandas
@@ -42,13 +43,10 @@ def load_state_footprints(conn) -> None:
     overwrite = True  # For the first subset, overwrite any existing table
     for _, row in california_data.iterrows():
         print(f"Reading quadkey {row.QuadKey}")
-        gdf = geopandas.GeoDataFrame(
-            pandas.read_json(row.Url, lines=True).assign(
-                geometry=lambda df: df.geometry.apply(shapely.geometry.shape),
-                quadkey=row.QuadKey,  # Note, if we include quadkeys here it could help with Snowflake partitioning
-            ),
-            crs="EPSG:4326",
-        )
+        with fsspec.open(row.Url, compression="infer") as f:
+            gdf = geopandas.read_file(f, driver="GeoJSONSeq")
+        # If we include quadkeys here it could help with Snowflake partitioning
+        gdf = gdf.assign(quadkey=row.QuadKey)
         gdf_to_snowflake(
             gdf,
             conn,
