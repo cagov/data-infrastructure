@@ -3,12 +3,17 @@ version: 2
 sources:
   - name: building_footprints
     database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
-    schema: geo_reference
+    schema: building_footprints
     tables:
       - name: us_building_footprints
         description: "[Microsoft US Building Footprints]\
           (https://github.com/Microsoft/USBuildingFootprints) \
           dataset for California."
+      - name: global_ml_building_footprints
+        description: "[Microsoft Global ML Building Footprints]\
+          (https://github.com/microsoft/GlobalMLBuildingFootprints) \
+          dataset for California. This contains some null geometries,\
+          as well as geometries that fall somewhat outside of California"
 
   - name: tiger_2022
     database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
