@@ -3,7 +3,7 @@ from __future__ import annotations
 from jobs.utils.snowflake import snowflake_connection_from_environment
 
 
-def write_building_footprints(conn):
+def write_building_footprints(conn, kind: str):
     """Grab Microsoft building footprints data enriched with Census TIGER Blocks data for California from Snowflake and write to an S3 bucket."""
     import os
 
@@ -16,19 +16,23 @@ def write_building_footprints(conn):
     """
     conn.cursor().execute(sql_alter)
 
-    counties = """
+    ref = (
+        "ANALYTICS_DEV.ANALYTICS"
+        f".GEO_REFERENCE__{kind.upper()}_BUILDING_FOOTPRINTS_WITH_TIGER"
+    )
+    sql_counties = f"""
     SELECT DISTINCT "county_fips"
-    FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_TIGER
+    FROM {ref}
     ORDER BY 1 ASC
     """
 
-    counties = conn.cursor().execute(counties).fetchall()
+    counties = conn.cursor().execute(sql_counties).fetchall()
     counties = [x[0] for x in counties if x[0] is not None]
 
     for index, county in enumerate(counties):
         sql_table = f"""
         SELECT *
-        FROM ANALYTICS_DEV.ANALYTICS.GEO_REFERENCE__BUILDING_FOOTPRINTS_WITH_TIGER
+        FROM {ref}
         WHERE "county_fips" = {county}
         """
         df = conn.cursor().execute(sql_table).fetch_pandas_all()
@@ -39,7 +43,7 @@ def write_building_footprints(conn):
 
         gdf = gdf[gdf.geometry.geom_type != "GeometryCollection"]
 
-        file_prefix = f"footprints_with_tiger_for_county_fips_{county}"
+        file_prefix = f"county_fips_{county}"
         gdf.to_parquet(f"{file_prefix}.parquet")
         # .shz suffix triggers GDAL to write zipped shapefile
         gdf.to_file(f"{file_prefix}.shz")
@@ -51,12 +55,12 @@ def write_building_footprints(conn):
         s3 = s3fs.S3FileSystem(anon=False)
         s3.put(
             f"{file_prefix}.parquet",
-            "s3://dof-demographics-dev-us-west-2-public/parquet/",
+            f"s3://dof-demographics-dev-us-west-2-public/{kind}_building_footprints/parquet/{file_prefix}.parquet",
         )
         # Esri doesn't like .shp.zip or .shz, so rename to just be .zip.
         s3.put(
             f"{file_prefix}.shz",
-            f"s3://dof-demographics-dev-us-west-2-public/shp/{file_prefix}.zip",
+            f"s3://dof-demographics-dev-us-west-2-public/{kind}_building_footprints/shp/{file_prefix}.zip",
         )
 
         os.remove(f"{file_prefix}.parquet")
@@ -64,8 +68,17 @@ def write_building_footprints(conn):
 
 
 if __name__ == "__main__":
+    import sys
+
+    N_ARGS = 1
+
     conn = snowflake_connection_from_environment(
-        schema="GEO_REFERENCE",
         client_session_keep_alive=True,  # This can be a slow job! Keep the session alive
     )
-    write_building_footprints(conn)
+
+    if len(sys.argv) != N_ARGS + 1 or sys.argv[1] not in ("global_ml", "us"):
+        raise ValueError(
+            "Must provide specify one of 'global_ml' or 'us' for building footprint source"
+        )
+
+    write_building_footprints(conn, kind=sys.argv[1])

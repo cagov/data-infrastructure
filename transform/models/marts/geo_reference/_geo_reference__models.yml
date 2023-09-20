@@ -3,9 +3,18 @@ version: 2
 sources:
   - name: building_footprints
     database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
-    schema: geo_reference
+    schema: building_footprints
     tables:
-      - name: california_building_footprints
+      - name: us_building_footprints
+        description: "[Microsoft US Building Footprints]\
+          (https://github.com/Microsoft/USBuildingFootprints) \
+          dataset for California."
+      - name: global_ml_building_footprints
+        description: "[Microsoft Global ML Building Footprints]\
+          (https://github.com/microsoft/GlobalMLBuildingFootprints) \
+          dataset for California. This contains some null geometries,\
+          as well as geometries that fall somewhat outside of California"
+
   - name: tiger_2022
     database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
     schema: tiger_2022
@@ -14,7 +23,7 @@ sources:
       - name: places
 
 models:
-  - name: geo_reference__building_footprints_with_tiger
+  - name: geo_reference__us_building_footprints_with_tiger
     description: |
       This data table is a join of the TIGER data for blocks, tracts, counties, and
       places with the Microsoft Building Footprints data for the state of CA.

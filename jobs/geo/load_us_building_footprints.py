@@ -16,14 +16,14 @@ def load_state_footprints(conn) -> None:
     gdf_to_snowflake(
         gdf,
         conn,
-        table_name="CALIFORNIA_BUILDING_FOOTPRINTS",
+        table_name="US_BUILDING_FOOTPRINTS",
         cluster=False,
     )
 
 
 if __name__ == "__main__":
     conn = snowflake_connection_from_environment(
-        schema="GEO_REFERENCE",
+        schema="BUILDING_FOOTPRINTS",
         client_session_keep_alive=True,  # This can be a slow job! Keep the session alive
     )
     load_state_footprints(conn)

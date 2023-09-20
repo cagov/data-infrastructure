@@ -1,9 +1,8 @@
 with footprints as (
     select
-        "release",
-        "capture_dates_range",
+        "height",
         "geometry"
-    from {{ source('building_footprints', 'california_building_footprints') }}
+    from {{ source('building_footprints', 'global_ml_building_footprints') }}
 ),
 
 blocks_source as (
@@ -41,7 +40,7 @@ footprints_with_blocks as (
     {{ spatial_join_with_deduplication(
        "footprints",
        "blocks",
-       ['"release"', '"capture_dates_range"'],
+       ['"height"'],
        ['"county_fips"', '"tract"', '"block"', '"block_geoid"'],
        left_geom='"geometry"',
        right_geom='"geometry"',
@@ -54,7 +53,7 @@ footprints_with_blocks_and_places as (
     {{ spatial_join_with_deduplication(
        "footprints_with_blocks",
        "places",
-       ['"release"', '"capture_dates_range"', '"county_fips"', '"tract"', '"block"', '"block_geoid"'],
+       ['"height"', '"county_fips"', '"tract"', '"block"', '"block_geoid"'],
        ['"place_fips"', '"place_ns"', '"place_geoid"', '"place_name"', '"class_fips_code"', '"class_fips"'],
        left_geom='"geometry"',
        right_geom='"geometry"',

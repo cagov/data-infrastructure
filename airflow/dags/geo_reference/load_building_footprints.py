@@ -22,11 +22,11 @@ def building_footprints_dag():
     """DAG for loading MS Building footprints dataset."""
     submit_batch_job = BatchOperator(
         task_id="load_footprints",
-        job_name="california_building_footprints",
+        job_name="us_building_footprints",
         job_queue=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_QUEUE"],
         job_definition=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_DEFINITION"],
         overrides={
-            "command": ["python", "-m", "jobs.geo.load_building_footprints"],
+            "command": ["python", "-m", "jobs.geo.load_us_building_footprints"],
             "resourceRequirements": [
                 {"type": "VCPU", "value": "8"},
                 {"type": "MEMORY", "value": "32768"},
