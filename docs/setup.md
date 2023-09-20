@@ -1,5 +1,8 @@
 # Repository setup
 
+These are instructions for individual contributors to set up the repository locally.
+For instructions on how to develop using GitHub Codespaces, see [here](./codespaces.md).
+
 ## Install dependencies
 
 ### 1. Set up a Python virtual environment
