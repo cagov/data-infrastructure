@@ -17,7 +17,7 @@ def write_building_footprints(conn, kind: str):
     conn.cursor().execute(sql_alter)
 
     ref = (
-        "ANALYTICS_DEV.DBT_IROSE"
+        "ANALYTICS_DEV.ANALYTICS"
         f".GEO_REFERENCE__{kind.upper()}_BUILDING_FOOTPRINTS_WITH_TIGER"
     )
     sql_counties = f"""
