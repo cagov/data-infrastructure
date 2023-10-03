@@ -60,6 +60,13 @@ footprints_with_blocks_and_places as (
        kind="left",
        prefix="p",
     ) }}
+),
+
+footprints_with_blocks_and_places_final as (
+    select
+        *,
+        st_area("geometry") as "area_sqm"
+    from footprints_with_blocks_and_places
 )
 
-select * from footprints_with_blocks_and_places
+select * from footprints_with_blocks_and_places_final
