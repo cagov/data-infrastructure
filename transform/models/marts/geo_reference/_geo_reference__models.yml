@@ -26,7 +26,7 @@ models:
   - name: geo_reference__us_building_footprints_with_tiger
     description: |
       This data table is a join of the TIGER data for blocks, tracts, counties, and
-      places with the Microsoft Building Footprints data for the state of CA.
+      places with the Microsoft US Building Footprints data for the state of CA.
     columns:
       - name: release
         description: The version of the data
@@ -60,3 +60,42 @@ models:
         description: Current FIPS class definition
       - name: geometry
         description: The footprint geometry
+      - name: area_sqm
+        description: The area of the footprint in square meters
+  - name: geo_reference__global_ml_building_footprints_with_tiger
+    description: |
+      This data table is a join of the TIGER data for blocks, tracts, counties, and
+      places with the Microsoft Global ML Building Footprints data for the state of CA.
+    columns:
+      - name: height
+        description: The height of the building (negative indicates unknown height)
+      - name: county_fips
+        description: 2020 Census county FIPS code
+      - name: tract
+        description: 2020 Census tract code
+      - name: block
+        description: 2020 Census tabulation block number
+      - name: block_geoid
+        description: >
+          Census block identifier; a concatenation of 2020 Census state FIPS code, 2020
+          Census county FIPS code, 2020 Census tract code, and 2020 Census block number
+      - name: place_fips
+        description: Current place FIPS code
+      - name: place_ns
+        description: Current place GNIS code
+      - name: place_geoid
+        description: >
+          Place identifier; a concatenation of the current state
+          FIPS code and place FIPS code
+      - name: place_name
+        description: >
+          Current name and the translated legal/statistical
+          area description for place
+      - name: class_fips_code
+        description: Current FIPS class code
+      - name: class_fips
+        description: Current FIPS class definition
+      - name: geometry
+        description: The footprint geometry
+      - name: area_sqm
+        description: The area of the footprint in square meters
