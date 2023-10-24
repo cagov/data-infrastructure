@@ -20,8 +20,8 @@ from airflow.providers.amazon.aws.sensors.batch import BatchSensor
 )
 def building_footprints_dag():
     """DAG for loading MS Building footprints dataset."""
-    submit_batch_job = BatchOperator(
-        task_id="load_footprints",
+    submit_batch_job_us = BatchOperator(
+        task_id="load_us_footprints",
         job_name="us_building_footprints",
         job_queue=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_QUEUE"],
         job_definition=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_DEFINITION"],
@@ -35,8 +35,28 @@ def building_footprints_dag():
         region_name="us-west-2",  # TODO: can we make this unnecessary?
     )
     _ = BatchSensor(
-        task_id="wait_for_batch_job",
-        job_id=submit_batch_job.output,
+        task_id="wait_for_batch_job_us",
+        job_id=submit_batch_job_us.output,
+        region_name="us-west-2",  # TODO: can we make this unnecessary?
+    )
+
+    submit_batch_job_global_ml = BatchOperator(
+        task_id="load_global_ml_footprints",
+        job_name="global_ml_building_footprints",
+        job_queue=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_QUEUE"],
+        job_definition=os.environ["AIRFLOW__CUSTOM__DEFAULT_JOB_DEFINITION"],
+        overrides={
+            "command": ["python", "-m", "jobs.geo.load_global_ml_building_footprints"],
+            "resourceRequirements": [
+                {"type": "VCPU", "value": "8"},
+                {"type": "MEMORY", "value": "32768"},
+            ],
+        },
+        region_name="us-west-2",  # TODO: can we make this unnecessary?
+    )
+    __ = BatchSensor(
+        task_id="wait_for_batch_job_global_ml",
+        job_id=submit_batch_job_global_ml.output,
         region_name="us-west-2",  # TODO: can we make this unnecessary?
     )
 
