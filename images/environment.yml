@@ -4,8 +4,10 @@ channels:
   - nodefaults
 dependencies:
   - python=3.10
+  - fsspec
   - geopandas
   - mercantile
+  - s3fs
   - pip
   - pip:
       - snowflake-connector-python[pandas]
