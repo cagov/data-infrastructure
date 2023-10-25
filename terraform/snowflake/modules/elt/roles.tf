@@ -196,3 +196,16 @@ resource "snowflake_role_grants" "logging_to_logger" {
   enable_multiple_grants = true
   roles                  = [snowflake_role.logger.name]
 }
+
+######################################
+#          Privilege Grants          #
+######################################
+
+# Imported privileges for logging
+resource "snowflake_database_grant" "this" {
+  provider               = snowflake.accountadmin
+  database_name          = "SNOWFLAKE"
+  privilege              = "IMPORTED PRIVILEGES"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.logger.name]
+}

@@ -96,16 +96,3 @@ resource "snowflake_role_grants" "logger_to_sentinel" {
   enable_multiple_grants = true
   users                  = [snowflake_user.sentinel.name]
 }
-
-######################################
-#          Privilege Grants          #
-######################################
-
-# Imported privileges for logging
-resource "snowflake_database_grant" "this" {
-  provider               = snowflake.accountadmin
-  database_name          = "SNOWFLAKE"
-  privilege              = "IMPORTED PRIVILEGES"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.logger.name]
-}
