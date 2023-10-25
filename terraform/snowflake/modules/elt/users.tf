@@ -47,6 +47,17 @@ resource "snowflake_user" "github_ci" {
   must_change_password = false
 }
 
+resource "snowflake_user" "sentinel" {
+  provider = snowflake.useradmin
+  name     = "SENTINEL_SVC_USER_${var.environment}"
+  comment  = "Service user for Sentinel"
+
+  default_warehouse = module.logging.name
+  default_role      = snowflake_role.logger.name
+
+  must_change_password = false
+}
+
 ######################################
 #            Role Grants             #
 ######################################
@@ -77,4 +88,24 @@ resource "snowflake_role_grants" "reader_to_github_ci" {
   role_name              = snowflake_role.reader.name
   enable_multiple_grants = true
   users                  = [snowflake_user.github_ci.name]
+}
+
+resource "snowflake_role_grants" "logger_to_sentinel" {
+  provider               = snowflake.useradmin
+  role_name              = snowflake_role.logger.name
+  enable_multiple_grants = true
+  users                  = [snowflake_user.sentinel.name]
+}
+
+######################################
+#          Privilege Grants          #
+######################################
+
+# Imported privileges for logging
+resource "snowflake_database_grant" "this" {
+  provider               = snowflake.accountadmin
+  database_name          = "SNOWFLAKE"
+  privilege              = "IMPORTED PRIVILEGES"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.logger.name]
 }
