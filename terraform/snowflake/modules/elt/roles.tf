@@ -208,4 +208,10 @@ resource "snowflake_database_grant" "this" {
   privilege              = "IMPORTED PRIVILEGES"
   enable_multiple_grants = true
   roles                  = [snowflake_role.logger.name]
+  # Sigh... we need to ignore changes because the terraform provider doesn't
+  # properly track this resource:
+  # https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/1998
+  lifecycle {
+    ignore_changes = all
+  }
 }
