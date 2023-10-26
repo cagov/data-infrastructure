@@ -50,13 +50,13 @@ os.environ["AWS_NO_SIGN_REQUEST"] = "YES"
 # Read GeoParquet using S3 URL
 gdf = geopandas.read_parquet(
     "s3://dof-demographics-dev-us-west-2-public/"
-    "global_ml_building_footprints/parquet/_fips_003.parquet"
+    "global_ml_building_footprints/parquet/county_fips_003.parquet"
 )
 
 # Read Shapefile using HTTPS URL
 gdf = geopandas.read_file(
     "https://dof-demographics-dev-us-west-2-public.s3.us-west-2.amazonaws.com/"
-    "global_ml_building_footprints/shp/_fips_003.zip"
+    "global_ml_building_footprints/shp/county_fips_003.zip"
 )
 ```
 
