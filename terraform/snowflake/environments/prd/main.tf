@@ -38,6 +38,13 @@ provider "snowflake" {
   role    = "PUBLIC"
 }
 
+# Snowflake provider for account administration (to be used only when necessary).
+provider "snowflake" {
+  alias   = "accountadmin"
+  account = var.locator
+  role    = "ACCOUNTADMIN"
+}
+
 # Snowflake provider for creating databases, warehouses, etc.
 provider "snowflake" {
   alias   = "sysadmin"
@@ -66,6 +73,7 @@ provider "snowflake" {
 module "elt" {
   source = "../../modules/elt"
   providers = {
+    snowflake.accountadmin  = snowflake.accountadmin,
     snowflake.securityadmin = snowflake.securityadmin,
     snowflake.sysadmin      = snowflake.sysadmin,
     snowflake.useradmin     = snowflake.useradmin,

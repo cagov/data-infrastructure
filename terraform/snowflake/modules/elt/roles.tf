@@ -36,6 +36,13 @@ resource "snowflake_role" "reader" {
   comment  = "Permissions to read ${module.analytics.name}, ${module.transform.name}, and ${module.raw.name} for CI purposes"
 }
 
+# The logger role is for logging solutions like Sentinel to introspect
+# things like usage and access.
+resource "snowflake_role" "logger" {
+  provider = snowflake.useradmin
+  name     = "LOGGER_${var.environment}"
+  comment  = "Permissions to read the SNOWFLAKE metadatabase for logging purposes"
+}
 
 ######################################
 #            Role Grants             #
@@ -69,6 +76,15 @@ resource "snowflake_role_grants" "reporter_to_sysadmin" {
 resource "snowflake_role_grants" "reader_to_sysadmin" {
   provider               = snowflake.useradmin
   role_name              = snowflake_role.reader.name
+  enable_multiple_grants = true
+  roles                  = ["SYSADMIN"]
+}
+
+# NOTE: logger has elevated privileges, so it is assigned
+# directly to accountadmin
+resource "snowflake_role_grants" "logger_to_accountadmin" {
+  provider               = snowflake.accountadmin
+  role_name              = snowflake_role.logger.name
   enable_multiple_grants = true
   roles                  = ["SYSADMIN"]
 }
@@ -171,4 +187,31 @@ resource "snowflake_role_grants" "reporting_to_reader" {
   role_name              = each.key
   enable_multiple_grants = true
   roles                  = [snowflake_role.reader.name]
+}
+
+# Logger can use the LOGGING warehouse
+resource "snowflake_role_grants" "logging_to_logger" {
+  provider               = snowflake.useradmin
+  role_name              = module.logging.access_role_name
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.logger.name]
+}
+
+######################################
+#          Privilege Grants          #
+######################################
+
+# Imported privileges for logging
+resource "snowflake_database_grant" "this" {
+  provider               = snowflake.accountadmin
+  database_name          = "SNOWFLAKE"
+  privilege              = "IMPORTED PRIVILEGES"
+  enable_multiple_grants = true
+  roles                  = [snowflake_role.logger.name]
+  # Sigh... we need to ignore changes because the terraform provider doesn't
+  # properly track this resource:
+  # https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/1998
+  lifecycle {
+    ignore_changes = all
+  }
 }

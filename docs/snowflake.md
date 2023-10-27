@@ -202,6 +202,7 @@ The **elt** module has the following configuration:
 
 | Name | Version |
 |------|---------|
+| <a name="provider_snowflake.accountadmin"></a> [snowflake.accountadmin](#provider\_snowflake.accountadmin) | ~> 0.61 |
 | <a name="provider_snowflake.useradmin"></a> [snowflake.useradmin](#provider\_snowflake.useradmin) | ~> 0.61 |
 
 ## Modules
@@ -210,6 +211,7 @@ The **elt** module has the following configuration:
 |------|--------|---------|
 | <a name="module_analytics"></a> [analytics](#module\_analytics) | ../database | n/a |
 | <a name="module_loading"></a> [loading](#module\_loading) | ../warehouse | n/a |
+| <a name="module_logging"></a> [logging](#module\_logging) | ../warehouse | n/a |
 | <a name="module_raw"></a> [raw](#module\_raw) | ../database | n/a |
 | <a name="module_reporting"></a> [reporting](#module\_reporting) | ../warehouse | n/a |
 | <a name="module_transform"></a> [transform](#module\_transform) | ../database | n/a |
@@ -219,7 +221,9 @@ The **elt** module has the following configuration:
 
 | Name | Type |
 |------|------|
+| [snowflake_database_grant.this](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/database_grant) | resource |
 | [snowflake_role.loader](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
+| [snowflake_role.logger](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
 | [snowflake_role.reader](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
 | [snowflake_role.reporter](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
 | [snowflake_role.transformer](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role) | resource |
@@ -230,6 +234,9 @@ The **elt** module has the following configuration:
 | [snowflake_role_grants.loader_to_fivetran](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
 | [snowflake_role_grants.loader_to_sysadmin](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
 | [snowflake_role_grants.loading_to_loader](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
+| [snowflake_role_grants.logger_to_accountadmin](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
+| [snowflake_role_grants.logger_to_sentinel](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
+| [snowflake_role_grants.logging_to_logger](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
 | [snowflake_role_grants.raw_r_to_reader](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
 | [snowflake_role_grants.raw_r_to_transformer](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
 | [snowflake_role_grants.raw_rwc_to_loader](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants) | resource |
@@ -247,6 +254,7 @@ The **elt** module has the following configuration:
 | [snowflake_user.dbt](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user) | resource |
 | [snowflake_user.fivetran](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user) | resource |
 | [snowflake_user.github_ci](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user) | resource |
+| [snowflake_user.sentinel](https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user) | resource |
 
 ## Inputs
 
