@@ -38,7 +38,12 @@ GeoParquet is usually a superior format for doing data analytics as it is:
 However, GeoParquet is also somewhat newer, and not supported by all tooling yet,
 so the zipped Shapefiles may be better suited for some workflows (especially Esri ones).
 
-Examples for reading the files using [geopandas](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm):
+### Usage with GeoPandas
+
+[GeoPandas](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm)
+is an extension to the Python Pandas library enabling analysis of geopsatial vector data.
+
+Examples for reading the files using GeoPanas:
 
 ```python
 import os
@@ -59,6 +64,13 @@ gdf = geopandas.read_file(
     "global_ml_building_footprints/shp/county_fips_003.zip"
 )
 ```
+
+### Usage with ArcGIS Pro toolbox:
+
+Fennis Reed at the California Department of Finance Demographics Research Unit has created an ArcGIS Pro
+[toolbox](https://pro.arcgis.com/en/pro-app/latest/help/projects/connect-to-a-toolbox.htm)
+for downloading individual footprint files,
+which can be downloaded [here](../static/Download.MS.Global.Footprints.zip).
 
 ## Links
 
