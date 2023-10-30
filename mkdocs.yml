@@ -36,7 +36,6 @@ nav:
   - Snowflake: snowflake.md
   - Writing Documentation: writing-documentation.md
   - dbt Snowflake Project: dbt_docs_snowflake/index.html
-  - dbt BigQuery Project: dbt_docs_bigquery/index.html
   - Data:
       Building Footprints: data/footprints.md
   - Learning:

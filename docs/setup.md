@@ -114,21 +114,6 @@ you need to create access keys and configure your local setup to use them:
 1. Go to the AWS IAM console and [create an access key for yourself](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey).
 1. In a terminal, enter `aws configure`, and add the access key ID and secret access key when prompted. We use `us-west-2` as our default region.
 
-### GCP
-
-In order to run the BigQuery dbt project,
-you need to authenticate with your Google account:
-
-1. [Install](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) the `gcloud` command-line interface.
-1. Open a terminal, and enter the following:
-    ```bash
-    gcloud auth application-default login \
-      --scopes=https://www.googleapis.com/auth/bigquery,\
-      https://www.googleapis.com/auth/drive.readonly,\
-      https://www.googleapis.com/auth/iam.test
-    ```
-    This should open a browser window and prompt you to authenticate.
-
 ## Configure dbt
 
 The connection information for our data warehouses will,
@@ -141,8 +126,7 @@ in a YAML file located (by default) in `~/.dbt/profiles.yml`.
 Instructions for writing a `profiles.yml` are documented
 [here](https://docs.getdbt.com/docs/get-started/connection-profiles),
 as well as specific instructions for
-[Snowflake](https://docs.getdbt.com/reference/warehouse-setups/snowflake-setup)
-and [BigQuery](https://docs.getdbt.com/reference/warehouse-setups/bigquery-setup).
+[Snowflake](https://docs.getdbt.com/reference/warehouse-setups/snowflake-setup).
 
 You can verify that your `profiles.yml` is configured properly by running
 
@@ -150,7 +134,7 @@ You can verify that your `profiles.yml` is configured properly by running
 dbt debug
 ```
 
-from a project root directory (`transform` or `transform-bigquery`).
+from a project root directory (`transform`).
 
 ### Snowflake project
 
@@ -180,27 +164,9 @@ dse_snowflake:
     include a `prd` target in your profiles under rare circumstances.
 
 
-### BigQuery project
-
-A minimal version of a `profiles.yml` for dbt development with BigQuery is:
-
-```yml
-dse_bigquery:
-  target: dev
-  outputs:
-    dev:
-      type: bigquery
-      method: oauth
-      project: <project-id>  # Project ID to use
-      dataset: dbt_<your-name>  # Test schema for development, don't use prod!
-      threads: 4
-```
-
-This requires you to be authenticated using the `gcloud` CLI tool.
-
 ### Combined `profiles.yml`
 
-You can include targets for both BigQuery and Snowflake in the same `profiles.yml`,
+You can include profiles for several databases in the same `profiles.yml`,
 (as well as targets for production), allowing you to develop in several projects
 using the same computer.
 

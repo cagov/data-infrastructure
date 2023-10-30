@@ -32,16 +32,6 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/\
           tflint/master/install_linux.sh | bash
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-          # The credentials here can read metadata only, which makes them
-          # good enough for `dbt compile`, but not good enough for
-          # `dbt docs generate`. Should we want to do more detailed checks
-          # at some point, we should revisit the service account permissions.
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
-          export_environment_variables: true
         # TODO: once we are on dbt-snowflake 1.5, no need to pipe to a file, we can
         # just use $SNOWFLAKE_PRIVATE_KEY
       - name: Set up private key
