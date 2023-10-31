@@ -1,12 +1,5 @@
 # dbt on the Data Services and Engineering team
 
-## Projects
-
-We have two dbt projects, one using Snowflake (in `transform/`),
-and the other using BigQuery (in `transform-bigquery/`).
-Our BigQuery project is primarily used for modeling data from Google services, which
-have high-quality (and free) data loaders.
-
 ## Naming conventions
 
 Models in a data warehouse do not follow the same naming conventions as [raw cloud resources](./naming-conventions.md#general-approach),

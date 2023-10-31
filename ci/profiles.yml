@@ -3,17 +3,6 @@ config:
   use_colors: true
   warn_error: true
 
-dse_bigquery:
-  target: dev
-  outputs:
-    dev:
-      type: bigquery
-      method: oauth
-      project: "{{ env_var('GCP_PROJECT') }}"
-      # Should not be created in CI as the CI service account is read-only!
-      dataset: dbt_ci_should_not_create_this_dataset
-      threads: 4
-
 dse_snowflake:
   target: snowflake_dev
   outputs:

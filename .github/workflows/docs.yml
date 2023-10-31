@@ -23,14 +23,6 @@ jobs:
       - uses: snok/install-poetry@v1
         with:
           virtualenvs-create: false
-      - id: auth
-        name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-          # The credentials here can read metadata, data, and create jobs (execute
-          # queries), which allows it to compile the dbt project and generate docs.
-          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
-          export_environment_variables: true
       - uses: actions/cache@v2
         with:
           key: ${{ github.ref }}
@@ -48,9 +40,5 @@ jobs:
           dbt deps --project-dir=transform
           dbt docs generate --project-dir=transform
           cp -r transform/target docs/dbt_docs_snowflake
-          # Generate bigquery dbt docs
-          dbt deps --project-dir=transform-bigquery
-          dbt docs generate --project-dir=transform-bigquery
-          cp -r transform-bigquery/target docs/dbt_docs_bigquery
       - name: Deploy 🚀
         run: mkdocs gh-deploy --force
