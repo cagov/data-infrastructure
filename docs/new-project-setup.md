@@ -95,6 +95,10 @@ By default, Snowflake logs out user sessions after four hours of inactivity.
 ODI's information security policies prefer that we log out after one hour of inactivity for most accounts,
 and after fifteen minutes of inactivity for particularly sensitive accounts.
 
+!!! note
+    It's possible we will do this using Terraform in the future,
+    but at the time of this writing the Snowflake Terraform provider does not support session policies.
+
 After the Snowflake account is created, run the following script in a worksheet
 to set the appropriate session policy:
 
@@ -111,6 +115,10 @@ alter account set session policy policies.public.account_session_policy;
 ```
 
 ### Add IT-Ops representatives
+
+TODO: establish and document processes here.
+
+### Set up Okta SSO and SCIM
 
 TODO: establish and document processes here.
 
