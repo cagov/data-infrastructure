@@ -82,6 +82,10 @@ The recommended workaround for this is to add a key pair to your account for use
     Keep the key pair in a secure place on your device.
     [This gist](https://gist.github.com/ian-r-rose/1c714ee04be53f7a3fd80322e1a22c27)
     can be helpful for quickly creating a new encrypted key pair.
+    Usage of the script looks like:
+    ```bash
+    bash generate_encrypted_key.sh <key-name> <passphrase>
+    ```
 1. In your local `.bash_profile` or an `.env` file, add environment variables for
     `SNOWFLAKE_PRIVATE_KEY_PATH` and (if applicable) `SNOWFLAKE_PRIVATE_KEY_PASSPHRASE`.
 
@@ -137,7 +141,7 @@ You should substitute the appropriate names there.
 1. Copy the terraform configuration from
     [here](https://github.com/cagov/data-infrastructure/blob/main/terraform/snowflake/environments/dev/main.tf)
     to your `dev` directory.
-1. In the the "elt" module of `main.tf`, change the `source` parameter to point to
+1. In the "elt" module of `main.tf`, change the `source` parameter to point to
     `"github.com/cagov/data-infrastructure.git//terraform/snowflake/modules/elt?ref=<ref>"`
     where `<ref>` is the short hash of the most recent commit in this repository.
 1. In the `dev` directory, create a new backend configuration file called `<owner>-<project>-dev.tfbackend`.
@@ -184,8 +188,56 @@ Everywhere where there is a `dev` (or `DEV`), replace it with a `prd` (or `PRD`)
 
 ## Set up CI in GitHub
 
+The projects generated from our infrastructure template need read access to the
+Snowflake account in order to do two things from GitHub actions:
+
+1. Verify that dbt models in branches compile and pass linter checks
+1. Generate dbt docs upon merge to `main`.
+
+The terraform configurations deployed above create two service accounts
+for GitHub actions, a production one for docs and a dev one for CI checks.
+
 ### Add key pairs to the GitHub service accounts
+
+Set up key pairs for the two GitHub actions service accounts
+(`GITHUB_ACTIONS_SVC_USER_DEV` and `GITHUB_ACTIONS_SVC_USER_PRD`).
+This follows a similar procedure to what you did for your personal key pair,
+though the project template currently does not assume an encrypted key pair.
+[This bash script](https://gist.github.com/ian-r-rose/35d49bd253194f57b57e9e59a595bed8)
+is a helpful shortcut for generating the key pair:
+```bash
+bash generate_key.sh <key-name>
+```
+
+Once you have created and set the key pairs, add them to the DSE 1Password shared vault.
+Make sure to provide enough information to disambiguate the key pair from others stored in the vault,
+including:
+
+* The account locator
+* The service account name
+* The public key
+* The private key
 
 ### Set up GitHub actions secrets
 
+You need to configure secrets in GitHub actions
+in order for the service accounts to be able to connect to your Snowflake account.
+From the repository page, go to "Settings", then to "Secrets and variables", then to "Actions".
+
+Add the following repository secrets:
+
+| Variable | Value |
+|----------|-------|
+| `SNOWFLAKE_ACCOUNT` | new account locator |
+| `SNOWFLAKE_USER_DEV` | `GITHUB_ACTIONS_SVC_USER_DEV` |
+| `SNOWFLAKE_USER_PRD` | `GITHUB_ACTIONS_SVC_USER_PRD` |
+| `SNOWFLAKE_PRIVATE_KEY_DEV` | dev service account private key |
+| `SNOWFLAKE_PRIVATE_KEY_PRD` | prd service account private key |
+
 ### Enable GitHub pages for the repository
+
+The repository must have GitHub pages enabled in order for it to deploy and be viewable.
+
+1. From the repository page, go to "Settings", then to "Pages".
+1. Under "GitHub Pages visibility" select "Private" (unless the project is public!).
+1. Under "Build and deployment" select "Deploy from a branch" and choose "gh-pages" as your branch.
