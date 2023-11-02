@@ -290,3 +290,16 @@ The repository must have GitHub pages enabled in order for it to deploy and be v
 1. From the repository page, go to "Settings", then to "Pages".
 1. Under "GitHub Pages visibility" select "Private" (unless the project is public!).
 1. Under "Build and deployment" select "Deploy from a branch" and choose "gh-pages" as your branch.
+
+
+## Tearing down a project
+
+Upon completion of a project (or if you just went through the above for testing purposes)
+there are a few steps needed to tear down the infrastructure.
+
+1. If the GitHub repository is to be handed off a client, transfer ownership of it to them.
+    Otherwise, delete or archive the GitHub repository.
+    If archiving, delete the GitHub actions secrets.
+1. Open a Help Desk ticket with IT-Ops to remove Sentinel logging for the Snowflake account.
+1. If the Snowflake account is to be handed off to a client, transfer ownership of it to them.
+    Otherwise, [drop the account](https://docs.snowflake.com/en/user-guide/organizations-manage-accounts-delete).
