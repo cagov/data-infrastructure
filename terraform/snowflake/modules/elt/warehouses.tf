@@ -68,5 +68,5 @@ module "logging" {
   name         = "LOGGING_XS_${var.environment}"
   comment      = "Primary warehouse for logging. Logging tools like Sentinel should use this warehouse."
   size         = "X-SMALL"
-  auto_suspend = 5
+  auto_suspend = 1
 }
