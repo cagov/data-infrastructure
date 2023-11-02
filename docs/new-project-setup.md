@@ -24,6 +24,13 @@ USE ROLE accountadmin;
 GRANT ROLE orgadmin TO USER <YOUR-USER>;
 ```
 
+If you later want to revoke the `orgadmin` role from your user or any other, you can do so with:
+
+```sql
+USE ROLE accountadmin;
+REVOKE ROLE orgadmin FROM USER <YOUR-USER>;
+```
+
 ### Get access to AWS
 
 We typically create our Snowflake architecture using Terraform.
@@ -151,7 +158,7 @@ You should substitute the appropriate names there.
     to your `dev` directory.
 1. In the "elt" module of `main.tf`, change the `source` parameter to point to
     `"github.com/cagov/data-infrastructure.git//terraform/snowflake/modules/elt?ref=<ref>"`
-    where `<ref>` is the short hash of the most recent commit in this repository.
+    where `<ref>` is the short hash of the most recent commit in the `data-infrastructure` repository.
 1. In the `dev` directory, create a new backend configuration file called `<owner>-<project>-dev.tfbackend`.
     The file will point to the S3 bucket in which we are storing terraform state:
     ```hcl
