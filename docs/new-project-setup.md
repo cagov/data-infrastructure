@@ -65,13 +65,13 @@ conda install -c conda-forge terraform tflint  # Install terraform and tflint
     1. You will be prompted to create an initial user with `ACCOUNTADMIN` privileges. This should be you.
         You will be prompted to create a password for your user. Create one using your password manager,
         but know that it will ask you change your password upon first log-in.
-    1. Save the Account Locator and URL for your new account.
+    1. Save the Account Locator and Account URL for your new account.
 1. Log into your new account. You should be prompted to change your password. Save the updated password in your password manager.
 
 ### Enable multi-factor authentication for your user
 
 1. Ensure the Duo Mobile app is installed on your phone.
-1. In the upper-left corner, click on your user, and select "Profile"
+1. In the upper-left corner of the Snowsight UI, click on your username, and select "Profile"
 1. At the bottom of the dialog, select "Enroll" to enable multi-factor authentication.
 1. Follow the instructions to link the new account with your Duo app.
 
@@ -88,13 +88,18 @@ The recommended workaround for this is to add a key pair to your account for use
     to generate a key pair and add the public key to your account.
     Keep the key pair in a secure place on your device.
     [This gist](https://gist.github.com/ian-r-rose/1c714ee04be53f7a3fd80322e1a22c27)
-    can be helpful for quickly creating a new encrypted key pair.
+    contains the bash commands from the instructions,
+    and can be helpful for quickly creating a new encrypted key pair.
     Usage of the script looks like:
     ```bash
     bash generate_encrypted_key.sh <key-name> <passphrase>
     ```
+    You can use `pbcopy < _your_public_key_file_name_.pub` to copy the contents of your public key.
+    Be sure to remove the `----BEGIN PUBLIC KEY----` and `-----END PUBLIC KEY------` portions
+    when adding your key to your Snowflake user.
 1. In your local `.bash_profile` or an `.env` file, add environment variables for
-    `SNOWFLAKE_PRIVATE_KEY_PATH` and (if applicable) `SNOWFLAKE_PRIVATE_KEY_PASSPHRASE`.
+    `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PRIVATE_KEY_PATH`,
+    and (if applicable) `SNOWFLAKE_PRIVATE_KEY_PASSPHRASE`.
 
 ### Apply a session policy
 
