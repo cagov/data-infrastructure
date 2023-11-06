@@ -169,7 +169,8 @@ You should substitute the appropriate names there.
     `"github.com/cagov/data-infrastructure.git//terraform/snowflake/modules/elt?ref=<ref>"`
     where `<ref>` is the short hash of the most recent commit in the `data-infrastructure` repository.
 1. In the `dev` directory, create a new backend configuration file called `<owner>-<project>-dev.tfbackend`.
-    The file will point to the S3 bucket in which we are storing terraform state:
+    The file will point to the S3 bucket in which we are storing terraform state. Populate the backend
+    configuration file with the following (making sure to substitute values for `<owner>` and `<project>`):
     ```hcl
     bucket = "dse-snowflake-dev-terraform-state"
     dynamodb_table = "dse-snowflake-dev-terraform-state-lock"
