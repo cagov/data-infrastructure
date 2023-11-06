@@ -153,6 +153,10 @@ You should substitute the appropriate names there.
 
 ### Create the dev configuration
 
+1. Ensure that your environment has environment variables set for
+    `SNOWFLAKE_ACCOUNT`, `SNOWFLAKE_USER`, `SNOWFLAKE_PRIVATE_KEY_PATH`, and `SNOWFLAKE_PRIVATE_KEY_PASSPHRASE`.
+    Make sure you *don't* have any other `SNOWFLAKE_*` variables set,
+    as they can interfere with authentication.
 1. In the new git repository, create a directory to hold the development Terraform configuration:
     ```bash
     mkdir -p terraform/environments/dev/
