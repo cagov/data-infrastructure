@@ -36,8 +36,9 @@ nav:
   - Snowflake: snowflake.md
   - Writing Documentation: writing-documentation.md
   - dbt Snowflake Project: dbt_docs_snowflake/index.html
+  - New Project Setup: new-project-setup.md
   - Data:
-      Building Footprints: data/footprints.md
+      - Building Footprints: data/footprints.md
   - Learning:
       - MDSA Glossary: learning/glossary.md
       - git: learning/git.md
