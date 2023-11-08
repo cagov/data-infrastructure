@@ -46,7 +46,7 @@ This includes:
 
 ### Usage notes
 
-1. When you launch a new codespace, it can take a couple of minutes for all of the extensions to install. In particular, this means that the Python environment may not be fully set-up when you land in VS Code. We recommend closing existing terminal sessions and starting a new one once the extensions have finished installig.
+1. When you launch a new codespace, it can take a couple of minutes for all of the extensions to install. In particular, this means that the Python environment may not be fully set-up when you land in VS Code. We recommend closing existing terminal sessions and starting a new one once the extensions have finished installing.
 1. The first time you make a commit, the pre-commit hooks will be installed. This may take a few minutes. Subsequent commits will take less time.
 1. If the pre-commit hooks fail when making a commit, it will give you the opportunity to open the git logs to view the errors. If you are unable to fix the errors for whatever reason, you can always make a new commit from the command line with `--no-verify`:
     ```bash
