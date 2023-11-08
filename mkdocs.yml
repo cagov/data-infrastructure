@@ -27,16 +27,19 @@ markdown_extensions:
 nav:
   - Introduction: index.md
   - Project Setup: setup.md
+  - Codespaces: codespaces.md
   - Code Review: code-review.md
+  - Writing Documentation: writing-documentation.md
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
-  - dbt: dbt.md
-  - dbt Performance: dbt-performance.md
   - Snowflake: snowflake.md
   - Writing Documentation: writing-documentation.md
-  - dbt Snowflake Project: dbt_docs_snowflake/index.html
   - New Project Setup: new-project-setup.md
+  - dbt:
+      - Overview: dbt.md
+      - dbt Performance: dbt-performance.md
+      - dbt Snowflake Project: dbt_docs_snowflake/index.html
   - Data:
       - Building Footprints: data/footprints.md
   - Learning:

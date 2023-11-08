@@ -84,8 +84,8 @@ repos:
     hooks:
       - name: Dbt deps
         id: dbt-deps
-        language: python
-        entry: dbt deps --project-dir=transform
+        language: system
+        entry: poetry run dbt deps --project-dir transform
         always_run: false
         pass_filenames: false
         types: [sql]
@@ -103,7 +103,7 @@ repos:
     hooks:
       - id: sqlfluff
         name: sqlfluff
-        language: python
+        language: system
         description: "Lints sql files with `SQLFluff`"
         types: [sql]
         require_serial: true
