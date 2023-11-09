@@ -39,7 +39,7 @@ For a quick visual reference of which models take up the most time in a run, cli
 ![dbt Model Timing Graph](images/dbt_model_timing.png)
 
 ### Getting model timing: Snowflake
-Snowflake has quite a lot of performance data readily available through it's information_schema.QUERY_HISTORY() table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.
+Snowflake has quite a lot of performance data readily available through it's `information_schema.QUERY_HISTORY()` table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.
 
 #### Query History
 The [Query History](https://docs.snowflake.com/en/sql-reference/functions/query_history) gives you real time data while the Account Usage is delayed. So Query History is great for analyzing your own queries in development and for current query performance in production.
