@@ -34,14 +34,70 @@ dbt Cloud has a nicer interface for finding which models in a project are runnin
 
 ![dbt Model Run Summary](images/dbt_run_summary.png)
 
-For a quick visual reference of which models take up the most time in a run, click on the "Model Timiing" tab. If you hover over a model you will be shown the specific timing.
+For a quick visual reference of which models take up the most time in a run, click on the "Model Timing" tab. If you hover over a model you will be shown the specific timing.
 
 ![dbt Model Timing Graph](images/dbt_model_timing.png)
+
+### Getting model timing: Snowflake
+Snowflake has quite a lot of performance data readily available through it's `information_schema.QUERY_HISTORY()` table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.
+
+#### Query History
+The [Query History](https://docs.snowflake.com/en/sql-reference/functions/query_history) gives you real time data while the Account Usage is delayed. So Query History is great for analyzing your own queries in development and for current query performance in production.
+
+Example Query: Get top time-consuming queries for the dbt Cloud production loads
+```sql
+SELECT
+    query_text, query_type, database_name, schema_name,
+    user_name, total_elapsed_time
+    FROM
+        -- query_history() is a table function
+        table (information_schema.query_history())
+    WHERE user_name = 'DBT_CLOUD_SVC_USER_PRD'
+ORDER BY total_elapsed_time DESC
+LIMIT 20
+```
+
+As you might have guessed this also lets you search for a model on query text, so you can find specific dbt models or classes of models:
+```sql
+    WHERE query_text LIKE '%stg_%'
+```
+
+
+#### Account Usage
+The [Account Usage schema](https://docs.snowflake.com/en/sql-reference/account-usage) (snowflake.account_usage) has multiple views that are of interest for monitoring not just query performance and credit usage but warehouse and database usage and more. This data is delayed 45 minutes but has a much longer history.
+
+Example Query: Find the queries with highest total execution time this month for the dbt cloud production loads.
+```sql
+SELECT query_text,
+    SUM(execution_time) / 60000 AS total_exec_time_mins,
+    SUM(credits_used_cloud_services) AS total_credits_used
+from snowflake.account_usage.query_history
+WHERE
+    start_time >= date_trunc(month, current_date)
+    AND user_name = 'DBT_CLOUD_SVC_USER_PRD'
+GROUP BY 1
+ORDER BY total_exec_time_mins DESC
+LIMIT 20
+```
+
+
+
+Example Query: Get Credits used by Warehouse this month
+```sql
+select warehouse_name,
+       sum(credits_used) as total_credits_used
+from warehouse_metering_history
+where start_time >= date_trunc(month, current_date)
+group by 1
+order by 2 desc;
+```
+
+
 
 ## Solutions: How to Tackle dbt Performance Issues
 Now that you've identified which models might need optimization, it's time to figure out how to get them to run faster. These options are roughly in order of bang-for-buck in most situations.
 
-### 1. Adjust Frequency and Break Up Runs
+### 1. Job Level: Adjust Frequency and Break Up Runs
 It's common for end-users to say they want the freshest data (who doesn't?) but in practice require a much lower frequency of refreshing. To gain an understand of the real-world needs it's helpful to see the frequency with which end-users actually view reporting and to consider the time scales involved. If someone only cares about monthly results, for example, you can *in theory* have a 30 day frequency for model runs.
 It's also quite common to have parts of the data be relatively static, and only need to be refreshed occasionally whereas other parts of the data might change much more often.
 An easy way to break up model runs is by using dbt tags.
@@ -64,7 +120,7 @@ Of course this works in dbt Cloud as well!
 For more information refer to the [dbt tags documentation](https://docs.getdbt.com/reference/resource-configs/tags).
 
 
-### 2. Materialization Matters
+### 2. Model Level: Materialization Matters
 
 For a good comparison of materialization options and their trade-offs see the [Materialization Best Practices](https://docs.getdbt.com/guides/best-practices/materializations/2-available-materializations) section of the dbt docs.
 
@@ -75,7 +131,7 @@ For a very large data sets, it can be essential to use [incremental models](http
 
 An example in our current projects is the CalHR Ecos model [stg_CertEligibles](https://github.com/cagov/caldata-mdsa-calhr-ecos/blob/main/transform/models/stage/ecos/certification/stg_CertEligibles.sql). This query takes over three minutes to run and no wonder - it generates 858 million rows! This is clearly a case where we should ask if we need all of that data or can filtered in someway and if the answer is yes, then we should consider using an incremental materialization.
 
-### 4. Optimizing Queries
+### 4. Query Level: Optimizing Queries
 A great many books have been written on this subject! The good news is that most of the tools we use provide excellent resources for analyzing query performance.
 
 #### Write or Read?
