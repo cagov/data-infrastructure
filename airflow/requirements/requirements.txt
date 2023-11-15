@@ -1,8 +1,10 @@
+--constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.7.2/constraints-3.10.txt
 apache-airflow-providers-slack
 apache-airflow-providers-snowflake
 backoff
 fsspec
+pandas
 pdfplumber
+pyarrow
 s3fs
-snowflake-connector-python[pandas]==3.5.0
-pandas==2.0.3
+snowflake-connector-python
