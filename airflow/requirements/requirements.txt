@@ -1,7 +1,8 @@
 apache-airflow-providers-slack
-apache-airflow-providers-snowflake[slack]
+apache-airflow-providers-snowflake
 backoff
 fsspec
 pdfplumber
 s3fs
-snowflake-connector-python[pandas]
+snowflake-connector-python[pandas]==3.5.0
+pandas==2.0.3
