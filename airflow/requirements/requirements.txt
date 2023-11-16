@@ -6,5 +6,5 @@ fsspec
 pandas
 pdfplumber
 pyarrow
-s3fs
+s3fs==2023.9.2
 snowflake-connector-python
