@@ -5,6 +5,7 @@ Adapted from sample code here:
 https://docs.aws.amazon.com/mwaa/latest/userguide/airflow-cli-command-reference.html#airflow-cli-command-examples
 """
 import base64
+import json
 import sys
 
 import boto3
@@ -26,9 +27,15 @@ mwaa_response = requests.post(
     data=raw_data,
 )
 
-mwaa_std_err_message = base64.b64decode(mwaa_response.json()["stderr"]).decode("utf8")
-mwaa_std_out_message = base64.b64decode(mwaa_response.json()["stdout"]).decode("utf8")
-
 print(mwaa_response.status_code)
-print(mwaa_std_err_message)
-print(mwaa_std_out_message)
+try:
+    mwaa_std_err_message = base64.b64decode(mwaa_response.json()["stderr"]).decode(
+        "utf8"
+    )
+    mwaa_std_out_message = base64.b64decode(mwaa_response.json()["stdout"]).decode(
+        "utf8"
+    )
+    print(mwaa_std_err_message)
+    print(mwaa_std_out_message)
+except json.decoder.JSONDecodeError:
+    print(mwaa_response.text)
