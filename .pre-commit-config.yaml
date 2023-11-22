@@ -42,18 +42,12 @@ repos:
             "--output-file",
             "../../../../docs/snowflake.md",
           ]
-  - repo: https://github.com/psf/black
-    rev: 23.1.0
-    hooks:
-      - id: black
-        language_version: python3
-        args:
-          - --target-version=py310
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.259
+    rev: v0.1.6
     hooks:
       - id: ruff
         args: [--show-source, --fix]
+      - id: ruff-format
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
     hooks:
