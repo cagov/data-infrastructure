@@ -34,6 +34,7 @@ ignore = [
   "D203", # blank line before docstring
   "D212", # Start multi-line docstring at the second line.
   "E501", # line length handled by black
+  "ISC001", # Handled by formatter
   "PGH003", # specific mypy ignore codes
   "PLR0913", # too many arguments
   "PLR0912", # too many branches
