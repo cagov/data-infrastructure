@@ -153,13 +153,41 @@ resource "aws_mwaa_environment" "this" {
   schedulers         = 2
   max_workers        = 5
   min_workers        = 1
-  airflow_version    = "2.4.3"
+  airflow_version    = "2.7.2"
 
   airflow_configuration_options = {
     "custom.scratch_bucket"         = aws_s3_bucket.scratch.id
     "custom.default_job_queue"      = aws_batch_job_queue.default.name
     "custom.default_job_definition" = aws_batch_job_definition.default.name
   }
+
+  logging_configuration {
+    dag_processing_logs {
+      enabled   = true
+      log_level = "INFO"
+    }
+
+    scheduler_logs {
+      enabled   = true
+      log_level = "INFO"
+    }
+
+    task_logs {
+      enabled   = true
+      log_level = "INFO"
+    }
+
+    webserver_logs {
+      enabled   = true
+      log_level = "INFO"
+    }
+
+    worker_logs {
+      enabled   = true
+      log_level = "INFO"
+    }
+  }
+
 
   source_bucket_arn    = aws_s3_bucket.mwaa.arn
   dag_s3_path          = "dags/"
