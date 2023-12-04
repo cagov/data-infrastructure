@@ -1,8 +1,22 @@
 from __future__ import annotations
 
+import logging
 import os
 
 from jobs.utils.snowflake import gdf_to_snowflake, snowflake_connection_from_environment
+
+for logger_name in ("snowflake.connector",):
+    logger = logging.getLogger(logger_name)
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(
+        logging.Formatter(
+            "%(asctime)s - %(threadName)s %(filename)s:%(lineno)d - %(funcName)s() - %(levelname)s - %(message)s"
+        )
+    )
+    logger.addHandler(ch)
+
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
