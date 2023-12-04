@@ -8,9 +8,9 @@ dependencies:
   - geopandas=0.14.1
   - mercantile=1.2.1
   - pandas
-  - pyarrow=14.0.1
+  - pyarrow
   - s3fs=2023.12.0
-  - snowflake-connector-python=3.5.0
+  - snowflake-connector-python=3.2.1
   - pip
   - pip:
       - pygris

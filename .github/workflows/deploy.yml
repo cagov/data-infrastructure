@@ -34,7 +34,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: dse-infra-dev-us-west-2-default
-          IMAGE_TAG: test-global-ml
+          IMAGE_TAG: latest
         with:
           push: true
           context: "."
