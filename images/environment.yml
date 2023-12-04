@@ -3,12 +3,14 @@ channels:
   - conda-forge
   - nodefaults
 dependencies:
-  - python=3.10
-  - fsspec
-  - geopandas
-  - mercantile
-  - s3fs
+  - python=3.11
+  - fsspec=2023.12.0
+  - geopandas=0.14.1
+  - mercantile=1.2.1
+  - pandas
+  - pyarrow=14.0.1
+  - s3fs=2023.12.0
+  - snowflake-connector-python=3.5.0
   - pip
   - pip:
-      - snowflake-connector-python[pandas]
       - pygris
