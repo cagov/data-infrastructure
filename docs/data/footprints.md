@@ -72,6 +72,15 @@ Fennis Reed at the California Department of Finance Demographics Research Unit h
 for downloading individual footprint files,
 which can be downloaded [here](../static/Download.MS.Global.Footprints.zip).
 
+### Removing errors of inclusion:
+
+Fennis Reed has also constructed a dataset of known "errors of inclusion",
+i.e. shapes that were incorrectly identified as footprints by the machine learning algorithm.
+These errors of inclusion are updated in
+[this gist](https://gist.github.com/fennisreed/d7cd238a92c197b5117581caa03317ae),
+and examples for how to use them to filter them from other datasets can be found in
+[this gist](https://gist.github.com/ian-r-rose/767c1f28d33cba13e4219c6f3ae139b0).
+
 ## Links
 
 The following tables contains public links to the datasets partitioned by county.
