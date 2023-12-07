@@ -71,6 +71,19 @@ Fennis Reed at the California Department of Finance Demographics Research Unit h
 [toolbox](https://pro.arcgis.com/en/pro-app/latest/help/projects/connect-to-a-toolbox.htm)
 for downloading individual footprint files,
 which can be downloaded [here](../static/Download.MS.Global.Footprints.zip).
+Some usage notes for the toolbox are [here](../static/AccessFootprintsArcPro.pdf)
+
+### Removing errors of inclusion:
+
+Fennis Reed has also constructed a dataset of known "errors of inclusion",
+i.e. shapes that were incorrectly identified as footprints by the machine learning algorithm.
+These errors of inclusion are updated in
+[this gist](https://gist.github.com/fennisreed/d7cd238a92c197b5117581caa03317ae),
+and examples for how to use them to filter them from other datasets can be found in
+[this gist](https://gist.github.com/ian-r-rose/767c1f28d33cba13e4219c6f3ae139b0).
+
+The above ArcGIS Pro toolbox also includes an option for filtering errors of inclusion
+using the same process.
 
 ## Links
 
