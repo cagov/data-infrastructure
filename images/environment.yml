@@ -10,7 +10,7 @@ dependencies:
   - pandas
   - pyarrow
   - s3fs=2023.12.0
-  - snowflake-connector-python=3.2.1
+  - snowflake-connector-python=3.5.0
   - pip
   - pip:
       - pygris
