@@ -156,9 +156,10 @@ resource "aws_mwaa_environment" "this" {
   airflow_version    = "2.7.2"
 
   airflow_configuration_options = {
-    "custom.scratch_bucket"         = aws_s3_bucket.scratch.id
-    "custom.default_job_queue"      = aws_batch_job_queue.default.name
-    "custom.default_job_definition" = aws_batch_job_definition.default.name
+    "custom.scratch_bucket"    = aws_s3_bucket.scratch.id
+    "custom.default_job_queue" = aws_batch_job_queue.default.name
+    # Note: default job definition to the "latest", rather than the "test" environment.
+    "custom.default_job_definition" = aws_batch_job_definition.default["latest"].name
   }
 
   logging_configuration {

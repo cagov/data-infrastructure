@@ -46,8 +46,11 @@ provider "aws" {
 module "infra" {
   source = "../../modules/infra"
 
-  owner                   = local.owner
-  environment             = local.environment
-  project                 = local.project
-  snowflake_loader_secret = "arn:aws:secretsmanager:us-west-2:676096391788:secret:dse-snowflake-dev-us-west-2-loader-q1kChm"
+  owner       = local.owner
+  environment = local.environment
+  project     = local.project
+  snowflake_loader_secret = {
+    test   = "dse-snowflake-dev-us-west-2-loader"
+    latest = "dse-snowflake-prd-us-west-2-loader"
+  }
 }
