@@ -3,7 +3,7 @@ name: Build Image
 on: push
 
 jobs:
-  deploy:
+  build-image:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
