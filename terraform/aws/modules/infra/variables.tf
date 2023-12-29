@@ -24,7 +24,7 @@ variable "region" {
 
 variable "snowflake_loader_secret" {
   description = "ARN for SecretsManager login info to Snowflake with loader role"
-  type        = string
+  type        = object({ test = string, latest = string })
   default     = null
 }
 

@@ -3,7 +3,8 @@ version: 2
 sources:
   - name: building_footprints
     database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
-    schema: building_footprints
+    config:
+      schema: building_footprints
     tables:
       - name: us_building_footprints
         description: "[Microsoft US Building Footprints]\
@@ -24,6 +25,8 @@ sources:
 
 models:
   - name: geo_reference__us_building_footprints_with_tiger
+    config:
+      schema: building_footprints
     description: |
       This data table is a join of the TIGER data for blocks, tracts, counties, and
       places with the Microsoft US Building Footprints data for the state of CA.
@@ -63,6 +66,7 @@ models:
       - name: area_sqm
         description: The area of the footprint in square meters
   - name: geo_reference__global_ml_building_footprints_with_tiger
+    schema: building_footprints
     description: |
       This data table is a join of the TIGER data for blocks, tracts, counties, and
       places with the Microsoft Global ML Building Footprints data for the state of CA.

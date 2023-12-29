@@ -2,10 +2,6 @@
 #          AWS Batch             #
 ##################################
 
-locals {
-  snowflake_data = ["account", "user", "database", "warehouse", "role", "password"]
-}
-
 data "aws_iam_policy_document" "aws_batch_service_policy" {
   statement {
     actions = [
@@ -72,8 +68,9 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_access_snowflake_loader" {
+  for_each   = toset(local.jobs)
   role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = aws_iam_policy.access_snowflake_loader.arn
+  policy_arn = aws_iam_policy.access_snowflake_loader[each.key].arn
 }
 
 resource "aws_iam_role" "batch_job_role" {
@@ -97,15 +94,14 @@ resource "aws_batch_job_queue" "default" {
 }
 
 resource "aws_batch_job_definition" "default" {
-  name = "${local.prefix}-${var.region}-default"
-  type = "container"
-  platform_capabilities = [
-    "FARGATE",
-  ]
+  for_each              = toset(local.jobs)
+  name                  = "${local.prefix}-${var.region}-${each.key}"
+  type                  = "container"
+  platform_capabilities = ["FARGATE"]
 
   container_properties = jsonencode({
     command = ["echo", "$SNOWFLAKE_USER", "$SNOWFLAKE_ROLE"]
-    image   = "${aws_ecr_repository.default.repository_url}:latest"
+    image   = "${aws_ecr_repository.default.repository_url}:${each.key}"
     fargatePlatformConfiguration = {
       platformVersion = "LATEST"
     }
@@ -118,7 +114,7 @@ resource "aws_batch_job_definition" "default" {
     secrets = [
       for s in local.snowflake_data : {
         name      = "SNOWFLAKE_${upper(s)}",
-        valueFrom = var.snowflake_loader_secret != null ? "${var.snowflake_loader_secret}:${s}::" : ""
+        valueFrom = data.aws_secretsmanager_secret.snowflake_loader_secret[each.key].arn != null ? "${data.aws_secretsmanager_secret.snowflake_loader_secret[each.key].arn}:${s}::" : ""
       }
     ]
     networkConfiguration = {

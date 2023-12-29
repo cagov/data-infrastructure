@@ -1,12 +1,9 @@
-name: deploy
+name: Build Image
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
-  deploy:
+  build-image:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -33,7 +30,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: dse-infra-dev-us-west-2-default
-          IMAGE_TAG: latest
+          IMAGE_TAG: ${{ github.ref == 'refs/heads/main' && 'latest' || 'test' }}
         with:
           push: true
           context: "."

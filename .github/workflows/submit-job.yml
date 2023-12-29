@@ -25,7 +25,7 @@ jobs:
           aws batch submit-job \
           --job-name test \
           --job-queue dse-infra-dev-us-west-2-default \
-          --job-definition dse-infra-dev-us-west-2-default \
+          --job-definition dse-infra-dev-us-west-2-default-latest \
           --container-overrides '{
             "resourceRequirements":
             [{"value": "2", "type": "VCPU"}, {"value": "4096", "type": "MEMORY"}],
