@@ -2,6 +2,8 @@
 apache-airflow-providers-slack
 apache-airflow-providers-snowflake
 backoff
+dbt-core==1.6.9
+dbt-snowflake==1.6.6
 fsspec
 pandas
 pdfplumber
