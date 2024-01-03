@@ -79,7 +79,7 @@ if __name__ == "__main__":
     os.environ["SNOWFLAKE_ROLE"] = os.environ["SNOWFLAKE_ROLE"].replace(
         "LOADER", "REPORTER"
     )
-    os.environ["SNOWFLAKE_WAREHOUSE"] = os.environ["SNOWFLAKE_ROLE"].replace(
+    os.environ["SNOWFLAKE_WAREHOUSE"] = os.environ["SNOWFLAKE_WAREHOUSE"].replace(
         "LOADING", "REPORTING"
     )
 
