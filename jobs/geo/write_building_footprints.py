@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+import os
+
 from jobs.utils.snowflake import snowflake_connection_from_environment
 
 
 def write_building_footprints(conn, kind: str):
     """Grab Microsoft building footprints data enriched with Census TIGER Blocks data for California from Snowflake and write to an S3 bucket."""
-    import os
-
     import geopandas
     import s3fs
     import shapely.wkb
@@ -71,6 +71,17 @@ if __name__ == "__main__":
     import sys
 
     N_ARGS = 1
+
+    # This is a bit of a hack: our batch jobs are designed more around loading data
+    # to a data warehouse than unloading it, and so the default connection parameters
+    # specify a LOADER role. Here we replace that with a REPORTER role for grabbing
+    # data from the marts db.
+    os.environ["SNOWFLAKE_ROLE"] = os.environ["SNOWFLAKE_ROLE"].replace(
+        "LOADER", "REPORTER"
+    )
+    os.environ["SNOWFLAKE_WAREHOUSE"] = os.environ["SNOWFLAKE_ROLE"].replace(
+        "LOADING", "REPORTING"
+    )
 
     conn = snowflake_connection_from_environment(
         client_session_keep_alive=True,  # This can be a slow job! Keep the session alive
