@@ -9,6 +9,7 @@ from common.defaults import DEFAULT_ARGS
 from airflow.decorators import dag
 from airflow.providers.amazon.aws.operators.batch import BatchOperator
 from airflow.providers.amazon.aws.sensors.batch import BatchSensor
+from airflow.providers.dbt.cloud.operators.dbt import DbtCloudRunJobOperator
 
 
 def _construct_batch_args(name: str, command: list[str]) -> dict:
@@ -49,6 +50,29 @@ def building_footprints_dag():
         region_name="us-west-2",  # TODO: can we make this unnecessary?
     )
 
+    load_global_ml_footprints = BatchOperator(
+        **_construct_batch_args(
+            name="load_global_ml_building_footprints",
+            command=["python", "-m", "jobs.geo.load_global_ml_building_footprints"],
+        )
+    )
+    wait_for_global_ml_footprints_load = BatchSensor(
+        task_id="wait_for_global_ml_footprints_load",
+        job_id=load_global_ml_footprints.output,
+        region_name="us-west-2",  # TODO: can we make this unnecessary?
+    )
+
+    run_dbt_cloud_job = DbtCloudRunJobOperator(
+        job_id=None,
+        task_id="run_dbt_cloud_job",
+        dbt_cloud_conn_id="dbt_cloud_default",
+        wait_for_termination=True,
+        timeout=1800,
+    )
+
+    run_dbt_cloud_job.set_upstream(wait_for_us_footprints_load)
+    run_dbt_cloud_job.set_upstream(wait_for_global_ml_footprints_load)
+
     unload_us_footprints = BatchOperator(
         **_construct_batch_args(
             name="unload_us_building_footprints",
@@ -61,19 +85,7 @@ def building_footprints_dag():
         region_name="us-west-2",  # TODO: can we make this unnecessary?
     )
 
-    unload_us_footprints.set_upstream(wait_for_us_footprints_load)
-
-    load_global_ml_footprints = BatchOperator(
-        **_construct_batch_args(
-            name="load_global_ml_building_footprints",
-            command=["python", "-m", "jobs.geo.load_global_ml_building_footprints"],
-        )
-    )
-    wait_for_global_ml_footprints_unload = BatchSensor(
-        task_id="wait_for_global_ml_footprints_load",
-        job_id=load_global_ml_footprints.output,
-        region_name="us-west-2",  # TODO: can we make this unnecessary?
-    )
+    unload_us_footprints.set_upstream(run_dbt_cloud_job)
 
     unload_global_ml_footprints = BatchOperator(
         **_construct_batch_args(
@@ -87,7 +99,7 @@ def building_footprints_dag():
         region_name="us-west-2",  # TODO: can we make this unnecessary?
     )
 
-    unload_global_ml_footprints.set_upstream(wait_for_global_ml_footprints_unload)
+    unload_global_ml_footprints.set_upstream(run_dbt_cloud_job)
 
 
 run = building_footprints_dag()
