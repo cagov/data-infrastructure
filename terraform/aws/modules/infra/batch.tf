@@ -84,6 +84,11 @@ resource "aws_iam_role_policy_attachment" "s3_scratch_policy_role_attachment" {
   policy_arn = aws_iam_policy.s3_scratch_policy.arn
 }
 
+resource "aws_iam_role_policy_attachment" "dof_demographics_read_write_access" {
+  role       = aws_iam_role.batch_job_role.name
+  policy_arn = aws_iam_policy.dof_demographics_read_write_access.arn
+}
+
 resource "aws_batch_job_queue" "default" {
   name     = "${local.prefix}-${var.region}-default"
   state    = "ENABLED"

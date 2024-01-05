@@ -110,6 +110,31 @@ resource "aws_s3_bucket_policy" "dof_demographics_public_read_access" {
   policy = data.aws_iam_policy_document.dof_demographics_public_read_access.json
 }
 
+data "aws_iam_policy_document" "dof_demographics_read_write_access" {
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+
+    resources = [aws_s3_bucket.dof_demographics_public.arn]
+  }
+  statement {
+    actions = [
+      "s3:*Object",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.dof_demographics_public.arn}/*",
+    ]
+  }
+}
+
+resource "aws_iam_policy" "dof_demographics_read_write_access" {
+  name        = "${aws_s3_bucket.dof_demographics_public.id}-read-write"
+  description = "Read/write access to the ${aws_s3_bucket.dof_demographics_public.id} bucket"
+  policy      = data.aws_iam_policy_document.dof_demographics_read_write_access.json
+}
+
 resource "aws_s3_bucket_public_access_block" "dof_demographics_public" {
   bucket = aws_s3_bucket.dof_demographics_public.id
 
