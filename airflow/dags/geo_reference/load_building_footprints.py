@@ -63,7 +63,7 @@ def building_footprints_dag():
     )
 
     run_dbt_cloud_job = DbtCloudRunJobOperator(
-        job_id=None,
+        job_id=14,
         task_id="run_dbt_cloud_job",
         dbt_cloud_conn_id="dbt_cloud_default",
         wait_for_termination=True,
