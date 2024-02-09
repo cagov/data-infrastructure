@@ -22,10 +22,9 @@ Here are instructions for setting up a Python environment using Miniconda:
    ```bash
    conda create -n infra -c conda-forge python=3.10 poetry
    ```
-
    The following prompt will appear, "_The following NEW packages will be INSTALLED:_ "
    You'll have the option to accept or reject by typing _y_ or _n_. Type _y_ to continue.
-   3. Activate the `infra` environment:
+3. Activate the `infra` environment:
    ```bash
    conda activate infra
    ```
