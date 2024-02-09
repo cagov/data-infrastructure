@@ -1,6 +1,6 @@
 # Conventions for Code Review and GitHub
 
-This page documents the Data Services and Engineering Team's practices around GitHub-based development and code review..
+This page documents the Data Services and Engineering Team's practices around GitHub-based development and code review.
 
 ## Creating a Pull Request
 

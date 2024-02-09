@@ -23,9 +23,9 @@ Here are instructions for setting up a Python environment using Miniconda:
    conda create -n infra -c conda-forge python=3.10 poetry
    ```
 
-   The following pronpt will appear, "_The following NEW packages will be INSTALLED:_ "
+   The following prompt will appear, "_The following NEW packages will be INSTALLED:_ "
    You'll have the option to accept or reject by typing _y_ or _n_. Type _y_ to continue.
-3. Activate the `infra` environment:
+   3. Activate the `infra` environment:
    ```bash
    conda activate infra
    ```
@@ -34,7 +34,7 @@ Here are instructions for setting up a Python environment using Miniconda:
 
 Python dependencies are specified using [`poetry`](https://python-poetry.org/).
 
-To install them, open a terminal and ensure you are working in the data-infrastructure repo folder, then enter the following:
+To install them, open a terminal and ensure you are working in the data-infrastructure root folder, then enter the following:
 
 ```bash
 poetry install --with dev --no-root
