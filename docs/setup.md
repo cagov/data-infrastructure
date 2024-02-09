@@ -24,9 +24,8 @@ Here are instructions for setting up a Python environment using Miniconda:
    ```
 
    The following pronpt will appear, "_The following NEW packages will be INSTALLED:_ "
-   You'll have the option to accept or reject by typing _y_ or _n_. Type _y_
-3.
-4. Activate the `infra` environment:
+   You'll have the option to accept or reject by typing _y_ or _n_. Type _y_ to continue.
+3. Activate the `infra` environment:
    ```bash
    conda activate infra
    ```
@@ -35,10 +34,10 @@ Here are instructions for setting up a Python environment using Miniconda:
 
 Python dependencies are specified using [`poetry`](https://python-poetry.org/).
 
-To install them, open a terminal and enter:
+To install them, open a terminal and ensure you are working in the data-infrastructure repo folder, then enter the following:
 
 ```bash
-poetry install
+poetry install --with dev --no-root
 ```
 
 Any time the dependencies change, you can re-run the above command to update them.
@@ -196,7 +195,7 @@ This project uses [pre-commit](https://pre-commit.com/) to lint, format,
 and generally enforce code quality. These checks are run on every commit,
 as well as in CI.
 
-To set up your pre-commit environment locally run
+To set up your pre-commit environment locally run the following in the data-infrastructure repo root folder:
 
 ```bash
 pre-commit install
