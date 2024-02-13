@@ -69,6 +69,8 @@ repos:
     hooks:
       - id: prettier
         types: [yaml]
+        endOfLine: auto
+        proseWrap: "always"
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.28.0
     hooks:
