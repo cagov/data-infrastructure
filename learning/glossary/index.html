@@ -1,0 +1,838 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../../data/footprints/">
+      
+      
+        <link rel="next" href="../git/">
+      
+      <link rel="icon" href="../../images/odi-circle_logomark-blue.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>MDSA Glossary - CalData Data Services and Engineering Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.eebd395e.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#modern-data-stack-glossary" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CalData Data Services and Engineering Infrastructure" class="md-header__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CalData Data Services and Engineering Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MDSA Glossary
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CalData Data Services and Engineering Infrastructure" class="md-nav__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    CalData Data Services and Engineering Infrastructure
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/" class="md-nav__link">
+        Project Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../codespaces/" class="md-nav__link">
+        Codespaces
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code-review/" class="md-nav__link">
+        Code Review
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writing-documentation/" class="md-nav__link">
+        Writing Documentation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../naming-conventions/" class="md-nav__link">
+        Naming Conventions
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../security/" class="md-nav__link">
+        Security Guidelines
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cloud-infrastructure/" class="md-nav__link">
+        Cloud Infrastructure
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../snowflake/" class="md-nav__link">
+        Snowflake
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../writing-documentation/" class="md-nav__link">
+        Writing Documentation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../new-project-setup/" class="md-nav__link">
+        New Project Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          dbt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          dbt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt-performance/" class="md-nav__link">
+        dbt Performance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt_docs_snowflake/" class="md-nav__link">
+        dbt Snowflake Project
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Data
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data/footprints/" class="md-nav__link">
+        Building Footprints
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          Learning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Learning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          MDSA Glossary
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        MDSA Glossary
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#acronyms" class="md-nav__link">
+    Acronyms
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    Definitions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    Tools
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git/" class="md-nav__link">
+        git
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt/" class="md-nav__link">
+        dbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-data-warehouses/" class="md-nav__link">
+        Cloud Data Warehouses
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#acronyms" class="md-nav__link">
+    Acronyms
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#definitions" class="md-nav__link">
+    Definitions
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools" class="md-nav__link">
+    Tools
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="modern-data-stack-glossary">Modern Data Stack Glossary<a class="headerlink" href="#modern-data-stack-glossary" title="Permanent link">&para;</a></h1>
+<p>This glossary is a reference for commonly used acronyms, terms, and tools associated with the modern data stack and data and analytics engineering practices.</p>
+<h2 id="acronyms">Acronyms<a class="headerlink" href="#acronyms" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>MDS</strong> - Modern Data Stack</li>
+<li><strong>ETL</strong> - Extract, Transform, Load</li>
+<li><strong>ELT</strong> - Extract, Load, Transform</li>
+<li><strong>CI</strong> - Continuous integration</li>
+<li><strong>CD</strong> - Continuous delivery/deployment</li>
+<li><strong>GCS</strong> - Google Cloud Storage</li>
+<li><strong>AWS</strong> - Amazon Web Services</li>
+<li><strong>SaaS</strong> - Software as a Service</li>
+</ul>
+<h2 id="definitions">Definitions<a class="headerlink" href="#definitions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Modern data stack</strong> - a cloud-first suite of software tools that enable data teams to connect to, process, store, transform, and visualize data.</p>
+</li>
+<li>
+<p><strong>ETL vs ELT</strong> – ETL (Extract, Transform and Load) and ELT (Extract, Load and Transform) are data integration methods that determine whether data is preprocessed before landing in storage or transformed after being stored.</p>
+<p>Both methods have the same three operations:</p>
+<ul>
+<li><strong>Extraction</strong>: Pulling data from its original source system (e.g. connecting to data from a SaaS platform like Google Analytics)</li>
+<li><strong>Transformation</strong>: Changing the data’s structure so it can be integrated into the target data system. (e.g. changing geospatial data from a JSON structure to a parquet format)</li>
+<li><strong>Loading</strong>: Dumping data into a storage system (e.g. AWS S3 bucket or GCS)</li>
+</ul>
+<p>Advantages of ELT over ETL:</p>
+<ul>
+<li><strong>More flexibility</strong>, as ETL is traditionally intended for relational, structured data. Cloud-based data warehouses enable ELT for structured and unstructured data</li>
+<li><strong>Greater accessibility</strong>, as ETL is generally supported, maintained, and governed by organizations’ IT departments. ELT allows for easier access and use by employees</li>
+<li><strong>Scalability</strong>, as ETL can be prohibitively resource-intensive for some businesses. ELT solutions are generally cloud-based SaaS, available to a broader range of businesses</li>
+<li><strong>Faster load times</strong>, as ETL typically takes longer as it uses a staging area and system. With ELT, there is only one load to the destination system</li>
+<li><strong>Faster transformation times</strong>, as ETL is typically slower and dependent on the size of the data set(s). ELT transformation is not dependent on data size</li>
+<li><strong>Less time required for data maintenance</strong>, as data may need to be re-sourced and re-loaded if the transformation is found to be inadequate for the data’s intended purposes. With ELT, the original data is intact and already loaded from disk</li>
+</ul>
+<p>Sources: <em><a href="https://www.fivetran.com/blog/etl-vs-elt?_gl=1*rjd374*_ga*MTAxNTU1MjM4MC4xNjc3MTkxOTcy*_ga_NE72Z5F3GB*MTY4MTMzODc0OS43LjAuMTY4MTMzODc0OS42MC4wLjA.">Fivetran</a></em>, <em><a href="https://www.snowflake.com/guides/etl-vs-elt">Snowflake</a></em></p>
+</li>
+<li>
+<p><strong>Columnar Database vs Relational Database</strong> - a columnar database stores data by columns making it suitable for analytical query processing whereas a relational database stores data by rows making it optimized for transactional applications</p>
+<p>Advantages of Columnar over Relational databases:</p>
+<ul>
+<li>Reduces amount of data needed to be loaded</li>
+<li>Improves query performance by returning relevant data faster (instead of going row by row, multiple fields can be skipped)</li>
+</ul>
+</li>
+<li>
+<p><strong>Cloud Data Warehouse</strong> - a database stored as a managed service in a public cloud optimized for scalable analytics.</p>
+<p>Tools like Excel, Tableau, or PowerBI are limited in how much data can be brought into the dashboard. Cloud data warehouses, however, can handle petabyte scale data without too much fuss. Now, PowerBI or Tableau can also pass off data processing to a cloud data warehouse, but then major data processing jobs get hidden in a dashboard panel, which can produce unexpected spends, poor code reusability, and brittle dashboards.</p>
+</li>
+<li>
+<p><strong>Analytics engineering</strong> - applies software engineering practices to analytical workflows like version control and continuous integration/development. Analytics engineers are often thought of as a hybrid between data engineers and data analysts. Most analytics engineers spend their time transforming, modeling, testing, deploying, and documenting data. Data modeling – applying business logic to data to represent commonly known truths across an organization (for example, what data defines an order) – is the core of their workload and it enables analysts and other data consumers to answer their own questions.</p>
+<p>Originally coined two years ago, by <a href="https://www.linkedin.com/in/michael-the-data-guy-kaminsky/">Michael Kaminsky</a>, the term came from the ground-up, when data people experienced a shift in their job: they went from handling data engineer/scientist/analyst’s tasks to spending most of their time fixing, cleaning, and transforming data. And so, they (mainly members of the dbt community) created a terminology to describe this middle seat role: the Analytics Engineer.</p>
+<p>dbt comes in as a SQL-first transformation layer built for modern data warehousing and ingestion tools that centralizes data models, tests, and documentation.</p>
+<p>Sources: <em><a href="https://www.castordoc.com/blog/what-is-analytics-engineering">Castor</a></em>, <em><a href="https://www.getdbt.com/what-is-analytics-engineering/">dbt</a></em></p>
+</li>
+<li>
+<p><strong>Agile development</strong> - is an iterative approach to software development (and project management) that helps teams ship code faster and with fewer bugs.</p>
+<ul>
+<li><strong>Sprints</strong> - a time-boxed period (usually 2 weeks) when a team works to complete a set amount of work. Some sprints have themes like if a new tool was procured an entire sprint may be dedicated to setup and onboarding.</li>
+</ul>
+<p>Additional reading: <em><a href="https://www.atlassian.com/agile">Atlassian: What is Agile?</a></em>, <em><a href="https://business.adobe.com/blog/basics/sprints">Adobe: Project Sprints</a></em></p>
+</li>
+<li>
+<p><strong>Version control</strong> - enables teams to collaborate and streamline code development to resolve conflicts and create a centralized location for code.</p>
+<p>Source: <em><a href="https://about.gitlab.com/topics/version-control/">Gitlab: What is Version Control</a></em></p>
+</li>
+<li>
+<p><strong>CI/CD</strong> - Continuous integration and continuous delivery/deployment are automated processes to deploy code (e.g., whenever you merge to main).</p>
+<ul>
+<li>Continuous integration (CI) automatically builds, tests, and integrates code changes within a shared repository</li>
+<li>Continuous delivery (CD) automatically delivers code changes to production environments for human approval</li>
+<li>~OR ~ Continuous deployment (CD) automatically delivers and deploys code changes directly, circumventing human approval</li>
+</ul>
+<p>Source: <em><a href="https://resources.github.com/ci-cd/">Github: CI/CD explained</a></em></p>
+<p>Some advantages of using CI/CD are:</p>
+<ul>
+<li>Check code quality with linters in pull requests</li>
+<li>Run data/code tests in pull requests</li>
+<li>Deploy documentation upon merging to main</li>
+<li>Deploy infrastructure upon merging to main</li>
+</ul>
+</li>
+</ol>
+<h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="https://fivetran.com/docs/getting-started">Fivetran</a></strong> - a data loading tool that connects source data to your data warehouse.</li>
+<li><strong><a href="https://docs.getdbt.com/docs/introduction">dbt</a></strong> - a data transformation/modeling tool that operates as a layer on top of your data warehouse.</li>
+<li><strong><a href="https://airflow.apache.org/docs/apache-airflow/stable/">Airflow</a></strong> - an open-source data orchestration tool for developing, scheduling, and monitoring batch-oriented workflows.</li>
+<li><strong><a href="https://docs.snowflake.com/en/user-guide/intro-key-concepts">Snowflake</a></strong> - a cloud data warehouse that can automatically scale up/down compute resources to load, integrate, and analyze data.</li>
+<li><strong><a href="https://github.com/features/">GitHub</a></strong> - a cloud-based Git repository for version control.</li>
+<li><strong><a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html">AWS S3</a></strong> - cloud-based object storage.</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+    
+  </body>
+</html>
