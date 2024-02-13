@@ -1,2 +1,2 @@
 endOfLine: auto
-proseWrap: "always"
+proseWrap: "preserve"
