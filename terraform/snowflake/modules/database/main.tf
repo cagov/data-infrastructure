@@ -135,6 +135,8 @@ resource "snowflake_grant_account_role" "this_to_sysadmin" {
 # roles created here also get the same permissions in newly-created schemas and tables.
 # https://community.snowflake.com/s/article/How-to-grant-select-on-all-future-tables-in-a-schema-and-database-level
 
+# TODO: ownership grants on all and future tables
+
 # Database grants
 resource "snowflake_grant_privileges_to_account_role" "database" {
   provider          = snowflake.securityadmin
