@@ -60,21 +60,20 @@ resource "snowflake_role" "this" {
 #          Role Grants          #
 #################################
 
-resource "snowflake_role_grants" "this_to_sysadmin" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.this.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "this_to_sysadmin" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_role.this.name
+  parent_role_name = "SYSADMIN"
 }
 
 #################################
 #       Warehouse Grants        #
 #################################
 
-resource "snowflake_grant_privileges_to_role" "this" {
-  provider   = snowflake.securityadmin
-  privileges = local.warehouse.MOU
-  role_name  = snowflake_role.this.name
+resource "snowflake_grant_privileges_to_account_role" "this" {
+  provider          = snowflake.securityadmin
+  privileges        = local.warehouse.MOU
+  account_role_name = snowflake_role.this.name
   on_account_object {
     object_type = "WAREHOUSE"
     object_name = snowflake_warehouse.this.name

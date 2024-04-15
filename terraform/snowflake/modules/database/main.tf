@@ -57,7 +57,6 @@ locals {
       "CREATE VIEW",
       "MODIFY",
       "MONITOR",
-      "OWNERSHIP",
       "USAGE",
     ]
   }
@@ -74,7 +73,6 @@ locals {
     READWRITECONTROL = [
       "DELETE",
       "INSERT",
-      "OWNERSHIP",
       "TRUNCATE",
       "UPDATE",
     ]
@@ -84,7 +82,7 @@ locals {
   view = {
     READ             = ["SELECT", "REFERENCES"]
     READWRITE        = ["SELECT", "REFERENCES"]
-    READWRITECONTROL = ["SELECT", "REFERENCES", "OWNERSHIP"]
+    READWRITECONTROL = ["SELECT", "REFERENCES"]
   }
 }
 
@@ -118,13 +116,11 @@ resource "snowflake_role" "this" {
 #            Role Grants             #
 ######################################
 
-resource "snowflake_role_grants" "this_to_sysadmin" {
-  provider               = snowflake.useradmin
-  for_each               = toset(keys(local.database))
-  role_name              = snowflake_role.this[each.key].name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
-  depends_on             = [snowflake_role.this]
+resource "snowflake_grant_account_role" "this_to_sysadmin" {
+  provider         = snowflake.useradmin
+  for_each         = toset(keys(local.database))
+  role_name        = snowflake_role.this[each.key].name
+  parent_role_name = "SYSADMIN"
 }
 
 ######################################
@@ -140,11 +136,11 @@ resource "snowflake_role_grants" "this_to_sysadmin" {
 # https://community.snowflake.com/s/article/How-to-grant-select-on-all-future-tables-in-a-schema-and-database-level
 
 # Database grants
-resource "snowflake_grant_privileges_to_role" "database" {
-  provider   = snowflake.securityadmin
-  for_each   = local.database
-  privileges = each.value
-  role_name  = snowflake_role.this[each.key].name
+resource "snowflake_grant_privileges_to_account_role" "database" {
+  provider          = snowflake.securityadmin
+  for_each          = local.database
+  privileges        = each.value
+  account_role_name = snowflake_role.this[each.key].name
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.this.name
@@ -153,22 +149,22 @@ resource "snowflake_grant_privileges_to_role" "database" {
 }
 
 # Schema grants
-resource "snowflake_grant_privileges_to_role" "schemas" {
-  provider   = snowflake.securityadmin
-  for_each   = local.schema
-  privileges = each.value
-  role_name  = snowflake_role.this[each.key].name
+resource "snowflake_grant_privileges_to_account_role" "schemas" {
+  provider          = snowflake.securityadmin
+  for_each          = local.schema
+  privileges        = each.value
+  account_role_name = snowflake_role.this[each.key].name
   on_schema {
     future_schemas_in_database = snowflake_database.this.name
   }
   with_grant_option = false
 }
 
-resource "snowflake_grant_privileges_to_role" "public" {
-  provider   = snowflake.securityadmin
-  for_each   = local.schema
-  privileges = each.value
-  role_name  = snowflake_role.this[each.key].name
+resource "snowflake_grant_privileges_to_account_role" "public" {
+  provider          = snowflake.securityadmin
+  for_each          = local.schema
+  privileges        = each.value
+  account_role_name = snowflake_role.this[each.key].name
   on_schema {
     schema_name = "${snowflake_database.this.name}.PUBLIC"
   }
@@ -176,11 +172,11 @@ resource "snowflake_grant_privileges_to_role" "public" {
 }
 
 # Table grants
-resource "snowflake_grant_privileges_to_role" "tables" {
-  provider   = snowflake.securityadmin
-  for_each   = local.table
-  privileges = each.value
-  role_name  = snowflake_role.this[each.key].name
+resource "snowflake_grant_privileges_to_account_role" "tables" {
+  provider          = snowflake.securityadmin
+  for_each          = local.table
+  privileges        = each.value
+  account_role_name = snowflake_role.this[each.key].name
   on_schema_object {
     future {
       object_type_plural = "TABLES"
@@ -191,11 +187,11 @@ resource "snowflake_grant_privileges_to_role" "tables" {
 }
 
 # View grants
-resource "snowflake_grant_privileges_to_role" "views" {
-  provider   = snowflake.securityadmin
-  for_each   = local.view
-  privileges = each.value
-  role_name  = snowflake_role.this[each.key].name
+resource "snowflake_grant_privileges_to_account_role" "views" {
+  provider          = snowflake.securityadmin
+  for_each          = local.view
+  privileges        = each.value
+  account_role_name = snowflake_role.this[each.key].name
   on_schema_object {
     future {
       object_type_plural = "VIEWS"
