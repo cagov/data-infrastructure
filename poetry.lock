@@ -371,95 +371,40 @@ test = ["pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-cov", "pytest
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
-name = "daff"
-version = "1.3.46"
-description = "Diff and patch tables"
-optional = false
-python-versions = "*"
-files = [
-    {file = "daff-1.3.46.tar.gz", hash = "sha256:22d0da9fd6a3275b54c926a9c97b180f9258aad65113ea18f3fec52cbadcd818"},
-]
-
-[[package]]
-name = "dbt-adapters"
-version = "1.1.1"
-description = "The set of adapter protocols and base functionality that supports integration with dbt-core"
-optional = false
-python-versions = ">=3.8.0"
-files = [
-    {file = "dbt_adapters-1.1.1-py3-none-any.whl", hash = "sha256:6b747b6246e318dd3a2f154fa61894afd1755edc158793d2dcfe80277db35a9a"},
-    {file = "dbt_adapters-1.1.1.tar.gz", hash = "sha256:515d8d8e3504f1640785ada0ca69575dd0ed90868053b9e921c58a6bda5b4875"},
-]
-
-[package.dependencies]
-agate = ">=1.0,<2.0"
-dbt-common = "<2.0"
-mashumaro = {version = ">=3.0,<4.0", extras = ["msgpack"]}
-protobuf = ">=3.0,<5.0"
-pytz = ">=2015.7"
-typing-extensions = ">=4.0,<5.0"
-
-[[package]]
-name = "dbt-common"
-version = "1.0.4"
-description = "The shared common utilities that dbt-core and adapter implementations use"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "dbt_common-1.0.4-py3-none-any.whl", hash = "sha256:0862e3f020ea36f767c1c706d1ee555f883e4d25e9f312235ccb14b2f774a820"},
-    {file = "dbt_common-1.0.4.tar.gz", hash = "sha256:68f4bf0d7fc7dfd939ebd4bec4c7e11814c7a98c281f7bfdca86a86f57de40f5"},
-]
-
-[package.dependencies]
-agate = ">=1.7.0,<1.10"
-colorama = ">=0.3.9,<0.5"
-isodate = ">=0.6,<0.7"
-jinja2 = ">=3.1.3,<4"
-jsonschema = ">=4.0,<5.0"
-mashumaro = {version = ">=3.9,<4.0", extras = ["msgpack"]}
-pathspec = ">=0.9,<0.13"
-protobuf = ">=4.0.0,<5.0.0"
-python-dateutil = ">=2.0,<3.0"
-requests = "<3.0.0"
-typing-extensions = ">=4.4,<5.0"
-
-[package.extras]
-build = ["check-wheel-contents", "twine", "wheel"]
-lint = ["black (>=23.3,<24.0)", "flake8", "flake8-docstrings", "flake8-pyproject", "mypy (>=1.3,<2.0)", "pytest (>=7.3,<8.0)", "types-jinja2 (>=2.11,<3.0)", "types-jsonschema (>=4.17,<5.0)", "types-protobuf (>=4.24,<5.0)", "types-python-dateutil (>=2.8,<3.0)", "types-pyyaml (>=6.0,<7.0)", "types-requests"]
-test = ["hypothesis (>=6.87,<7.0)", "pytest (>=7.3,<8.0)", "pytest-cov (>=4.1,<5.0)", "pytest-xdist (>=3.2,<4.0)"]
-
-[[package]]
 name = "dbt-core"
-version = "1.8.0"
+version = "1.7.14"
 description = "With dbt, data analysts and engineers can build analytics the way engineers build applications."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dbt_core-1.8.0-py3-none-any.whl", hash = "sha256:fc089e3e7c22cb8bc3d2e30a16f1d02beb330f05a0d142afd0875dde32cf2007"},
-    {file = "dbt_core-1.8.0.tar.gz", hash = "sha256:13b475810232e9d9d75678245f3315fdffa1bc67eaf81460385d04620bfb53ac"},
+    {file = "dbt_core-1.7.14-py3-none-any.whl", hash = "sha256:e142e62d30178d598ad9463b8d162cfa8238806622fee7e63bf8b3236551feec"},
+    {file = "dbt_core-1.7.14.tar.gz", hash = "sha256:86dc6e84c356f075ae29896ef315c679d9bc49d96ae24124a105d5ecc79de43b"},
 ]
 
 [package.dependencies]
-agate = ">=1.7.0,<1.10"
-click = ">=8.0.2,<9.0"
-daff = ">=1.3.46"
-dbt-adapters = ">=0.1.0a2,<2.0"
-dbt-common = ">=1.0.2,<2.0"
-dbt-extractor = ">=0.5.0,<=0.6"
-dbt-semantic-interfaces = ">=0.5.1,<0.6"
+agate = ">=1.7.0,<1.8.0"
+cffi = ">=1.9,<2.0.0"
+click = ">=8.0.2,<9"
+colorama = ">=0.3.9,<0.5"
+dbt-extractor = ">=0.5.0,<0.6.0"
+dbt-semantic-interfaces = ">=0.4.2,<0.5.0"
+idna = ">=2.5,<4"
+isodate = ">=0.6,<0.7"
 Jinja2 = ">=3.1.3,<4"
+jsonschema = ">=3.0"
 logbook = ">=1.5,<1.6"
 mashumaro = {version = ">=3.9,<4.0", extras = ["msgpack"]}
-minimal-snowplow-tracker = ">=0.0.2,<0.1"
-networkx = ">=2.3,<4.0"
+minimal-snowplow-tracker = ">=0.0.2,<0.1.0"
+networkx = ">=2.3,<4"
 packaging = ">20.9"
-pathspec = ">=0.9,<0.13"
+pathspec = ">=0.9,<0.12"
 protobuf = ">=4.0.0,<5"
 pytz = ">=2015.7"
 pyyaml = ">=6.0"
 requests = "<3.0.0"
 sqlparse = ">=0.5.0,<0.6.0"
-typing-extensions = ">=4.4"
+typing-extensions = ">=3.7.4"
+urllib3 = ">=1.0,<2.0"
 
 [[package]]
 name = "dbt-extractor"
@@ -488,42 +433,40 @@ files = [
 
 [[package]]
 name = "dbt-semantic-interfaces"
-version = "0.5.1"
+version = "0.4.4"
 description = "The shared semantic layer definitions that dbt-core and MetricFlow use"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dbt_semantic_interfaces-0.5.1-py3-none-any.whl", hash = "sha256:b95ff3a6721dc30f6278cb84933d95e0ef27766e67eeb6bb41906242e77f7c9b"},
-    {file = "dbt_semantic_interfaces-0.5.1.tar.gz", hash = "sha256:3a497abef1ba8112affdf804b26bfdcd5468ed95cc924b509068e18d371c7c4d"},
+    {file = "dbt_semantic_interfaces-0.4.4-py3-none-any.whl", hash = "sha256:0149a4fd7fd4f25309edf5f856410536eaf2019f29dad58967dcf6d0625e6914"},
+    {file = "dbt_semantic_interfaces-0.4.4.tar.gz", hash = "sha256:3b8126deb964c03d14e8af1cb4bdfb9f20c53dfcef28fa3a0bc158a8312e4070"},
 ]
 
 [package.dependencies]
 click = ">=7.0,<9.0"
-importlib-metadata = ">=6.0,<7"
-jinja2 = ">=3.1.3,<4"
-jsonschema = ">=4.0,<5"
+importlib-metadata = ">=6.0,<7.0"
+jinja2 = ">=3.0,<4.0"
+jsonschema = ">=4.0,<5.0"
 more-itertools = ">=8.0,<11.0"
 pydantic = ">=1.10,<3"
-python-dateutil = ">=2.0,<3"
-pyyaml = ">=6.0,<7"
-typing-extensions = ">=4.4,<5"
+python-dateutil = ">=2.0,<3.0"
+pyyaml = ">=6.0,<7.0"
+typing-extensions = ">=4.4,<5.0"
 
 [[package]]
 name = "dbt-snowflake"
-version = "1.8.1"
+version = "1.7.4"
 description = "The Snowflake adapter plugin for dbt"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dbt_snowflake-1.8.1-py3-none-any.whl", hash = "sha256:0a401417c4fce85dd4ecccb63b2e4000861b7e9acbb5e5f70d81680236475d56"},
-    {file = "dbt_snowflake-1.8.1.tar.gz", hash = "sha256:1b5e5e08c468ece856f7b311d9f3ba821a46f01dd39d44810207d1c9cde2210d"},
+    {file = "dbt_snowflake-1.7.4-py3-none-any.whl", hash = "sha256:04c460c818a8ead980dfb5ea270c902d1be8a974523e6d8a9db0134c837b1c28"},
+    {file = "dbt_snowflake-1.7.4.tar.gz", hash = "sha256:fc272c95b8a08a80799b0ae3939496d56fe7a9973602e385613a7ca17f47ce2f"},
 ]
 
 [package.dependencies]
 agate = "*"
-dbt-adapters = ">=1.1.1,<2.0"
-dbt-common = ">=1.0.4,<2.0"
-dbt-core = ">=1.8.0"
+dbt-core = ">=1.7.0,<1.8.0"
 snowflake-connector-python = {version = ">=3.0,<4.0", extras = ["secure-local-storage"]}
 
 [[package]]
@@ -2405,4 +2348,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c5b9ff7fa53eba9a0c715ffa66a89297b854c92911f63b2c1390f541b7352679"
+content-hash = "7ef6d1f22f7db2abdbc811ce8e38d822ef439921e59be8deec2c3b51c4c1c3e6"
