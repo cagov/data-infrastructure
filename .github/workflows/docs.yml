@@ -8,8 +8,7 @@ permissions:
 
 env:
   DBT_PROFILES_DIR: ci
-  PRIVATE_KEY: ${{ SECRETS.SNOWFLAKE_PRIVATE_KEY }}
-  SNOWFLAKE_PRIVATE_KEY_PATH: /tmp/private_key.p8
+  SNOWFLAKE_PRIVATE_KEY: ${{ SECRETS.SNOWFLAKE_PRIVATE_KEY }}
   SNOWFLAKE_USER: GITHUB_ACTIONS_SVC_USER_DEV
 
 jobs:
@@ -30,10 +29,6 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
-        # TODO: once we are on dbt-snowflake 1.5, no need to pipe to a file, we can
-        # just use $SNOWFLAKE_PRIVATE_KEY
-      - name: Set up private key
-        run: echo "$PRIVATE_KEY" > $SNOWFLAKE_PRIVATE_KEY_PATH
       - name: Build dbt docs
         run: |
           # Generate snowflake dbt docs
