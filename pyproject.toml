@@ -64,8 +64,8 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 mkdocs-material = "~9.1.3"
-dbt-core = "~1.6"
-dbt-snowflake = "~1.6"
+dbt-core = "~1.8.0"
+dbt-snowflake = "~1.8.1"
 awscliv2 = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
