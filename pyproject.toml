@@ -70,8 +70,8 @@ awscliv2 = "^2.2.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.1"
-sqlfluff = "2.3.0"
-sqlfluff-templater-dbt = "2.3.0"
+sqlfluff = "3.0.6"
+sqlfluff-templater-dbt = "3.0.6"
 
 [build-system]
 requires = ["poetry-core"]
