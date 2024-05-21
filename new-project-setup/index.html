@@ -1,0 +1,1346 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../writing-documentation/">
+      
+      
+        <link rel="next" href="../dbt/">
+      
+      <link rel="icon" href="../images/odi-circle_logomark-blue.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>New Project Setup - CalData Data Services and Engineering Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.eebd395e.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#new-project-setup" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CalData Data Services and Engineering Infrastructure" class="md-header__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CalData Data Services and Engineering Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              New Project Setup
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CalData Data Services and Engineering Infrastructure" class="md-nav__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    CalData Data Services and Engineering Infrastructure
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        Project Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codespaces/" class="md-nav__link">
+        Codespaces
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code-review/" class="md-nav__link">
+        Code Review
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing-documentation/" class="md-nav__link">
+        Writing Documentation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../naming-conventions/" class="md-nav__link">
+        Naming Conventions
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security Guidelines
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-infrastructure/" class="md-nav__link">
+        Cloud Infrastructure
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../snowflake/" class="md-nav__link">
+        Snowflake
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing-documentation/" class="md-nav__link">
+        Writing Documentation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          New Project Setup
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        New Project Setup
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtain-permissions-in-snowflake" class="md-nav__link">
+    Obtain permissions in Snowflake
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-access-to-aws" class="md-nav__link">
+    Get access to AWS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-terraform-dependencies" class="md-nav__link">
+    Install terraform dependencies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snowflake-account-setup" class="md-nav__link">
+    Snowflake account setup
+  </a>
+  
+    <nav class="md-nav" aria-label="Snowflake account setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-account" class="md-nav__link">
+    Create the account
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-multi-factor-authentication-for-your-user" class="md-nav__link">
+    Enable multi-factor authentication for your user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-key-pair-authentication" class="md-nav__link">
+    Set up key pair authentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply-a-session-policy" class="md-nav__link">
+    Apply a session policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-it-ops-representatives" class="md-nav__link">
+    Add IT-Ops representatives
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-okta-sso-and-scim" class="md-nav__link">
+    Set up Okta SSO and SCIM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-project-git-repository" class="md-nav__link">
+    Create project git repository
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-project-infrastructure-using-terraform" class="md-nav__link">
+    Deploy project infrastructure using Terraform
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy project infrastructure using Terraform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-dev-configuration" class="md-nav__link">
+    Create the dev configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-dev-configuration" class="md-nav__link">
+    Deploy the dev configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-and-deploy-the-production-configuration" class="md-nav__link">
+    Configure and deploy the production configuration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-sentinel-logging" class="md-nav__link">
+    Set up Sentinel logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-ci-in-github" class="md-nav__link">
+    Set up CI in GitHub
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up CI in GitHub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-key-pairs-to-the-github-service-accounts" class="md-nav__link">
+    Add key pairs to the GitHub service accounts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-github-actions-secrets" class="md-nav__link">
+    Set up GitHub actions secrets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-github-pages-for-the-repository" class="md-nav__link">
+    Enable GitHub pages for the repository
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tearing-down-a-project" class="md-nav__link">
+    Tearing down a project
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          dbt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          dbt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt-performance/" class="md-nav__link">
+        dbt Performance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt_docs_snowflake/" class="md-nav__link">
+        dbt Snowflake Project
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Data
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/footprints/" class="md-nav__link">
+        Building Footprints
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_14" id="__nav_14_label" tabindex="0">
+          Learning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_14">
+          <span class="md-nav__icon md-icon"></span>
+          Learning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/glossary/" class="md-nav__link">
+        MDSA Glossary
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/git/" class="md-nav__link">
+        git
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/dbt/" class="md-nav__link">
+        dbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/cloud-data-warehouses/" class="md-nav__link">
+        Cloud Data Warehouses
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    Prerequisites
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obtain-permissions-in-snowflake" class="md-nav__link">
+    Obtain permissions in Snowflake
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#get-access-to-aws" class="md-nav__link">
+    Get access to AWS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-terraform-dependencies" class="md-nav__link">
+    Install terraform dependencies
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snowflake-account-setup" class="md-nav__link">
+    Snowflake account setup
+  </a>
+  
+    <nav class="md-nav" aria-label="Snowflake account setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-account" class="md-nav__link">
+    Create the account
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-multi-factor-authentication-for-your-user" class="md-nav__link">
+    Enable multi-factor authentication for your user
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-key-pair-authentication" class="md-nav__link">
+    Set up key pair authentication
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply-a-session-policy" class="md-nav__link">
+    Apply a session policy
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-it-ops-representatives" class="md-nav__link">
+    Add IT-Ops representatives
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-okta-sso-and-scim" class="md-nav__link">
+    Set up Okta SSO and SCIM
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-project-git-repository" class="md-nav__link">
+    Create project git repository
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deploy-project-infrastructure-using-terraform" class="md-nav__link">
+    Deploy project infrastructure using Terraform
+  </a>
+  
+    <nav class="md-nav" aria-label="Deploy project infrastructure using Terraform">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-the-dev-configuration" class="md-nav__link">
+    Create the dev configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-the-dev-configuration" class="md-nav__link">
+    Deploy the dev configuration
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-and-deploy-the-production-configuration" class="md-nav__link">
+    Configure and deploy the production configuration
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-sentinel-logging" class="md-nav__link">
+    Set up Sentinel logging
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-ci-in-github" class="md-nav__link">
+    Set up CI in GitHub
+  </a>
+  
+    <nav class="md-nav" aria-label="Set up CI in GitHub">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-key-pairs-to-the-github-service-accounts" class="md-nav__link">
+    Add key pairs to the GitHub service accounts
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#set-up-github-actions-secrets" class="md-nav__link">
+    Set up GitHub actions secrets
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-github-pages-for-the-repository" class="md-nav__link">
+    Enable GitHub pages for the repository
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tearing-down-a-project" class="md-nav__link">
+    Tearing down a project
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="new-project-setup">New Project Setup<a class="headerlink" href="#new-project-setup" title="Permanent link">&para;</a></h1>
+<p>The DSE team regularly creates new Snowflake accounts in our Snowflake org.
+We do this instead of putting all of our data projects into our main account for a few reasons:</p>
+<ol>
+<li>At the end of a project, we often want to transfer account ownership to our partners.
+    Having it separated from the start helps that process.</li>
+<li>We frequently want to add our project champion or IT partners to our account as admins.
+    This is safer if project accounts are separate.</li>
+<li>We often want to have accounts in a specific cloud and region for compliance or data transfer regions.</li>
+<li>Different projects may require different approaches to account-level operations like OAuth/SAML.</li>
+</ol>
+<p>Here we document the steps to creating a new Snowflake account from scratch.</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="obtain-permissions-in-snowflake">Obtain permissions in Snowflake<a class="headerlink" href="#obtain-permissions-in-snowflake" title="Permanent link">&para;</a></h3>
+<p>In order to create a new account, you will need access to the <code>orgadmin</code> role.
+If you have <code>accountadmin</code> in the primary Snowflake account, you can grant it to yourself:</p>
+<div class="highlight"><pre><span></span><code><span class="n">USE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">accountadmin</span><span class="p">;</span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">orgadmin</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="o">&lt;</span><span class="n">YOUR</span><span class="o">-</span><span class="k">USER</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div>
+<p>If you later want to revoke the <code>orgadmin</code> role from your user or any other, you can do so with:</p>
+<div class="highlight"><pre><span></span><code><span class="n">USE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">accountadmin</span><span class="p">;</span>
+<span class="k">REVOKE</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">orgadmin</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="o">&lt;</span><span class="n">YOUR</span><span class="o">-</span><span class="k">USER</span><span class="o">&gt;</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="get-access-to-aws">Get access to AWS<a class="headerlink" href="#get-access-to-aws" title="Permanent link">&para;</a></h3>
+<p>We typically create our Snowflake architecture using Terraform.
+Terraform state is stored in S3 buckets within our AWS account,
+so you will need read/write access to those buckets.</p>
+<p>Ask a DSE AWS admin to give you access to these buckets,
+and <a href="../setup/#aws">configure your AWS credentials</a>.</p>
+<h3 id="install-terraform-dependencies">Install terraform dependencies<a class="headerlink" href="#install-terraform-dependencies" title="Permanent link">&para;</a></h3>
+<p>You can install Terraform using whatever approach makes sense for your system,
+including using <code>brew</code> or <code>conda</code>.</p>
+<p>Here is a sample for installing the dependencies using <code>conda</code>:</p>
+<div class="highlight"><pre><span></span><code>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>infra<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.10<span class="w">  </span><span class="c1"># create an environment named &#39;infra&#39;</span>
+conda<span class="w"> </span>activate<span class="w"> </span>infra<span class="w">  </span><span class="c1"># activate the environment</span>
+conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>terraform<span class="w"> </span>tflint<span class="w">  </span><span class="c1"># Install terraform and tflint</span>
+</code></pre></div>
+<h2 id="snowflake-account-setup">Snowflake account setup<a class="headerlink" href="#snowflake-account-setup" title="Permanent link">&para;</a></h2>
+<h3 id="create-the-account">Create the account<a class="headerlink" href="#create-the-account" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Assume the <code>ORGADMIN</code> role</li>
+<li>Under the "Admin" side panel, go to "Accounts" and click the "+ Account" button:<ol>
+<li>Select the cloud and region appropriate to the project. The region should be in the United States.</li>
+<li>Select "Business Critical" for the Snowflake Edition.</li>
+<li>You will be prompted to create an initial user with <code>ACCOUNTADMIN</code> privileges. This should be you.
+    You will be prompted to create a password for your user. Create one using your password manager,
+    but know that it will ask you change your password upon first log-in.</li>
+<li>Save the Account Locator and Account URL for your new account.</li>
+</ol>
+</li>
+<li>Log into your new account. You should be prompted to change your password. Save the updated password in your password manager.</li>
+</ol>
+<h3 id="enable-multi-factor-authentication-for-your-user">Enable multi-factor authentication for your user<a class="headerlink" href="#enable-multi-factor-authentication-for-your-user" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ensure the Duo Mobile app is installed on your phone.</li>
+<li>In the upper-left corner of the Snowsight UI, click on your username, and select "Profile"</li>
+<li>At the bottom of the dialog, select "Enroll" to enable multi-factor authentication.</li>
+<li>Follow the instructions to link the new account with your Duo app.</li>
+</ol>
+<h3 id="set-up-key-pair-authentication">Set up key pair authentication<a class="headerlink" href="#set-up-key-pair-authentication" title="Permanent link">&para;</a></h3>
+<p>Certain Snowflake clients don't properly cache MFA tokens,
+which means that using them can generate dozens or hundreds of MFA requests on your phone.
+At best this makes the tools unusable, and at worst it can lock your Snowflake account.
+One example of such a tool is (as of this writing) the Snowflake Terraform Provider.</p>
+<p>The recommended workaround for this is to add a key pair to your account for use with those tools.</p>
+<ol>
+<li>Follow the instructions given <a href="https://docs.snowflake.com/en/user-guide/key-pair-auth#configuring-key-pair-authentication">here</a>
+    to generate a key pair and add the public key to your account.
+    Keep the key pair in a secure place on your device.
+    <a href="https://gist.github.com/ian-r-rose/1c714ee04be53f7a3fd80322e1a22c27">This gist</a>
+    contains the bash commands from the instructions,
+    and can be helpful for quickly creating a new encrypted key pair.
+    Usage of the script looks like:
+    <div class="highlight"><pre><span></span><code>bash<span class="w"> </span>generate_encrypted_key.sh<span class="w"> </span>&lt;key-name&gt;<span class="w"> </span>&lt;passphrase&gt;
+</code></pre></div>
+    You can use <code>pbcopy &lt; _your_public_key_file_name_.pub</code> to copy the contents of your public key.
+    Be sure to remove the <code>----BEGIN PUBLIC KEY----</code> and <code>-----END PUBLIC KEY------</code> portions
+    when adding your key to your Snowflake user.</li>
+<li>In your local <code>.bash_profile</code> or an <code>.env</code> file, add environment variables for
+    <code>SNOWFLAKE_ACCOUNT</code>, <code>SNOWFLAKE_USER</code>, <code>SNOWFLAKE_PRIVATE_KEY_PATH</code>,
+    and (if applicable) <code>SNOWFLAKE_PRIVATE_KEY_PASSPHRASE</code>.</li>
+</ol>
+<h3 id="apply-a-session-policy">Apply a session policy<a class="headerlink" href="#apply-a-session-policy" title="Permanent link">&para;</a></h3>
+<p>By default, Snowflake logs out user sessions after four hours of inactivity.
+ODI's information security policies prefer that we log out after one hour of inactivity for most accounts,
+and after fifteen minutes of inactivity for particularly sensitive accounts.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It's possible we will do this using Terraform in the future,
+but at the time of this writing the Snowflake Terraform provider does not support session policies.</p>
+</div>
+<p>After the Snowflake account is created, run the following script in a worksheet
+to set the appropriate session policy:</p>
+<div class="highlight"><pre><span></span><code><span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">sysadmin</span><span class="p">;</span>
+<span class="k">create</span><span class="w"> </span><span class="k">database</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">exists</span><span class="w"> </span><span class="n">policies</span><span class="p">;</span>
+<span class="k">create</span><span class="w"> </span><span class="k">session</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="k">exists</span><span class="w"> </span><span class="n">policies</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="n">account_session_policy</span>
+<span class="w">  </span><span class="n">session_idle_timeout_mins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span>
+<span class="w">  </span><span class="n">session_ui_idle_timeout_mins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">60</span>
+<span class="p">;</span>
+<span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">accountadmin</span><span class="p">;</span>
+<span class="c1">-- alter account unset session policy;  -- unset any previously existing session policy</span>
+<span class="k">alter</span><span class="w"> </span><span class="n">account</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="k">session</span><span class="w"> </span><span class="n">policy</span><span class="w"> </span><span class="n">policies</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="n">account_session_policy</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="add-it-ops-representatives">Add IT-Ops representatives<a class="headerlink" href="#add-it-ops-representatives" title="Permanent link">&para;</a></h3>
+<p>TODO: establish and document processes here.</p>
+<h3 id="set-up-okta-sso-and-scim">Set up Okta SSO and SCIM<a class="headerlink" href="#set-up-okta-sso-and-scim" title="Permanent link">&para;</a></h3>
+<p>TODO: establish and document processes here.</p>
+<h2 id="create-project-git-repository">Create project git repository<a class="headerlink" href="#create-project-git-repository" title="Permanent link">&para;</a></h2>
+<p>Create a new git repository from the CalData Infrastructure Template
+following the instructions <a href="https://github.com/cagov/caldata-infrastructure-template#usage">here</a>.</p>
+<p>Once you have created the repository, push it to a remote repository in GitHub.
+There are some GitHub actions that will fail because the repository is not yet
+configured to work with the new Snowflake account.</p>
+<h2 id="deploy-project-infrastructure-using-terraform">Deploy project infrastructure using Terraform<a class="headerlink" href="#deploy-project-infrastructure-using-terraform" title="Permanent link">&para;</a></h2>
+<p>We will create two separate deployments of the project infrastructure,
+one for development, and one for production.
+In some places we will refer to project name and owner as <code>&lt;project&gt;</code> and <code>&lt;owner&gt;</code>, respectively,
+following our <a href="../naming-conventions/">naming conventions</a>.
+You should substitute the appropriate names there.</p>
+<h3 id="create-the-dev-configuration">Create the dev configuration<a class="headerlink" href="#create-the-dev-configuration" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ensure that your environment has environment variables set for
+    <code>SNOWFLAKE_ACCOUNT</code>, <code>SNOWFLAKE_USER</code>, <code>SNOWFLAKE_PRIVATE_KEY_PATH</code>, and <code>SNOWFLAKE_PRIVATE_KEY_PASSPHRASE</code>.
+    Make sure you <em>don't</em> have any other <code>SNOWFLAKE_*</code> variables set,
+    as they can interfere with authentication.</li>
+<li>In the new git repository, create a directory to hold the development Terraform configuration:
+    <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>terraform/environments/dev/
+</code></pre></div>
+    The location of this directory is by convention, and subject to change.</li>
+<li>Copy the terraform configuration from
+    <a href="https://github.com/cagov/data-infrastructure/blob/main/terraform/snowflake/environments/dev/main.tf">here</a>
+    to your <code>dev</code> directory.</li>
+<li>In the "elt" module of <code>main.tf</code>, change the <code>source</code> parameter to point to
+    <code>"github.com/cagov/data-infrastructure.git//terraform/snowflake/modules/elt?ref=&lt;ref&gt;"</code>
+    where <code>&lt;ref&gt;</code> is the short hash of the most recent commit in the <code>data-infrastructure</code> repository.</li>
+<li>In the <code>dev</code> directory, create a new backend configuration file called <code>&lt;owner&gt;-&lt;project&gt;-dev.tfbackend</code>.
+    The file will point to the S3 bucket in which we are storing terraform state. Populate the backend
+    configuration file with the following (making sure to substitute values for <code>&lt;owner&gt;</code> and <code>&lt;project&gt;</code>):
+    <div class="highlight"><pre><span></span><code><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dse-snowflake-dev-terraform-state&quot;</span>
+<span class="na">dynamodb_table</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;dse-snowflake-dev-terraform-state-lock&quot;</span>
+<span class="na">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;owner&gt;-&lt;project&gt;-dev.tfstate&quot;</span>
+<span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;us-west-2&quot;</span>
+</code></pre></div></li>
+<li>In the <code>dev</code> directory, create a terraform variables file called <code>terraform.tfvars</code>,
+    and populate the "elt" module variables. These variables may expand in the future,
+    but at the moment they are just the new Snowflake account locator and the environment
+    (in this case <code>"DEV"</code>):
+    <div class="highlight"><pre><span></span><code><span class="na">locator</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;&lt;account-locator&gt;&quot;</span>
+<span class="na">environment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;DEV&quot;</span>
+</code></pre></div></li>
+<li>Initialize the configuration:
+    <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>init<span class="w"> </span>-backend-config<span class="w"> </span>&lt;owner&gt;-&lt;project&gt;-dev.tfbackend
+</code></pre></div></li>
+<li>Include both Mac and Linux provider binaries in your terraform lock file.
+    This helps mitigate differences between CI environments and ODI Macs:
+    <div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>providers<span class="w"> </span>lock<span class="w"> </span>-platform<span class="o">=</span>linux_amd64<span class="w"> </span>-platform<span class="o">=</span>darwin_amd64
+</code></pre></div></li>
+<li>Add your new <code>main.tf</code>, <code>terraform.tfvars</code>, <code>&lt;owner&gt;-&lt;project&gt;-dev.tfbackend</code>,
+    and terraform lock file to the git repository. Do not add the <code>.terraform/</code> directory.</li>
+</ol>
+<h3 id="deploy-the-dev-configuration">Deploy the dev configuration<a class="headerlink" href="#deploy-the-dev-configuration" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Ensure that your local environment has environment variables set for <code>SNOWFLAKE_ACCOUNT</code>,
+    <code>SNOWFLAKE_USER</code>, <code>SNOWFLAKE_PRIVATE_KEY_PATH</code>,  and <code>SNOWFLAKE_PRIVATE_KEY_PASSPHRASE</code>,
+    and that they are set to your new account, rather than any other accounts.</li>
+<li>Run <code>terraform plan</code> to see the plan for the resources that will be created.
+    Inspect the plan to see that everything looks correct.</li>
+<li>Run <code>terraform apply</code> to deploy the configuration. This will actually create the infrastructure!</li>
+</ol>
+<h3 id="configure-and-deploy-the-production-configuration">Configure and deploy the production configuration<a class="headerlink" href="#configure-and-deploy-the-production-configuration" title="Permanent link">&para;</a></h3>
+<p>Re-run all of the steps above, but in a new directory <code>terraform/environments/prd</code>.
+Everywhere where there is a <code>dev</code> (or <code>DEV</code>), replace it with a <code>prd</code> (or <code>PRD</code>).</p>
+<h2 id="set-up-sentinel-logging">Set up Sentinel logging<a class="headerlink" href="#set-up-sentinel-logging" title="Permanent link">&para;</a></h2>
+<p>ODI IT requires that systems log to our Microsoft Sentinel instance
+for compliance with security monitoring policies.
+The terraform configuration deployed above creates a service account for Sentinel
+which needs to be integrated.</p>
+<ol>
+<li>Create a password for the Sentinel service account.
+    In other contexts we prefer key pairs for service accounts, but the Sentinel
+    integration requires password authentication. In a Snowflake worksheet run:
+    <div class="highlight"><pre><span></span><code><span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">securityadmin</span><span class="p">;</span>
+<span class="k">alter</span><span class="w"> </span><span class="k">user</span><span class="w"> </span><span class="n">sentinel_svc_user_prd</span><span class="w"> </span><span class="k">set</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;new-password&gt;&#39;</span>
+</code></pre></div></li>
+<li>
+<p>Store the Sentinel service account authentication information in our shared
+    1Password vault.
+    Make sure to provide enough information to disambiguate it from others stored in the vault,
+    including:</p>
+<ul>
+<li>The account locator</li>
+<li>The account name (distinct from the account locator)</li>
+<li>The service account name</li>
+<li>The public key</li>
+<li>The private key</li>
+</ul>
+</li>
+<li>
+<p>Create an IT Help Desk ticket to add the new account to our Sentinel instance.
+    Share the 1Password item with the IT-Ops staff member who is implementing the ticket.
+    If you've included all of the above information in the vault item,
+    it should be all they need.</p>
+</li>
+<li>Within fifteen minutes or so of implementation it should be clear whether the integration is working.
+    IT-Ops should be able to see logs ingesting, and Snowflake account admins should see queries
+    from the Sentinel service user.</li>
+</ol>
+<h2 id="set-up-ci-in-github">Set up CI in GitHub<a class="headerlink" href="#set-up-ci-in-github" title="Permanent link">&para;</a></h2>
+<p>The projects generated from our infrastructure template need read access to the
+Snowflake account in order to do two things from GitHub actions:</p>
+<ol>
+<li>Verify that dbt models in branches compile and pass linter checks</li>
+<li>Generate dbt docs upon merge to <code>main</code>.</li>
+</ol>
+<p>The terraform configurations deployed above create two service accounts
+for GitHub actions, a production one for docs and a dev one for CI checks.</p>
+<h3 id="add-key-pairs-to-the-github-service-accounts">Add key pairs to the GitHub service accounts<a class="headerlink" href="#add-key-pairs-to-the-github-service-accounts" title="Permanent link">&para;</a></h3>
+<p>Set up key pairs for the two GitHub actions service accounts
+(<code>GITHUB_ACTIONS_SVC_USER_DEV</code> and <code>GITHUB_ACTIONS_SVC_USER_PRD</code>).
+This follows a similar procedure to what you did for your personal key pair,
+though the project template currently does not assume an encrypted key pair.
+<a href="https://gist.github.com/ian-r-rose/35d49bd253194f57b57e9e59a595bed8">This bash script</a>
+is a helpful shortcut for generating the key pair:
+<div class="highlight"><pre><span></span><code>bash<span class="w"> </span>generate_key.sh<span class="w"> </span>&lt;key-name&gt;
+</code></pre></div></p>
+<p>Once you have created and set the key pairs, add them to the DSE 1Password shared vault.
+Make sure to provide enough information to disambiguate the key pair from others stored in the vault,
+including:</p>
+<ul>
+<li>The account locator</li>
+<li>The account name (distinct from the account locator)</li>
+<li>The service account name</li>
+<li>The public key</li>
+<li>The private key</li>
+</ul>
+<h3 id="set-up-github-actions-secrets">Set up GitHub actions secrets<a class="headerlink" href="#set-up-github-actions-secrets" title="Permanent link">&para;</a></h3>
+<p>You need to configure secrets in GitHub actions
+in order for the service accounts to be able to connect to your Snowflake account.
+From the repository page, go to "Settings", then to "Secrets and variables", then to "Actions".</p>
+<p>Add the following repository secrets:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SNOWFLAKE_ACCOUNT</code></td>
+<td>new account locator</td>
+</tr>
+<tr>
+<td><code>SNOWFLAKE_USER_DEV</code></td>
+<td><code>GITHUB_ACTIONS_SVC_USER_DEV</code></td>
+</tr>
+<tr>
+<td><code>SNOWFLAKE_USER_PRD</code></td>
+<td><code>GITHUB_ACTIONS_SVC_USER_PRD</code></td>
+</tr>
+<tr>
+<td><code>SNOWFLAKE_PRIVATE_KEY_DEV</code></td>
+<td>dev service account private key</td>
+</tr>
+<tr>
+<td><code>SNOWFLAKE_PRIVATE_KEY_PRD</code></td>
+<td>prd service account private key</td>
+</tr>
+</tbody>
+</table>
+<h3 id="enable-github-pages-for-the-repository">Enable GitHub pages for the repository<a class="headerlink" href="#enable-github-pages-for-the-repository" title="Permanent link">&para;</a></h3>
+<p>The repository must have GitHub pages enabled in order for it to deploy and be viewable.</p>
+<ol>
+<li>From the repository page, go to "Settings", then to "Pages".</li>
+<li>Under "GitHub Pages visibility" select "Private" (unless the project is public!).</li>
+<li>Under "Build and deployment" select "Deploy from a branch" and choose "gh-pages" as your branch.</li>
+</ol>
+<h2 id="tearing-down-a-project">Tearing down a project<a class="headerlink" href="#tearing-down-a-project" title="Permanent link">&para;</a></h2>
+<p>Upon completion of a project (or if you just went through the above for testing purposes)
+there are a few steps needed to tear down the infrastructure.</p>
+<ol>
+<li>If the GitHub repository is to be handed off a client, transfer ownership of it to them.
+    Otherwise, delete or archive the GitHub repository.
+    If archiving, delete the GitHub actions secrets.</li>
+<li>Open a Help Desk ticket with IT-Ops to remove Sentinel logging for the Snowflake account.</li>
+<li>If the Snowflake account is to be handed off to a client, transfer ownership of it to them.
+    Otherwise, <a href="https://docs.snowflake.com/en/user-guide/organizations-manage-accounts-delete">drop the account</a>.</li>
+</ol>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+    
+  </body>
+</html>
