@@ -52,149 +52,131 @@ resource "snowflake_role" "logger" {
 # https:#docs.snowflake.com/en/user-guide/security-access-control-considerations#aligning-object-access-with-business-functions
 # This allows SYSADMIN to make additional grants of database objects to these roles.
 
-resource "snowflake_role_grants" "loader_to_sysadmin" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.loader.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "loader_to_sysadmin" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_role.loader.name
+  parent_role_name = "SYSADMIN"
 }
 
-resource "snowflake_role_grants" "transformer_to_sysadmin" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.transformer.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "transformer_to_sysadmin" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_role.transformer.name
+  parent_role_name = "SYSADMIN"
 }
 
-resource "snowflake_role_grants" "reporter_to_sysadmin" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.reporter.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "reporter_to_sysadmin" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_role.reporter.name
+  parent_role_name = "SYSADMIN"
 }
 
-resource "snowflake_role_grants" "reader_to_sysadmin" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.reader.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "reader_to_sysadmin" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_role.reader.name
+  parent_role_name = "SYSADMIN"
 }
 
 # NOTE: logger has elevated privileges, so it is assigned
 # directly to accountadmin
-resource "snowflake_role_grants" "logger_to_accountadmin" {
-  provider               = snowflake.accountadmin
-  role_name              = snowflake_role.logger.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "logger_to_accountadmin" {
+  provider         = snowflake.accountadmin
+  role_name        = snowflake_role.logger.name
+  parent_role_name = "ACCOUNTADMIN"
 }
 
 # Loader has RWC privileges in RAW
-resource "snowflake_role_grants" "raw_rwc_to_loader" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.raw.name}_READWRITECONTROL"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.loader.name]
+resource "snowflake_grant_account_role" "raw_rwc_to_loader" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.raw.name}_READWRITECONTROL"
+  parent_role_name = snowflake_role.loader.name
 }
 
 # Reporter has read privileges in ANALYTICS
-resource "snowflake_role_grants" "analytics_r_to_reporter" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.analytics.name}_READ"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.reporter.name]
+resource "snowflake_grant_account_role" "analytics_r_to_reporter" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.analytics.name}_READ"
+  parent_role_name = snowflake_role.reporter.name
 }
 
 # Transformer has RWC privileges in TRANSFORM
-resource "snowflake_role_grants" "transform_rwc_to_transformer" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.transform.name}_READWRITECONTROL"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.transformer.name]
+resource "snowflake_grant_account_role" "transform_rwc_to_transformer" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.transform.name}_READWRITECONTROL"
+  parent_role_name = snowflake_role.transformer.name
 }
 
 # Transformer has RWC privileges in ANALYTICS
-resource "snowflake_role_grants" "analytics_rwc_to_transformer" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.analytics.name}_READWRITECONTROL"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.transformer.name]
+resource "snowflake_grant_account_role" "analytics_rwc_to_transformer" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.analytics.name}_READWRITECONTROL"
+  parent_role_name = snowflake_role.transformer.name
 }
 
 # Transformer has read permissions in RAW
-resource "snowflake_role_grants" "raw_r_to_transformer" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.raw.name}_READ"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.transformer.name]
+resource "snowflake_grant_account_role" "raw_r_to_transformer" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.raw.name}_READ"
+  parent_role_name = snowflake_role.transformer.name
 }
 
 # Transformer can use the TRANSFORMING warehouse
-resource "snowflake_role_grants" "transforming_to_transformer" {
-  provider               = snowflake.useradmin
-  for_each               = toset(values(module.transforming)[*].access_role_name)
-  role_name              = each.key
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.transformer.name]
+resource "snowflake_grant_account_role" "transforming_to_transformer" {
+  provider         = snowflake.useradmin
+  for_each         = toset(values(module.transforming)[*].access_role_name)
+  role_name        = each.key
+  parent_role_name = snowflake_role.transformer.name
 }
 
 # Reporter can use the REPORTING warehouse
-resource "snowflake_role_grants" "reporting_to_reporter" {
-  provider               = snowflake.useradmin
-  for_each               = toset(values(module.reporting)[*].access_role_name)
-  role_name              = each.key
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.reporter.name]
+resource "snowflake_grant_account_role" "reporting_to_reporter" {
+  provider         = snowflake.useradmin
+  for_each         = toset(values(module.reporting)[*].access_role_name)
+  role_name        = each.key
+  parent_role_name = snowflake_role.reporter.name
 }
 
 # Loader can use the LOADING warehouse
-resource "snowflake_role_grants" "loading_to_loader" {
-  provider               = snowflake.useradmin
-  for_each               = toset(values(module.loading)[*].access_role_name)
-  role_name              = each.key
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.loader.name]
+resource "snowflake_grant_account_role" "loading_to_loader" {
+  provider         = snowflake.useradmin
+  for_each         = toset(values(module.loading)[*].access_role_name)
+  role_name        = each.key
+  parent_role_name = snowflake_role.loader.name
 }
 
 # Reader has read permissions in RAW
-resource "snowflake_role_grants" "raw_r_to_reader" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.raw.name}_READ"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.reader.name]
+resource "snowflake_grant_account_role" "raw_r_to_reader" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.raw.name}_READ"
+  parent_role_name = snowflake_role.reader.name
 }
 
 # Reader has read permissions in TRANSFORM
-resource "snowflake_role_grants" "transform_r_to_reader" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.transform.name}_READ"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.reader.name]
+resource "snowflake_grant_account_role" "transform_r_to_reader" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.transform.name}_READ"
+  parent_role_name = snowflake_role.reader.name
 }
 
 # Reader has read permissions in ANALYTICS
-resource "snowflake_role_grants" "analytics_r_to_reader" {
-  provider               = snowflake.useradmin
-  role_name              = "${module.analytics.name}_READ"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.reader.name]
+resource "snowflake_grant_account_role" "analytics_r_to_reader" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.analytics.name}_READ"
+  parent_role_name = snowflake_role.reader.name
 }
 
 # Reader can use the REPORTING warehouse
-resource "snowflake_role_grants" "reporting_to_reader" {
-  provider               = snowflake.useradmin
-  for_each               = toset(values(module.reporting)[*].access_role_name)
-  role_name              = each.key
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.reader.name]
+resource "snowflake_grant_account_role" "reporting_to_reader" {
+  provider         = snowflake.useradmin
+  for_each         = toset(values(module.reporting)[*].access_role_name)
+  role_name        = each.key
+  parent_role_name = snowflake_role.reader.name
 }
 
 # Logger can use the LOGGING warehouse
-resource "snowflake_role_grants" "logging_to_logger" {
-  provider               = snowflake.useradmin
-  role_name              = module.logging.access_role_name
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.logger.name]
+resource "snowflake_grant_account_role" "logging_to_logger" {
+  provider         = snowflake.useradmin
+  role_name        = module.logging.access_role_name
+  parent_role_name = snowflake_role.logger.name
 }
 
 ######################################
@@ -202,16 +184,11 @@ resource "snowflake_role_grants" "logging_to_logger" {
 ######################################
 
 # Imported privileges for logging
-resource "snowflake_database_grant" "this" {
-  provider               = snowflake.accountadmin
-  database_name          = "SNOWFLAKE"
-  privilege              = "IMPORTED PRIVILEGES"
-  enable_multiple_grants = true
-  roles                  = [snowflake_role.logger.name]
-  # Sigh... we need to ignore changes because the terraform provider doesn't
-  # properly track this resource:
-  # https://github.com/Snowflake-Labs/terraform-provider-snowflake/issues/1998
-  lifecycle {
-    ignore_changes = all
+resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_logger" {
+  account_role_name = snowflake_role.logger.name
+  privileges        = ["IMPORTED PRIVILEGES"]
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = "SNOWFLAKE"
   }
 }
