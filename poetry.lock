@@ -2084,14 +2084,14 @@ files = [
 
 [[package]]
 name = "sqlfluff"
-version = "2.3.0"
+version = "3.0.7"
 description = "The SQL Linter for Humans"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "sqlfluff-2.3.0-py3-none-any.whl", hash = "sha256:b1ee83ad589ea843388d57d6e114dece5c59e5072e9f0fb26d9c8447d09240f8"},
-    {file = "sqlfluff-2.3.0.tar.gz", hash = "sha256:bd9d3667db9eaf349665ba1d1cba90b3cbadc106a96f1740d0a1dbb776b4e380"},
+    {file = "sqlfluff-3.0.7-py3-none-any.whl", hash = "sha256:b1ee83ad589ea843388d57d6e114dece5c59e5072e9f0fb26d9c8447d09240f8"},
+    {file = "sqlfluff-3.0.7.tar.gz", hash = "sha256:bd9d3667db9eaf349665ba1d1cba90b3cbadc106a96f1740d0a1dbb776b4e380"},
 ]
 
 [package.dependencies]
@@ -2112,14 +2112,14 @@ typing-extensions = "*"
 
 [[package]]
 name = "sqlfluff-templater-dbt"
-version = "2.3.0"
+version = "3.0.7"
 description = "Lint your dbt project SQL"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "sqlfluff-templater-dbt-2.3.0.tar.gz", hash = "sha256:db2abf497af1d792ad08e49db7e54d0cf074bb051afe8c0338aababf7d038052"},
-    {file = "sqlfluff_templater_dbt-2.3.0-py3-none-any.whl", hash = "sha256:b63de29b64fdbea614d4861bc546ec6c0397e3103860348b7a5f36969cbe0f04"},
+    {file = "sqlfluff-templater-dbt-3.0.7.tar.gz", hash = "sha256:db2abf497af1d792ad08e49db7e54d0cf074bb051afe8c0338aababf7d038052"},
+    {file = "sqlfluff_templater_dbt-3.0.7-py3-none-any.whl", hash = "sha256:b63de29b64fdbea614d4861bc546ec6c0397e3103860348b7a5f36969cbe0f04"},
 ]
 
 [package.dependencies]
@@ -2129,7 +2129,7 @@ markupsafe = "*"
 pydantic = "*"
 rich = "*"
 "ruamel.yaml" = "*"
-sqlfluff = "2.3.0"
+sqlfluff = "3.0.7"
 
 [[package]]
 name = "sqlparse"
