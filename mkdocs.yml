@@ -34,7 +34,6 @@ nav:
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
   - Snowflake: snowflake.md
-  - Writing Documentation: writing-documentation.md
   - New Project Setup: new-project-setup.md
   - dbt:
       - Overview: dbt.md
