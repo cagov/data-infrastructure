@@ -1,0 +1,1397 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../cloud-infrastructure/">
+      
+      
+        <link rel="next" href="../new-project-setup/">
+      
+      <link rel="icon" href="../images/odi-circle_logomark-blue.png">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
+    
+    
+      
+        <title>Snowflake - CalData Data Services and Engineering Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.eebd395e.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#snowflake" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="CalData Data Services and Engineering Infrastructure" class="md-header__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CalData Data Services and Engineering Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Snowflake
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="CalData Data Services and Engineering Infrastructure" class="md-nav__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    CalData Data Services and Engineering Infrastructure
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../setup/" class="md-nav__link">
+        Project Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codespaces/" class="md-nav__link">
+        Codespaces
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code-review/" class="md-nav__link">
+        Code Review
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing-documentation/" class="md-nav__link">
+        Writing Documentation
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../naming-conventions/" class="md-nav__link">
+        Naming Conventions
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        Security Guidelines
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-infrastructure/" class="md-nav__link">
+        Cloud Infrastructure
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Snowflake
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Snowflake
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    Architecture
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-databases" class="md-nav__link">
+    Three databases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-warehouse-groups" class="md-nav__link">
+    Three warehouse groups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-roles" class="md-nav__link">
+    Four roles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-roles-vs-functional-roles" class="md-nav__link">
+    Access Roles vs Functional Roles
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-policies" class="md-nav__link">
+    Security Policies
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-federated-single-sign-on-sso-and-system-for-cross-domain-identity-management-scim-for-human-users" class="md-nav__link">
+    Use Federated Single Sign-On (SSO) and System for Cross-domain Identity Management (SCIM) for human users
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-multi-factor-authentication-mfa-for-users" class="md-nav__link">
+    Enable multi-factor authentication (MFA) for users
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-auto-sign-out-for-snowflake-sessions" class="md-nav__link">
+    Use auto-sign-out for Snowflake sessions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#follow-the-principle-of-least-privilege" class="md-nav__link">
+    Follow the principle of least-privilege
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-service-accounts-using-terraform" class="md-nav__link">
+    Create service accounts using Terraform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularly-review-users-with-elevated-privileges" class="md-nav__link">
+    Regularly review users with elevated privileges
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snowflake-terraform-configuration" class="md-nav__link">
+    Snowflake Terraform configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    Providers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modules" class="md-nav__link">
+    Modules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    Resources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    Inputs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    Outputs
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../new-project-setup/" class="md-nav__link">
+        New Project Setup
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+          dbt
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_11">
+          <span class="md-nav__icon md-icon"></span>
+          dbt
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt-performance/" class="md-nav__link">
+        dbt Performance
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt_docs_snowflake/" class="md-nav__link">
+        dbt Snowflake Project
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_12" id="__nav_12_label" tabindex="0">
+          Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_12">
+          <span class="md-nav__icon md-icon"></span>
+          Data
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/footprints/" class="md-nav__link">
+        Building Footprints
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_13" id="__nav_13_label" tabindex="0">
+          Learning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_13">
+          <span class="md-nav__icon md-icon"></span>
+          Learning
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/glossary/" class="md-nav__link">
+        MDSA Glossary
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/git/" class="md-nav__link">
+        git
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/dbt/" class="md-nav__link">
+        dbt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../learning/cloud-data-warehouses/" class="md-nav__link">
+        Cloud Data Warehouses
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    Architecture
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-databases" class="md-nav__link">
+    Three databases
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#three-warehouse-groups" class="md-nav__link">
+    Three warehouse groups
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#four-roles" class="md-nav__link">
+    Four roles
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#access-roles-vs-functional-roles" class="md-nav__link">
+    Access Roles vs Functional Roles
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-policies" class="md-nav__link">
+    Security Policies
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Policies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#use-federated-single-sign-on-sso-and-system-for-cross-domain-identity-management-scim-for-human-users" class="md-nav__link">
+    Use Federated Single Sign-On (SSO) and System for Cross-domain Identity Management (SCIM) for human users
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enable-multi-factor-authentication-mfa-for-users" class="md-nav__link">
+    Enable multi-factor authentication (MFA) for users
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-auto-sign-out-for-snowflake-sessions" class="md-nav__link">
+    Use auto-sign-out for Snowflake sessions
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#follow-the-principle-of-least-privilege" class="md-nav__link">
+    Follow the principle of least-privilege
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-service-accounts-using-terraform" class="md-nav__link">
+    Create service accounts using Terraform
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#regularly-review-users-with-elevated-privileges" class="md-nav__link">
+    Regularly review users with elevated privileges
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snowflake-terraform-configuration" class="md-nav__link">
+    Snowflake Terraform configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#providers" class="md-nav__link">
+    Providers
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modules" class="md-nav__link">
+    Modules
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resources" class="md-nav__link">
+    Resources
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inputs" class="md-nav__link">
+    Inputs
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#outputs" class="md-nav__link">
+    Outputs
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="snowflake">Snowflake<a class="headerlink" href="#snowflake" title="Permanent link">&para;</a></h1>
+<p>We use Snowflake as our primary data warehouse.</p>
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<p>The setup of our account is adapted from the approach described in
+<a href="https://www.getdbt.com/blog/how-we-configure-snowflake/">this dbt blog post</a>,
+which we summarize here.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We have development and production environments, which we denote with <code>_DEV</code>
+and <code>_PRD</code> suffixes on Snowflake objects. For that reason, some of the names here
+are not exactly what exists in our deployment, but are given in the un-suffixed
+form for clarity.</p>
+</div>
+<pre class="mermaid"><code>flowchart LR
+  Airflow((Airflow))
+  Fivetran((Fivetran))
+  subgraph RAW
+    direction LR
+    A[(SCHEMA A)]
+    B[(SCHEMA A)]
+    C[(SCHEMA A)]
+  end
+  DBT1((dbt))
+  subgraph TRANSFORM
+    direction LR
+    D[(SCHEMA A)]
+    E[(SCHEMA A)]
+    F[(SCHEMA A)]
+  end
+  DBT2((dbt))
+  subgraph ANALYTICS
+    direction LR
+    G[(SCHEMA A)]
+    H[(SCHEMA A)]
+    I[(SCHEMA A)]
+  end
+  PowerBI
+  Tableau
+  Python
+  R
+
+  Airflow -- LOADER --&gt; RAW
+  Fivetran -- LOADER --&gt; RAW
+  RAW -- TRANSFORMER --&gt; DBT1
+  DBT1 -- TRANSFORMER --&gt; TRANSFORM
+  TRANSFORM -- TRANSFORMER --&gt; DBT2
+  DBT2 -- TRANSFORMER --&gt; ANALYTICS
+  ANALYTICS -- REPORTER --&gt; Tableau
+  ANALYTICS -- REPORTER --&gt; Python
+  ANALYTICS -- REPORTER --&gt; R
+  ANALYTICS -- REPORTER --&gt; PowerBI</code></pre>
+<h3 id="three-databases">Three databases<a class="headerlink" href="#three-databases" title="Permanent link">&para;</a></h3>
+<p>We have three primary databases in our account:</p>
+<ol>
+<li><strong><code>RAW_{env}</code></strong>: This holds raw data loaded from tools like Fivetran or Airflow. It is strictly permissioned, and only loader tools should have the ability to load or change data.</li>
+<li><strong><code>TRANSFORM_{env}</code></strong>: This holds intermediate results, including staging data, joined datasets, and aggregations. It is the primary database where development/analytics engineering happens.</li>
+<li><strong><code>ANALYTICS_{env}</code></strong>: This holds analysis/BI-ready datasets. This is the "marts" database.</li>
+</ol>
+<h3 id="three-warehouse-groups">Three warehouse groups<a class="headerlink" href="#three-warehouse-groups" title="Permanent link">&para;</a></h3>
+<p>There are warehouse groups for processing data in the databases,
+corresponding to the primary purposes of the above databases.
+They are available in a few different sizes, depending upon the needs of the the data processing job,
+X-small (denoted by (<code>XS</code>), X-Large (denoted by (<code>XL</code>), and 4X-Large (denoted by <code>4XL</code>).
+Most jobs on small data should use the relevant X-small warehouse.</p>
+<ol>
+<li><strong><code>LOADING_{size}_{env}</code></strong>: These warehouse is for loading data to <code>RAW</code>.</li>
+<li><strong><code>TRANSFORMING_{size}_{env}</code></strong>: This warehouse is for transforming data in <code>TRANSFORM</code> and <code>ANALYTICS</code>.</li>
+<li><strong><code>REPORTING_{size}_{env}</code></strong>: This warehouse is the role for BI tools and other end-users of the data.</li>
+</ol>
+<h3 id="four-roles">Four roles<a class="headerlink" href="#four-roles" title="Permanent link">&para;</a></h3>
+<p>There are four primary functional roles:</p>
+<ol>
+<li><strong><code>LOADER_{env}</code></strong>: This role is for tooling like Fivetran or Airflow to load raw data in to the <code>RAW</code> database.</li>
+<li><strong><code>TRANSFORMER_{env}</code></strong>: This is the analytics engineer/dbt role, for transforming raw data into something analysis-ready. It has read/write/control access to both <code>TRANSFORM</code> and <code>ANALYTICS</code>, and read access to <code>RAW</code>.</li>
+<li><strong><code>REPORTER_{env}</code></strong>: This role read access to <code>ANALYTICS</code>, and is intended for BI tools and other end-users of the data.</li>
+<li><strong><code>READER_{env}</code></strong>: This role has read access to all three databases, and is intended for CI service accounts to generate documentation.</li>
+</ol>
+<h2 id="access-roles-vs-functional-roles">Access Roles vs Functional Roles<a class="headerlink" href="#access-roles-vs-functional-roles" title="Permanent link">&para;</a></h2>
+<p>We create a two layer role hierarchy according to Snowflake's
+<a href="https://docs.snowflake.com/en/user-guide/security-access-control-considerations#aligning-object-access-with-business-functions">guidelines</a>:</p>
+<ul>
+<li><strong>Access Roles</strong> are roles giving a specific access type (read, write, or control) to a specific database object, e.g., "read access on <code>RAW</code>".</li>
+<li><strong>Functional Roles</strong> represent specific user personae like "developer" or "analyst" or "administrator". Functional roles are built by being granted a set of <strong>Access Roles</strong>.</li>
+</ul>
+<p>There is no technical difference between access roles and functional roles in Snowflake. The difference lies in the semantics and hierarchy that we impose upon them.</p>
+<h2 id="security-policies">Security Policies<a class="headerlink" href="#security-policies" title="Permanent link">&para;</a></h2>
+<p>Our security policies and norms for Snowflake are following the best practices laid out in
+<a href="https://community.snowflake.com/s/article/Snowflake-Security-Overview-and-Best-Practices">this article</a>,
+<a href="https://docs.snowflake.com/en/guides-overview-secure">these overview docs</a>,
+and conversations had with our Snowflake representatives.</p>
+<h3 id="use-federated-single-sign-on-sso-and-system-for-cross-domain-identity-management-scim-for-human-users">Use Federated Single Sign-On (SSO) and System for Cross-domain Identity Management (SCIM) for human users<a class="headerlink" href="#use-federated-single-sign-on-sso-and-system-for-cross-domain-identity-management-scim-for-human-users" title="Permanent link">&para;</a></h3>
+<p>Most State departments will have a federated identity provider for SSO and SCIM.
+At the Office of Data and Innovation, we use <a href="https://www.okta.com/">Okta</a>.
+Many State departments use <a href="https://azure.microsoft.com/en-us/products/active-directory/">Active Directory</a>.</p>
+<p>Most human users should have their account lifecycle managed through SCIM, and should log in via SSO.</p>
+<p>Using SCIM with Snowflake requires creating an authorization token for the account.
+This token should be stored in DSE's shared 1Password vault,
+and needs to be manually rotated every six months.</p>
+<h3 id="enable-multi-factor-authentication-mfa-for-users">Enable multi-factor authentication (MFA) for users<a class="headerlink" href="#enable-multi-factor-authentication-mfa-for-users" title="Permanent link">&para;</a></h3>
+<p>Users, especially those with elevated permissions, should have multi-factor authentication enabled for their accounts.
+In some cases, this may be provided by their SSO identity provider, and in some cases this may use the built-in Snowflake MFA using Duo.</p>
+<h3 id="use-auto-sign-out-for-snowflake-sessions">Use auto-sign-out for Snowflake sessions<a class="headerlink" href="#use-auto-sign-out-for-snowflake-sessions" title="Permanent link">&para;</a></h3>
+<p>Ensure that <code>CLIENT_SESSION_KEEP_ALIVE</code> is set to <code>FALSE</code> in the account.
+This means that unattended browser windows will automatically sign out after a set amount of time (defaulting to one hour).</p>
+<h3 id="follow-the-principle-of-least-privilege">Follow the principle of least-privilege<a class="headerlink" href="#follow-the-principle-of-least-privilege" title="Permanent link">&para;</a></h3>
+<p>In general, users and roles should be assigned permissions according to the
+<a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">Principle of Least Privilege</a>,
+which states that they should have sufficient privileges to perform
+legitimate work, and no more. This reduces security risks should a particular
+user or role become compromised.</p>
+<h3 id="create-service-accounts-using-terraform">Create service accounts using Terraform<a class="headerlink" href="#create-service-accounts-using-terraform" title="Permanent link">&para;</a></h3>
+<p>Service accounts aren't associated with a human user.
+Instead, they are created by an account administrator for
+the purposes of allowing another service to perform some action.</p>
+<p>We currently use service accounts for:</p>
+<ul>
+<li>Fivetran loading raw data</li>
+<li>Airflow loading raw data</li>
+<li>dbt Cloud for transforming data</li>
+<li>GitHub actions generating docs</li>
+</ul>
+<p>These service accounts are created using Terraform
+and assigned roles according to the principle of least-privilege.
+They use key pair authentication, which is more secure than password-based authentication as no sensitive data are exchanged.
+Private keys for service accounts should be stored in CalData's 1Password vault.</p>
+<p>The following are steps for creating a new service account with key pair authentication:</p>
+<ol>
+<li>Create a new key pair in accordance with <a href="https://docs.snowflake.com/en/user-guide/key-pair-auth#configuring-key-pair-authentication">these docs</a>.
+  Most of the time, you should create a key pair with encryption enabled for the private key.</li>
+<li>Add the private key to the CalData 1Password vault, along with the intended service account user name and passphrase (if applicable)</li>
+<li>Create a new user in the Snowflake Terraform configuration (<code>users.tf</code>) and assign it the appropriate functional role.
+  Once the user is created, add its public key in the Snowflake UI:
+  <div class="highlight"><pre><span></span><code><span class="k">ALTER</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="o">&lt;</span><span class="n">USERNAME</span><span class="o">&gt;</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="n">RSA_PUBLIC_KEY</span><span class="o">=</span><span class="s1">&#39;MII...&#39;</span>
+</code></pre></div>
+  Note that we need to remove the header and trailer (i.e. <code>-- BEGIN PUBLIC KEY --</code>) as well as any line breaks
+  in order for Snowflake to accept the public key as valid.</li>
+<li>Add the <em>private</em> key for the user to whatever system needs to access Snowflake.</li>
+</ol>
+<p>Service accounts should not be shared across different applications,
+so if one becomes compromised, the damage is more isolated.</p>
+<h3 id="regularly-review-users-with-elevated-privileges">Regularly review users with elevated privileges<a class="headerlink" href="#regularly-review-users-with-elevated-privileges" title="Permanent link">&para;</a></h3>
+<p>Users with access to elevated privileges (especially the <code>ACCOUNTADMIN</code>, <code>SECURITYADMIN</code>, and <code>SYSADMIN</code> roles)
+should be regularly reviewed by account administrators.</p>
+<h2 id="snowflake-terraform-configuration">Snowflake Terraform configuration<a class="headerlink" href="#snowflake-terraform-configuration" title="Permanent link">&para;</a></h2>
+<p>We provision our Snowflake account using <a href="https://github.com/Snowflake-Labs/terraform-provider-snowflake">terraform</a>.</p>
+<p>The infrastructure is organized into three modules, two lower level ones and one application-level one:</p>
+<ul>
+<li>
+<p><strong>database</strong>: A module which creates a Snowflake database and access roles for it.</p>
+</li>
+<li>
+<p><strong>warehouse</strong>: A module which creates a Snowflake warehouse and access roles for it.</p>
+</li>
+<li>
+<p><strong>elt</strong>: A module which creates several <strong>database</strong> and <strong>warehouse</strong> objects and implements the above architecture for them.</p>
+</li>
+</ul>
+<p>The <strong>elt</strong> module is then consumed by two different terraform deployments:</p>
+<ul>
+<li><strong>dev</strong> for dev infrastructure</li>
+<li><strong>prd</strong> for production infrastructure.</li>
+</ul>
+<p>The <strong>elt</strong> module has the following configuration:</p>
+<!-- BEGIN_TF_DOCS -->
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="requirement_terraform"></a> <a href="#requirement_terraform">terraform</a></td>
+<td>&gt;= 1.0</td>
+</tr>
+<tr>
+<td><a name="requirement_snowflake"></a> <a href="#requirement_snowflake">snowflake</a></td>
+<td>~&gt; 0.61</td>
+</tr>
+</tbody>
+</table>
+<h2 id="providers">Providers<a class="headerlink" href="#providers" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="provider_snowflake.accountadmin"></a> <a href="#provider_snowflake.accountadmin">snowflake.accountadmin</a></td>
+<td>~&gt; 0.61</td>
+</tr>
+<tr>
+<td><a name="provider_snowflake.useradmin"></a> <a href="#provider_snowflake.useradmin">snowflake.useradmin</a></td>
+<td>~&gt; 0.61</td>
+</tr>
+</tbody>
+</table>
+<h2 id="modules">Modules<a class="headerlink" href="#modules" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Source</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="module_analytics"></a> <a href="#module_analytics">analytics</a></td>
+<td>../database</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a name="module_loading"></a> <a href="#module_loading">loading</a></td>
+<td>../warehouse</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a name="module_logging"></a> <a href="#module_logging">logging</a></td>
+<td>../warehouse</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a name="module_raw"></a> <a href="#module_raw">raw</a></td>
+<td>../database</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a name="module_reporting"></a> <a href="#module_reporting">reporting</a></td>
+<td>../warehouse</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a name="module_transform"></a> <a href="#module_transform">transform</a></td>
+<td>../database</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td><a name="module_transforming"></a> <a href="#module_transforming">transforming</a></td>
+<td>../warehouse</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table>
+<h2 id="resources">Resources<a class="headerlink" href="#resources" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/database_grant">snowflake_database_grant.this</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role">snowflake_role.loader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role">snowflake_role.logger</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role">snowflake_role.reader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role">snowflake_role.reporter</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role">snowflake_role.transformer</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.analytics_r_to_reader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.analytics_r_to_reporter</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.analytics_rwc_to_transformer</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.loader_to_airflow</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.loader_to_fivetran</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.loader_to_sysadmin</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.loading_to_loader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.logger_to_accountadmin</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.logger_to_sentinel</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.logging_to_logger</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.raw_r_to_reader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.raw_r_to_transformer</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.raw_rwc_to_loader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.reader_to_github_ci</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.reader_to_sysadmin</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.reporter_to_sysadmin</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.reporting_to_reader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.reporting_to_reporter</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.transform_r_to_reader</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.transform_rwc_to_transformer</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.transformer_to_dbt</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.transformer_to_sysadmin</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/role_grants">snowflake_role_grants.transforming_to_transformer</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user">snowflake_user.airflow</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user">snowflake_user.dbt</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user">snowflake_user.fivetran</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user">snowflake_user.github_ci</a></td>
+<td>resource</td>
+</tr>
+<tr>
+<td><a href="https://registry.terraform.io/providers/Snowflake-Labs/snowflake/latest/docs/resources/user">snowflake_user.sentinel</a></td>
+<td>resource</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inputs">Inputs<a class="headerlink" href="#inputs" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Description</th>
+<th>Type</th>
+<th>Default</th>
+<th style="text-align: center;">Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a name="input_environment"></a> <a href="#input_environment">environment</a></td>
+<td>Environment suffix</td>
+<td><code>string</code></td>
+<td>n/a</td>
+<td style="text-align: center;">yes</td>
+</tr>
+</tbody>
+</table>
+<h2 id="outputs">Outputs<a class="headerlink" href="#outputs" title="Permanent link">&para;</a></h2>
+<p>No outputs.</p>
+<!-- END_TF_DOCS -->
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.copy"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+    
+  </body>
+</html>
