@@ -3,10 +3,6 @@ with blocks_source as (
     from {{ source('tiger_2022', 'blocks') }}
 ),
 
-places_source as (
-    select * from {{ source('tiger_2022', 'places') }}
-),
-
 footprints_with_blocks_and_places as (
     {{ spatial_join_with_deduplication(
        "footprints_with_blocks",
