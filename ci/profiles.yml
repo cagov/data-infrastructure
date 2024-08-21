@@ -1,8 +1,3 @@
-config:
-  send_anonymous_usage_stats: false
-  use_colors: true
-  warn_error: true
-
 dse_snowflake:
   target: snowflake_dev
   outputs:
