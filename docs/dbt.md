@@ -41,8 +41,8 @@ which may not be an ideal naming convention for end-users.
 Because our architecture separates development and production databases,
 and has strict permissions protecting the `RAW` database,
 there is less danger of breaking production models.
-So we use our own custom schema name following the modified from the
-[approach of the GitLab Data Team](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/utils/override/generate_schema_name.sql).
+So we use our own custom schema name following a modified
+[approach from the GitLab Data Team](https://gitlab.com/gitlab-data/analytics/-/blob/master/transform/snowflake-dbt/macros/utils/override/generate_schema_name.sql).
 
 In production, each schema is just the custom schema name without any prefix.
 In non-production environments the default is used, where analytics engineers
