@@ -1,8 +1,9 @@
 name: docs
 on:
+  pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
+
 permissions:
   contents: write
 
@@ -12,7 +13,7 @@ env:
   SNOWFLAKE_USER: GITHUB_ACTIONS_SVC_USER_DEV
 
 jobs:
-  deploy:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -35,5 +36,6 @@ jobs:
           dbt deps --project-dir=transform
           dbt docs generate --project-dir=transform
           cp -r transform/target docs/dbt_docs_snowflake
-      - name: Deploy 🚀
-        run: mkdocs gh-deploy --force
+      - name: Deploy docs to GitHub Pages
+        if: github.ref.name == 'refs/heads/main'
+        run: poetry run mkdocs gh-deploy --force
