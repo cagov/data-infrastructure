@@ -33,6 +33,7 @@ nav:
   - Naming Conventions: naming-conventions.md
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
+  - Project Architecture: architecture.md
   - Snowflake: snowflake.md
   - New Project Setup: new-project-setup.md
   - dbt:
