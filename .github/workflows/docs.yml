@@ -37,5 +37,5 @@ jobs:
           dbt docs generate --project-dir=transform
           cp -r transform/target docs/dbt_docs_snowflake
       - name: Deploy docs to GitHub Pages
-        if: github.ref.name == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: poetry run mkdocs gh-deploy --force
