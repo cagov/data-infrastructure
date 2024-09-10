@@ -8,3 +8,4 @@ rules:
     required: false
   truthy:
     allowed-values: ["true", "false"]
+  trailing-spaces: disable

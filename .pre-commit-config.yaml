@@ -6,7 +6,6 @@ repos:
         args:
           - --unsafe
       - id: check-json
-      - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: check-merge-conflict
       - id: detect-aws-credentials
