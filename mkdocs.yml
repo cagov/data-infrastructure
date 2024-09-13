@@ -26,7 +26,7 @@ markdown_extensions:
 
 nav:
   - Introduction: index.md
-  - Project Setup: setup.md
+  - Local Environment Setup: local-setup.md
   - Codespaces: codespaces.md
   - Code Review: code-review.md
   - Writing Documentation: writing-documentation.md
@@ -34,10 +34,11 @@ nav:
   - Security Guidelines: security.md
   - Cloud Infrastructure: cloud-infrastructure.md
   - Project Architecture: architecture.md
-  - Snowflake: snowflake.md
-  - New Project Setup: new-project-setup.md
+  - Snowflake:
+      - Snowflake Overview: snowflake.md
+      - New Project Setup: snowflake-project-setup.md
   - dbt:
-      - Overview: dbt.md
+      - dbt Overview: dbt.md
       - dbt Performance: dbt-performance.md
       - dbt Snowflake Project: dbt_docs_snowflake/index.html
   - Data:
