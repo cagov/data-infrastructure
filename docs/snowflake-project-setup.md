@@ -38,7 +38,7 @@ Terraform state is stored in S3 buckets within our AWS account,
 so you will need read/write access to those buckets.
 
 Ask a DSE AWS admin to give you access to these buckets,
-and [configure your AWS credentials](./setup.md#aws).
+and [configure your AWS credentials](./local-setup.md#aws).
 
 
 ### Install terraform dependencies
