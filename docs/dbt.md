@@ -17,7 +17,7 @@ To set up a new project on dbt Cloud follow these steps:
 
 Once you're through the first five steps you can return to the dbt homepage and click the Settings button in the upper right corner. From there you can follow the steps to configure three environments for Continuous intergation - CI, development, and production. Read [dbt's docs on CI in dbt Cloud](https://docs.getdbt.com/docs/deploy/continuous-integration). Read [dbt's docs on creating production (deployment) environments](https://docs.getdbt.com/docs/deploy/deploy-environments) and [dbt's docs on creating and scheduling deploy jobs](https://docs.getdbt.com/docs/deploy/deploy-jobs#create-and-schedule-jobs).
 
-You'll also want to [configure notifications for job failures](Configure notifications for job failures).
+You'll also want to [configure notifications for job failures](https://docs.getdbt.com/docs/deploy/job-notifications).
 
 Pictured below is an example of environment variables you can set for each environment. For more guidance, read [dbt's docs on environment variables](https://docs.getdbt.com/docs/build/environment-variables).
 
