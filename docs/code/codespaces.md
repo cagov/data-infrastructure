@@ -11,14 +11,14 @@ Go to the "Code" dropdown from the main repository page,
 select the three dot dropdown, and select "New with options..."
 This will allow more configuration than the default codespace.
 
-![Create a new codespace](images/create-new-codespace.png)
+![Create a new codespace](../images/create-new-codespace.png)
 
 In the codespace configuration form, you will have an option to add "Recommended Secrets".
 This is where you can add your personal Snowflake credentials to your codespace,
 allowing for development against our Snowflake warehouse, including using dbt.
 You should only add credentials for accounts that are protected by multi-factor authentication (MFA).
 
-![Add codespace secrets](images/codespace-secrets.png)
+![Add codespace secrets](../images/codespace-secrets.png)
 
 After you have added your secrets, click "Create Codespace".
 Building it may take a few minutes,
@@ -30,7 +30,7 @@ Once your codespace is created, you should be able to launch it
 without re-creating it every time using the "Code" dropdown,
 going to "Open in...", and selecting "Open in browser":
 
-![Launch codespace](images/launch-codespace.png)
+![Launch codespace](../images/launch-codespace.png)
 
 ## Using a Codespace
 

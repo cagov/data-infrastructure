@@ -114,7 +114,7 @@ The DSE team both manages CalData projects and onboards clients into Fivetran, a
 ## Snowflake
 
 Security policies for Snowflake can be found
-[here](./snowflake.md#security-policies).
+[here](../infra/snowflake.md#security-policies).
 
 ## Security Review Standard Practices
 

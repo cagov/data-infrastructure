@@ -32,11 +32,11 @@ This is extremely useful during development in order to understand potential pro
 ### Getting model timing: dbt Cloud
 dbt Cloud has a nicer interface for finding which models in a project are running longest. Visit the Deploy > Runs section of dbt Cloud. You'll see a full list of jobs and how long each one toook. To drill down to the model timing level click on a run name. You can expand the "Invoke dbt build" section under "Run Summary" to get a detailed summary of your run as well as timing for each model and test. There is also a "Debug logs" section for even more detail, including the exact queries run and an option to download the logs for easier viewing. Of course this is also where you go to find model and test errors and warnings!
 
-![dbt Model Run Summary](images/dbt_run_summary.png)
+![dbt Model Run Summary](../images/dbt_run_summary.png)
 
 For a quick visual reference of which models take up the most time in a run, click on the "Model Timing" tab. If you hover over a model you will be shown the specific timing.
 
-![dbt Model Timing Graph](images/dbt_model_timing.png)
+![dbt Model Timing Graph](../images/dbt_model_timing.png)
 
 ### Getting model timing: Snowflake
 Snowflake has quite a lot of performance data readily available through it's `information_schema.QUERY_HISTORY()` table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.
