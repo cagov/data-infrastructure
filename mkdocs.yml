@@ -59,7 +59,7 @@ nav:
   - dbt:
       - dbt Overview: dbt/dbt.md
       - dbt Performance: dbt/dbt-performance.md
-      - dbt Snowflake Project: dbt/dbt_docs_snowflake/index.html
+      - dbt Snowflake Project: dbt_docs_snowflake/index.html
   - Data:
       - Building Footprints: data/footprints.md
   - Learning:
