@@ -9,7 +9,7 @@ We follow an adapted version of the project architecture described in
 for our Snowflake dbt project.
 
 It is described in some detail in our
-[Snowflake docs](https://cagov.github.io/data-infrastructure/snowflake/#architecture) as well.
+[Snowflake docs](snowflake.md/#architecture) as well.
 
 ```mermaid
 flowchart TB
@@ -142,22 +142,6 @@ So we use our own custom schema name modified from the
 In production, each schema is just the custom schema name without any prefix.
 In non-production environments, dbt developers use their own custom schema based on their name: `dbt_username`.
 
-## Developing against production data
-
-Our Snowflake architecture allows for reasonably safe `SELECT`ing
-from the production `RAW_PRD` database while developing models.
-While this could be expensive for large tables,
-it also allows for faster and more reliable model development.
-
-To develop against raw production data, first you need someone with the `USERADMIN` role
-to grant rights to the `TRANSFORMER_DEV` role
-(this need only be done once, and can be revoked later):
-
-```sql
-USE ROLE USERADMIN;
-GRANT ROLE RAW_PRD_READ TO ROLE TRANSFORMER_DEV;
-```
-
 ## Examples
 
 ### User personae
@@ -165,26 +149,26 @@ GRANT ROLE RAW_PRD_READ TO ROLE TRANSFORMER_DEV;
 To make the preceding more concrete, let's consider the six databases,
 `RAW`, `TRANSFORM`, and `ANALYTICS`, for both `DEV` and `PRD`:
 
-![databases](images/databases.png)
+![databases](../images/databases.png)
 
 If you are a developer, you are doing most of your work in `TRANSFORM_DEV`
 and `ANALYTICS_DEV`, assuming the role `TRANSFORMER_DEV`.
 *However*, you also have the ability to select the production data from `RAW_PRD` for your development.
 So your data access looks like the following:
 
-![developer](images/developer.png)
+![developer](../images/developer.png)
 
 Now let's consider the nigthly production build. This service account builds the production models
 in `TRANSFORM_PRD` and `ANALYTICS_PRD` based on the raw data in `RAW_PRD`.
 The development environment effectively doesn't exist to this account, and data access looks like the following:
 
-![nightly](images/nightly.png)
+![nightly](../images/nightly.png)
 
 Finally, let's consider an external consumer of a mart from PowerBI.
 This user has no access to any of the raw or intermediate models (which might contain sensitive data!).
 To them, the whole rest of the architecture doesn't exist, and they can only see the marts in `ANALYTICS_PRD`:
 
-![consumer](images/consumers.png)
+![consumer](../images/consumers.png)
 
 ### Scenario: adding a new data source
 
