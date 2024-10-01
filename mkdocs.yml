@@ -39,15 +39,15 @@ markdown_extensions:
 nav:
   - Introduction: index.md
   - Code Development:
-    - Local Environment Setup: code/local-setup.md
-    - Codespaces: code/codespaces.md
-    - Code Review: code/code-review.md
-    - Writing Documentation: code/writing-documentation.md
-    - Terraform Setup: code/terraform-local-setup.md
+      - Local Environment Setup: code/local-setup.md
+      - Codespaces: code/codespaces.md
+      - Code Review: code/code-review.md
+      - Writing Documentation: code/writing-documentation.md
+      - Terraform Setup: code/terraform-local-setup.md
   - Project Infrastructure:
-    - Cloud Infrastructure: infra/cloud-infrastructure.md
-    - Project Architecture: infra/architecture.md
-    - Snowflake Overview: infra/snowflake.md
+      - Cloud Infrastructure: infra/cloud-infrastructure.md
+      - Project Architecture: infra/architecture.md
+      - Snowflake Overview: infra/snowflake.md
   - Project Setup:
       - Snowflake Setup: setup/snowflake-setup.md
       - Git/Github Setup: setup/repo-setup.md
@@ -57,15 +57,15 @@ nav:
       - Adding Service Accounts: setup/snowflake-service-accounts.md
       - Project Teardown: setup/project-teardown.md
   - dbt:
-    - dbt Overview: dbt/dbt.md
-    - dbt Performance: dbt/dbt-performance.md
-    - dbt Snowflake Project: dbt/dbt_docs_snowflake/index.html
+      - dbt Overview: dbt/dbt.md
+      - dbt Performance: dbt/dbt-performance.md
+      - dbt Snowflake Project: dbt/dbt_docs_snowflake/index.html
   - Data:
-    - Building Footprints: data/footprints.md
+      - Building Footprints: data/footprints.md
   - Learning:
-    - MDSA Glossary: learning/glossary.md
-    - Security Guidelines: learning/security.md
-    - Naming Conventions: learning/naming-conventions.md
-    - git: learning/git.md
-    - dbt: learning/dbt.md
-    - Cloud Data Warehouses: learning/cloud-data-warehouses.md
+      - MDSA Glossary: learning/glossary.md
+      - Security Guidelines: learning/security.md
+      - Naming Conventions: learning/naming-conventions.md
+      - git: learning/git.md
+      - dbt: learning/dbt.md
+      - Cloud Data Warehouses: learning/cloud-data-warehouses.md
