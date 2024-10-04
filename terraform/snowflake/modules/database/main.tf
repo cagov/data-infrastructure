@@ -151,6 +151,17 @@ resource "snowflake_grant_privileges_to_account_role" "database" {
 }
 
 # Schema grants
+resource "snowflake_grant_ownership" "schemas" {
+  provider          = snowflake.sysadmin
+  account_role_name = snowflake_role.this["READWRITECONTROL"].name
+  on {
+    future {
+      object_type_plural = "SCHEMAS"
+      in_database        = snowflake_database.this.name
+    }
+  }
+}
+
 resource "snowflake_grant_privileges_to_account_role" "schemas" {
   provider          = snowflake.securityadmin
   for_each          = local.schema
@@ -174,6 +185,17 @@ resource "snowflake_grant_privileges_to_account_role" "public" {
 }
 
 # Table grants
+resource "snowflake_grant_ownership" "tables" {
+  provider          = snowflake.sysadmin
+  account_role_name = snowflake_role.this["READWRITECONTROL"].name
+  on {
+    future {
+      object_type_plural = "TABLES"
+      in_database        = snowflake_database.this.name
+    }
+  }
+}
+
 resource "snowflake_grant_privileges_to_account_role" "tables" {
   provider          = snowflake.securityadmin
   for_each          = local.table
@@ -189,6 +211,17 @@ resource "snowflake_grant_privileges_to_account_role" "tables" {
 }
 
 # View grants
+resource "snowflake_grant_ownership" "views" {
+  provider          = snowflake.sysadmin
+  account_role_name = snowflake_role.this["READWRITECONTROL"].name
+  on {
+    future {
+      object_type_plural = "VIEWS"
+      in_database        = snowflake_database.this.name
+    }
+  }
+}
+
 resource "snowflake_grant_privileges_to_account_role" "views" {
   provider          = snowflake.securityadmin
   for_each          = local.view
