@@ -1,19 +1,19 @@
 name: docs
 on:
+  pull_request:
   push:
-    branches:
-      - main
+    branches: [main]
+
 permissions:
   contents: write
 
 env:
   DBT_PROFILES_DIR: ci
-  PRIVATE_KEY: ${{ SECRETS.SNOWFLAKE_PRIVATE_KEY }}
-  SNOWFLAKE_PRIVATE_KEY_PATH: /tmp/private_key.p8
+  SNOWFLAKE_PRIVATE_KEY: ${{ SECRETS.SNOWFLAKE_PRIVATE_KEY_DEV }}
   SNOWFLAKE_USER: GITHUB_ACTIONS_SVC_USER_DEV
 
 jobs:
-  deploy:
+  build-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,22 +23,19 @@ jobs:
       - uses: snok/install-poetry@v1
         with:
           virtualenvs-create: false
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           key: ${{ github.ref }}
           path: .cache
       - name: Install dependencies
         run: |
           poetry install
-        # TODO: once we are on dbt-snowflake 1.5, no need to pipe to a file, we can
-        # just use $SNOWFLAKE_PRIVATE_KEY
-      - name: Set up private key
-        run: echo "$PRIVATE_KEY" > $SNOWFLAKE_PRIVATE_KEY_PATH
       - name: Build dbt docs
         run: |
           # Generate snowflake dbt docs
           dbt deps --project-dir=transform
           dbt docs generate --project-dir=transform
           cp -r transform/target docs/dbt_docs_snowflake
-      - name: Deploy 🚀
-        run: mkdocs gh-deploy --force
+      - name: Deploy docs to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        run: poetry run mkdocs gh-deploy --force

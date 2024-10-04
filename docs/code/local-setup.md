@@ -141,6 +141,24 @@ from a project root directory (`transform`).
 
 A minimal version of a `profiles.yml` for dbt development with is:
 
+**ODI users**
+```yml
+dse_snowflake:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: <account-locator>
+      user: <your-innovation-email>
+      authenticator: externalbrowser
+      role: TRANSFORMER_DEV
+      database: TRANSFORM_DEV
+      warehouse: TRANSFORMING_XS_DEV
+      schema: DBT_<your-name>   # Test schema for development
+      threads: 4
+```
+
+**External users**
 ```yml
 dse_snowflake:
   target: dev
@@ -150,6 +168,7 @@ dse_snowflake:
       account: <account-locator>
       user: <your-username>
       password: <your-password>
+      authenticator: username_password_mfa
       role: TRANSFORMER_DEV
       database: TRANSFORM_DEV
       warehouse: TRANSFORMING_XS_DEV
@@ -160,10 +179,9 @@ dse_snowflake:
 !!! note
     The target name (`dev`) in the above example can be anything.
     However, we treat targets named `prd` differently in generating
-    custom dbt schema names (see [here](./dbt.md#custom-schema-names)).
+    custom dbt schema names (see [here](../dbt/dbt.md#custom-schema-names)).
     We recommend naming your local development target `dev`, and only
     include a `prd` target in your profiles under rare circumstances.
-
 
 ### Combined `profiles.yml`
 

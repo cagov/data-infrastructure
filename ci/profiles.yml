@@ -1,8 +1,3 @@
-config:
-  send_anonymous_usage_stats: false
-  use_colors: true
-  warn_error: true
-
 dse_snowflake:
   target: snowflake_dev
   outputs:
@@ -10,7 +5,7 @@ dse_snowflake:
       type: snowflake
       account: heb41095
       user: "{{ env_var('SNOWFLAKE_USER') }}"
-      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      private_key: "{{ env_var('SNOWFLAKE_PRIVATE_KEY') }}"
       role: READER_DEV
       warehouse: REPORTING_XS_DEV
       database: ANALYTICS_DEV

@@ -45,4 +45,4 @@ for learning to use its various features, including:
 ## Git+GitHub at CalData
 
 On the CalData Data Services and Engineering team we make heavy use of git and GitHub for our projects,
-and have our own set of [guidelines and best practices](../code-review.md) for code review.
+and have our own set of [guidelines and best practices](../code/code-review.md) for code review.
