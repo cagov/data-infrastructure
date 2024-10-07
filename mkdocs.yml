@@ -60,6 +60,10 @@ nav:
       - dbt Overview: dbt/dbt.md
       - dbt Performance: dbt/dbt-performance.md
       - dbt Snowflake Project: dbt_docs_snowflake/index.html
+  - GitHub:
+      - GitHub Overview: learning/git.md
+      - GitHub Project Management: github/project-management.md
+      - GitHub Data Engineering: github/data-engineering.md
   - Data:
       - Building Footprints: data/footprints.md
   - Learning:
