@@ -185,6 +185,7 @@ resource "snowflake_grant_account_role" "logging_to_logger" {
 
 # Imported privileges for logging
 resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_logger" {
+  provider          = snowflake.accountadmin
   account_role_name = snowflake_role.logger.name
   privileges        = ["IMPORTED PRIVILEGES"]
   on_account_object {
