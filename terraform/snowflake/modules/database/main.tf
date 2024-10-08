@@ -97,7 +97,7 @@ resource "snowflake_database" "this" {
   data_retention_time_in_days = var.data_retention_time_in_days
 
   lifecycle {
-    prevent_destroy = false
+    prevent_destroy = true
   }
 }
 
