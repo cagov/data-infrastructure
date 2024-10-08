@@ -1,6 +1,6 @@
 output "access_role_name" {
   description = "Warehouse access_role"
-  value       = snowflake_account_role.this.name
+  value       = snowflake_role.this.name
 }
 
 output "name" {
