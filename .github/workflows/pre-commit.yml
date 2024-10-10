@@ -23,14 +23,6 @@ jobs:
       - uses: snok/install-poetry@v1
         with:
           virtualenvs-create: false
-      - name: Setup terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: v1.4.0
-      - name: Install tflint
-        run: |
-          curl -s https://raw.githubusercontent.com/terraform-linters/\
-          tflint/master/install_linux.sh | bash
       - name: Install dependencies
         run: |
           poetry install

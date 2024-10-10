@@ -11,37 +11,6 @@ repos:
       - id: check-merge-conflict
       - id: detect-aws-credentials
         args: [--allow-missing-credentials]
-  - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.77.1
-    hooks:
-      - id: terraform_fmt
-      - id: terraform_validate
-        # Exclude modules to work around
-        # https://github.com/hashicorp/terraform/issues/28490
-        exclude: "terraform/[^/]+/modules/[^/]+/[^/]+$"
-      - id: terraform_tflint
-  - repo: https://github.com/terraform-docs/terraform-docs
-    rev: v0.16.0
-    hooks:
-      - id: terraform-docs-go
-        name: Document cloud infrastructure remote state in README
-        args: ["./terraform/s3-remote-state"]
-      - id: terraform-docs-go
-        name: Document cloud infrastructure in mkdocs
-        args:
-          [
-            "./terraform/aws/modules/infra/",
-            "--output-file",
-            "../../../../docs/cloud-infrastructure.md",
-          ]
-      - id: terraform-docs-go
-        name: Document Snowflake account infrastructure in mkdocs
-        args:
-          [
-            "./terraform/snowflake/modules/elt/",
-            "--output-file",
-            "../../../../docs/snowflake.md",
-          ]
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.1.6
     hooks:
