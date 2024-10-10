@@ -21,17 +21,11 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: v1.4.0
-      - name: Document cloud infrastructure remote state in README
-        uses: terraform-docs/gh-actions@v1.3.0
-        run: |
-          terraform-docs markdown table ./terraform/s3-remote-state
-        #with:
-        #  working-dir: ./terraform/s3-remote-state
-        #  git-push: "true"
       - name: Install tflint
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/\
           tflint/master/install_linux.sh | bash
+
       - name: Run terraform fmt
         run: |
           terraform fmt
@@ -41,3 +35,24 @@ jobs:
       - name: Run terraform tflint
         run: |
           tflint --chdir=terraform/ --recursive
+
+      - name: Document cloud infrastructure remote state in README
+        uses: terraform-docs/gh-actions@v1.3.0
+        run: |
+        with:
+          working-dir: ./terraform/s3-remote-state
+          git-push: "true"
+      - name: Document cloud infrastructure in mkdocs
+        uses: terraform-docs/gh-actions@v1.3.0
+        run: |
+        with:
+          working-dir: ./terraform/aws/modules/infra
+          output-file: ../../../../docs/cloud-infrastructure.md
+          git-push: "true"
+      - name: Document Snowflake account infrastructure in mkdocs
+        uses: terraform-docs/gh-actions@v1.3.0
+        run: |
+        with:
+          working-dir: ./terraform/snowflake/modules/elt
+          output-file: ../../../../docs/snowflake.md
+          git-push: "true"
