@@ -21,11 +21,13 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: v1.4.0
-      - name: Invoke terraform-docs
+      - name: Document cloud infrastructure remote state in README
         uses: terraform-docs/gh-actions@v1.3.0
-        with:
-          working-dir: ./terraform/s3-remote-state
-          git-push: "true"
+        run: |
+          terraform-docs markdown table ./terraform/s3-remote-state
+        #with:
+        #  working-dir: ./terraform/s3-remote-state
+        #  git-push: "true"
       - name: Install tflint
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/\
