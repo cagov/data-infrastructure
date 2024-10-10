@@ -38,20 +38,17 @@ jobs:
 
       - name: Document cloud infrastructure remote state in README
         uses: terraform-docs/gh-actions@v1.3.0
-        run: |
         with:
           working-dir: ./terraform/s3-remote-state
           git-push: "true"
       - name: Document cloud infrastructure in mkdocs
         uses: terraform-docs/gh-actions@v1.3.0
-        run: |
         with:
           working-dir: ./terraform/aws/modules/infra
           output-file: ../../../../docs/cloud-infrastructure.md
           git-push: "true"
       - name: Document Snowflake account infrastructure in mkdocs
         uses: terraform-docs/gh-actions@v1.3.0
-        run: |
         with:
           working-dir: ./terraform/snowflake/modules/elt
           output-file: ../../../../docs/snowflake.md
