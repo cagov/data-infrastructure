@@ -45,11 +45,11 @@ jobs:
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: ./terraform/aws/modules/infra
-          output-file: ../../../../docs/cloud-infrastructure.md
+          output-file: ../../../../docs/code/terraform-local-setup.md
           git-push: "true"
       - name: Document Snowflake account infrastructure in mkdocs
         uses: terraform-docs/gh-actions@v1.3.0
         with:
           working-dir: ./terraform/snowflake/modules/elt
-          output-file: ../../../../docs/snowflake.md
+          output-file: ../../../../docs/infra/snowflake.md
           git-push: "true"
