@@ -13,12 +13,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          # terraform-docs suggests this type of checkout
+          ref: ${{ github.event.pull_request.head.ref }}
+
       - name: Setup terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: v1.4.0
-      - name: Setup terraform-docs
+      - name: Invoke terraform-docs
         uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: ./terraform/s3-remote-state
+          git-push: "true"
       - name: Install tflint
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/\
@@ -32,6 +39,3 @@ jobs:
       - name: Run terraform tflint
         run: |
           tflint --chdir=terraform/ --recursive
-      - name: Document infrastructure in markdown files
-        run: |
-          terraform-docs --help
