@@ -1,0 +1,62 @@
+name: terraform-validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  terraform-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: v1.4.0
+      - name: Install tflint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/\
+          tflint/master/install_linux.sh | bash
+
+      - name: Run terraform fmt
+        run: |
+          terraform fmt
+      - name: Run terraform validate
+        run: |
+          terraform validate
+      - name: Run terraform tflint
+        run: |
+          tflint --chdir=terraform/ --recursive
+
+      - name: Document cloud infrastructure remote state in README
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: ./terraform/s3-remote-state
+      - name: Document cloud infrastructure in mkdocs
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: ./terraform/aws/modules/infra
+          output-file: ../../../../docs/code/terraform-local-setup.md
+      - name: Document Snowflake account infrastructure in mkdocs
+        uses: terraform-docs/gh-actions@v1.3.0
+        with:
+          working-dir: ./terraform/snowflake/modules/elt
+          output-file: ../../../../docs/infra/snowflake.md
+      # This shouldn't be necessary but the terraform-docs action has a bug
+      # preventing it from git-adding files outside of 'working-dir'.
+      # See: https://github.com/terraform-docs/gh-actions/pull/108
+      - name: Commit any files changed by terraform-docs
+        run: |
+          git add docs/code/terraform-local-setup.md
+          git add docs/infra/snowflake.md
+          # Run git commit if changed files are detected
+          if git status --porcelain | grep -q '[AM ][AM ]\s\+\S\+'; then
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            set -x
+            git commit -m "Automated terraform-docs commit"
+            git push
+            set +x
+          fi
