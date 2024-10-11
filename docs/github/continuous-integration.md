@@ -13,6 +13,8 @@ Git and GitHub are version control tools that help manage and track changes in c
 
 Git is a distributed version control system, which means that each developer has a local copy of the entire code repository. This makes it easy to work on code offline and to share changes with other developers.
 
+![version control](../images/github/version-control.png)
+
 GitHub is a web-based hosting service for Git repositories. It provides a graphical user interface (GUI) for managing and reviewing code, as well as social networking features for interacting with other developers.
 
 Git and GitHub are essential tools for software development. They allow developers to track changes to code, collaborate, and share open or closed-source code.
@@ -92,12 +94,13 @@ If you're working with git locally, you can create and switch branches as well a
     export PS1='\[\033[32m\]\u@\h \[\033[35m\]\w\[\033[36m\]$(__git_ps1 " (%s)")\[\033[0m\]\$ '`
 
 **Follow the remaining steps regardless of OS**
+
 - Save the file and close it
 - Open a new terminal window
 - Type `cd ~/caldata-mdsa-caltrans-pems/`
 - You’ll now see something like this:
 
-[insert image]
+![sample output](../images/github/page4.png)
 
 **Staging and committing changes**
 
@@ -119,17 +122,23 @@ If you're working with git locally, you can create and switch branches as well a
         1. Clicking the “commit and sync” button
         2. Then type a short, yet descriptive message about the changes you made in the text box that appears and click “Commit Changes”
 
+![commit changes](../images/github/commit-changes.png)
+
 **Pushing your changes**
+
 1. Locally this is done with: `git push origin <branch_name>`
 2. In dbt Cloud this is also done under the hood when you click “Commit Changes”
 
 **Opening a PR**
 
-**Option 1**: This works whether you commit changes locally or via dbt Cloud
+**Option 1**: 
+This works whether you commit changes locally or via dbt Cloud
+
 1. Go to the GitHub repository where you just pushed your changes
 2. At the top of the home page you’ll see a message like the one below. It’ll say “`<your_branch_name>` had recent pushes X minutes ago” with a green button that says “Compare & pull request”. Click that button
-
+![open a pr](../images/github/open-a-pr.png)
 3. Next you’ll be taken to a new screen like the one shown below.
+![pr description](../images/github/pr-description.png)
 4. From here you’ll:
     1. Check that your branch is “Able to merge” (as seen in the upper center of the screen with a preceding green checkmark)
         1. If you see “Can’t automatically merge.” that means you have a merge conflict. We cover how to resolve merge conflicts below.
@@ -141,9 +150,11 @@ If you're working with git locally, you can create and switch branches as well a
 
 🛎️Note: This option only works for an hour after you have pushed your changes. If you don’t open a pull request within that 60 minute window this button will disappear. Fear not! There is a second way to open a pull request outlined below.
 
-**Option 2**: This is the option to use if you cannot follow step 2 in Option 1.
+**Option 2**: 
+This is the option to use if you cannot follow step 2 in Option 1.
 
 1. Go to the Pull requests page on GitHub by going directly to this link or go to the repo homepage and click on the “Pull requests” tab near the top as pictured below
+![issues prs actions](../images/github/issues-pr-actions.png)
 2. Click the green “New pull request” button in the upper right corner
 3. You’ll be taken to a new window
 4. Click the button that says “compare: main”
@@ -166,6 +177,7 @@ The ODI CalData team put together [documentation on reviewing a PR](https://cago
     2. The “Commits” tab is where you can check each save to the PR to understand the sequence of changes
     3. The “Checks” tab is where you can see the jobs run by GitHub actions (CI automations). You can see whether or not they pass or fail and the details of each.
     4. There will be a yellow pane across the top of this page like pictured below. 
+![request for review](../images/github/request-for-review.png)
 
 Clicking the green “Add your review” button will take you to the “Files changed” tab where you can begin your review.
 
@@ -178,7 +190,7 @@ After you’re done with your review, if you scroll back to the top there will b
 When you’re reviewing a PR instead of just commenting on a line of code you may want to suggest changes directly to the code. You can do this by clicking the blue plus sign button next to the line of code you want to suggest changes to.
 
 In the window that opens click the button that has a + and - sign as pictured below.
-
+![suggest a change](../images/github/suggest-a-change.png)
 In this example, “test” is misspelled so the PR review is adding a suggestion and fixing the code with the correct spelling. If the PR author agrees they can seamlessly accept this suggestion and integrate it into their code.
 
 After adding your suggestion and additional comments if applicable, click the green “Start a review” button.
@@ -197,8 +209,11 @@ Below we’ll step through a more detailed explanation of how a merge conflict h
     1. If changes are made to the same part of the same file in both branches, git will detect a conflict. It is unable to reconcile the differences in files as it doesn’t know which changes to keep and which to discard.
 4. Conflict markers
     1. If attempting to merge from your command line you’ll see the following
+    ![conflict markers](../images/github/conflict-markers.png)
     2. Git will also mark the conflicting sections of the file with special markers. The conflicting changes from both branches are placed between these markers. Like you see below
+    ![conflict sections](../images/github/conflict-sections.png)
     3. If you navigate to GitHub to create a pull request you’ll see the following
+    ![comparing changes](../images/github/comparing-changes.png)
 5. Resolution
     1. Manually
         1. To resolve the conflict you need to manually edit the file to choose what changes to keep. Remove the conflict markers and any code that is not needed.
@@ -208,10 +223,12 @@ Below we’ll step through a more detailed explanation of how a merge conflict h
         5. Finally, type `git push origin main`
     2. In VS Code
         1. You’ll see the following along with a UI to actually help you decide which changes to keep
+        ![merging in vs code](../images/github/merging-in-vs-code.png)
         2. In the lower right corner of your screen you’ll see a blue button that says “Resolve in Merge Editor”. Click this button.
         3. Next you’ll be taken to a screen like you see below. On this screen you’ll have options on either side of your Incoming and Current changes to select the following options: _Accept_ _Incoming_ | _Accept_ _Combination_ | _Ignore_
         4. Select the appropriate option, this may require discussion with your team.
         5. After you decide which changes to keep, click the blue “Complete Merge” button in the lower right corner of  your screen
+        ![merging in a vs code2](../images/github/merging-in-vs-code2.png)
 
 To avoid or reduce the occurrence of merge conflicts, it’s a good practice to regularly pull changes from the main branch into your feature branch. Open communication with your team about changes will also help prevent conflicts.
 
