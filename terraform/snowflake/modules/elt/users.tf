@@ -62,37 +62,32 @@ resource "snowflake_user" "sentinel" {
 #            Role Grants             #
 ######################################
 
-resource "snowflake_role_grants" "transformer_to_dbt" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.transformer.name
-  enable_multiple_grants = true
-  users                  = [snowflake_user.dbt.name]
+resource "snowflake_grant_account_role" "transformer_to_dbt" {
+  provider  = snowflake.useradmin
+  role_name = snowflake_role.transformer.name
+  user_name = snowflake_user.dbt.name
 }
 
-resource "snowflake_role_grants" "loader_to_airflow" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.loader.name
-  enable_multiple_grants = true
-  users                  = [snowflake_user.airflow.name]
+resource "snowflake_grant_account_role" "loader_to_airflow" {
+  provider  = snowflake.useradmin
+  role_name = snowflake_role.loader.name
+  user_name = snowflake_user.airflow.name
 }
 
-resource "snowflake_role_grants" "loader_to_fivetran" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.loader.name
-  enable_multiple_grants = true
-  users                  = [snowflake_user.fivetran.name]
+resource "snowflake_grant_account_role" "loader_to_fivetran" {
+  provider  = snowflake.useradmin
+  role_name = snowflake_role.loader.name
+  user_name = snowflake_user.fivetran.name
 }
 
-resource "snowflake_role_grants" "reader_to_github_ci" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.reader.name
-  enable_multiple_grants = true
-  users                  = [snowflake_user.github_ci.name]
+resource "snowflake_grant_account_role" "reader_to_github_ci" {
+  provider  = snowflake.useradmin
+  role_name = snowflake_role.reader.name
+  user_name = snowflake_user.github_ci.name
 }
 
-resource "snowflake_role_grants" "logger_to_sentinel" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.logger.name
-  enable_multiple_grants = true
-  users                  = [snowflake_user.sentinel.name]
+resource "snowflake_grant_account_role" "logger_to_sentinel" {
+  provider  = snowflake.useradmin
+  role_name = snowflake_role.logger.name
+  user_name = snowflake_user.sentinel.name
 }
