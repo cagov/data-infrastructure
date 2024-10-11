@@ -22,71 +22,71 @@ These guidelines are meant to ensure that issues are created in a standardized f
     6. Milestone: Most DIF projects have Milestones which map to our project timelines. There is a search function which can help identify the correct milestone for the work being done. The Project Manager can help if you are not sure of the correct milestone.
         1. Note: If a project repo does not have milestones created (for example the ODI data-infrastructure repo) then this can be left blank.
     7. Due Date: Assign a due date when the work needs to be completed by, if applicable. If there is no set due date this can be left blank.
-    8. Status: 
-        1. New: Default for new issues. If discussion is needed to clarify details about the issue leave it as New until that discussion happens (so it appears in the “New Status” Project Board view). 
-        2. Backlog: If work is not planned on this within the next 2-3 sprints, set the Status to Backlog (or Blocked if the work is blocked for any reason) and do not assign it to a sprint.
-        3. TODO: If the issue is assigned to a sprint but work has not started yet, set the status as TODO. 
-        4. In Progress: Choose this status once work has started on the issue. 
-        5. Needs Review: Indicates that review is needed from other team members. 
-        6. Blocked: Choose this if work on the issue cannot move forward due to something outside of your team’s control, for example if waiting on another team to respond to a question. 
-        7. Paused: 
-        8. Done: Indicates the issue is completed. This status is set automatically when the issue is closed, you do not need to select it. 
-            1. Note: The correct way to close an issue is to scroll to the bottom of the issue page and choose “Close Issue”. 
+    8. Status: Assign a status on the current state of the issue. See below for Status defintions.
 4. Pull Requests: Add phrase “[Fixes/Closes/Resolves] #xx” to ensure the referenced issue gets closed when PR is merged
     1. Review “Open PRs” tab during stand up
 5. Make sure to fully close an issue when completed.
 
 
+## Size Definitions
 
-
-#Appendix: Github Issue Sizing and Priority Definitions
-
-##Sizing
-
-Tiny
+**Tiny**
 
 - Easy task, something that can be completed in about an hour May not require issue creation but could use as a reminder to complete the task later in the sprint (if something takes less than 30 minutes, no need for an issue).
 - Example: Sending a follow-up email
 
-Small
+**Small**
 
 - A task that can be completed in one day
 
-Medium
+**Medium**
 
 - A task that can be completed in about a week
 - More complex but still straightforward to complete
 
-Large
+**Large**
 
 - A task that can be completed in 2 or more weeks
 - Increased complexity, may require slower manual work or unknowns that require research and discovery
 
-X-Large
+**X-Large**
 
 - Tasks that may take a month or longer to complete
 - Consider breaking up into sub-tasks if appropriate, or create a meta-issue when there are dependencies
 - Example: Building a data model
 
-##Priority
-Urgent
+## Priority Definitions
+
+**Urgent**
 
 - Top priority / emergency
 - Putting everything else on backburner
 - Aiming for completion ASAP
 - Due Date assigned must be kept
 
-High
+**High**
 
 - Important, goal is to complete this sprint
 - Due Date should be kept as much as possible
 
-Medium
+**Medium**
 
 - Less important than High, aim to complete within 2-4 sprints
 - Due Date is a target but OK to push back
 
-Low
+**Low**
 
 - Work on as time allows, may leave in backlog
 - Due Date not required or kept as a reminder to check back and move out of backlog by a certain point in time
+
+## Status Definitions
+
+1. **New**: Default for new issues. If discussion is needed to clarify details about the issue leave it as New until that discussion happens (so it appears in the “New Status” Project Board view). 
+2. **Backlog**: If work is not planned on this within the next 2-3 sprints, set the Status to Backlog (or Blocked if the work is blocked for any reason) and do not assign it to a sprint.
+3. **TODO**: If the issue is assigned to a sprint but work has not started yet, set the status as TODO. 
+4. **In Progress**: Choose this status once work has started on the issue. 
+5. **Needs Review**: Indicates that review is needed from other team members. 
+6. **Blocked**: Choose this if work on the issue cannot move forward due to something outside of your team’s control, for example if waiting on another team to respond to a question. 
+7. **Paused**: 
+8. **Done**: Indicates the issue is completed. This status is set automatically when the issue is closed, you do not need to select it. 
+    1. Note: The correct way to close an issue is to scroll to the bottom of the issue page and choose “Close Issue”. 

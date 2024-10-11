@@ -1,6 +1,6 @@
-# GitHub and Data Engineering
+# GitHub and Continuous Integration
 
-##Housekeeping
+## Housekeeping
 
 - Bookmark our project’s GitHub [repository](https://github.com/cagov/caldata-mdsa-caltrans-pems)
 -  Update your [progress tracker](https://docs.google.com/spreadsheets/d/1ZuXqnR41VuaGLolKn0qq9ob1kLJ77ZZtshgWkCWfJ4c/edit#gid=0)
