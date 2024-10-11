@@ -23,7 +23,7 @@ These guidelines are meant to ensure that issues are created in a standardized f
         1. Note: If a project repo does not have milestones created (for example the ODI data-infrastructure repo) then this can be left blank.
     7. Due Date: Assign a due date when the work needs to be completed by, if applicable. If there is no set due date this can be left blank.
     8. Status: Assign a status on the current state of the issue. See below for Status defintions.
-4. Pull Requests: Add phrase “[Fixes/Closes/Resolves] #xx” to ensure the referenced issue gets closed when PR is merged
+4. Pull Requests: Add phrase “(Fixes/Closes/Resolves) #xx” to ensure the referenced issue gets closed when PR is merged
     1. Review “Open PRs” tab during stand up
 5. Make sure to fully close an issue when completed.
 
