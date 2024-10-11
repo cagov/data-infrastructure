@@ -21,7 +21,7 @@ Git and GitHub are essential tools for software development. They allow develope
 
 ## Clone the project repo locally (for MacOS or Linux-based CLI)
 
-1. Go to your command line 
+1. Go to your command line
 2. Type `cd ~`
 3. Type `git clone https://github.com/cagov/caldata-mdsa-caltrans-pems.git`
 
@@ -51,19 +51,19 @@ Here are some of the benefits of using PRs:
 2. Click on the Branch Dropdown
     1. On the main page of your repository, you'll see a dropdown menu on the top left, displaying the current branch (usually “main”). Click on this dropdown.
 3. Type or click on an Branch Name
-    1. In the dropdown that appears, there’s a textbox at the top, type the name for the branch you want to switch to or create. 
+    1. In the dropdown that appears, there’s a textbox at the top, type the name for the branch you want to switch to or create.
     2. When creating a new branch, choose a descriptive and relevant name. e.g. `pems_staging_model`
     3. **If you’re just switching branches you are done after this step!**
 4. Choose a base for the New Branch
     1. Usually this is “main” as you want to work off of the most up-to-date version of code, but you can also choose another branch to base your new one off of if you want to add to someone else’s work in progress without making edits directly to their branch and causing a merge conflict! 😬
 5. Click "Create branch `<branch_name>` from `<base_branch_name>`" (usually your base branch will be “main”)
 
-Now, you have successfully created a new branch in your GitHub repository and will be automatically switched to this branch. You can make changes on this new branch without affecting the main branch. 
+Now, you have successfully created a new branch in your GitHub repository and will be automatically switched to this branch. You can make changes on this new branch without affecting the main branch.
 
-If you're working with git locally, you can create and switch branches as well as check your current git branch using the following git commands: 
+If you're working with git locally, you can create and switch branches as well as check your current git branch using the following git commands:
 
 - **Create and switch to a branch:** `git switch -c <branch_name>`
-    - **This also works, but is the older way of doing it:** `git checkout -b <branch_name>` 
+    - **This also works, but is the older way of doing it:** `git checkout -b <branch_name>`
 - **Switch to an existing branch:** `git switch <branch_name>`
     - If this doesn’t work it’s likely that you have to pull down the remote branch you want to work with first using `git fetch`
     - Then you can run git switch `<branch_name`> again
@@ -85,7 +85,7 @@ If you're working with git locally, you can create and switch branches as well a
 
 **Windows OS (Linux-based)**
 
-- If you do not have git bash installed please download it [here](https://git-scm.com/download/win) 
+- If you do not have git bash installed please download it [here](https://git-scm.com/download/win)
 - Showing branch names is a built-in feature of git bash. If branches do not show in your command prompt, follow the following steps.
 - Download the official git-prompt script. Move it to somewhere accessible to git bash (e.g. `~/.git-prompt.sh`)
 - Add the following 2 lines to your ~/.bashrc file:
@@ -131,7 +131,7 @@ If you're working with git locally, you can create and switch branches as well a
 
 **Opening a PR**
 
-**Option 1**: 
+**Option 1**:
 This works whether you commit changes locally or via dbt Cloud
 
 1. Go to the GitHub repository where you just pushed your changes
@@ -150,7 +150,7 @@ This works whether you commit changes locally or via dbt Cloud
 
 🛎️Note: This option only works for an hour after you have pushed your changes. If you don’t open a pull request within that 60 minute window this button will disappear. Fear not! There is a second way to open a pull request outlined below.
 
-**Option 2**: 
+**Option 2**:
 This is the option to use if you cannot follow step 2 in Option 1.
 
 1. Go to the Pull requests page on GitHub by going directly to this link or go to the repo homepage and click on the “Pull requests” tab near the top as pictured below
@@ -161,7 +161,7 @@ This is the option to use if you cannot follow step 2 in Option 1.
 5. A dropdown will open, from there you can either type or click the name of the branch you want to compare to the “base: main” branch.
 6. After you select the branch follow steps 3 through 5 from Option 1 above
 
-**Option 3**: You have a third option to open a PR in dbt Cloud if you don’t choose to follow the steps of one of the two options above. 
+**Option 3**: You have a third option to open a PR in dbt Cloud if you don’t choose to follow the steps of one of the two options above.
 
 1. After you commit your changes you’ll see a light green button on the upper left that says “Create a pull request on GitHub”. This will only appear if you’ve yet to open a PR. If you have already opened a PR and are simply committing more changes to it you will not see this option.
 
@@ -173,10 +173,10 @@ The ODI CalData team put together [documentation on reviewing a PR](https://cago
     1. Go to the the “Pull Requests” tab in project repository where the PR was opened and find the PR you want to review
     2. You can also find PRs where you are the requested reviewer by going directly to this link: github.com/pulls/review-requested
 2. Review the changes
-    1. GitHub will take you to the home screen of the PR which starts on the “Conversation” tab. This is where you can read any commits by the PR author, anyone involved in review, and any automated tools. 
+    1. GitHub will take you to the home screen of the PR which starts on the “Conversation” tab. This is where you can read any commits by the PR author, anyone involved in review, and any automated tools.
     2. The “Commits” tab is where you can check each save to the PR to understand the sequence of changes
     3. The “Checks” tab is where you can see the jobs run by GitHub actions (CI automations). You can see whether or not they pass or fail and the details of each.
-    4. There will be a yellow pane across the top of this page like pictured below. 
+    4. There will be a yellow pane across the top of this page like pictured below.
 ![request for review](../images/github/request-for-review.png)
 
 Clicking the green “Add your review” button will take you to the “Files changed” tab where you can begin your review.
@@ -239,7 +239,7 @@ As a reviewer you have the responsibility to merge a PR after you approve it. PR
 - Requested changes have not be addressed or planned for in another PR
 - The ‘Merge pull request” button is green
 
-If no changes are needed or if requested changes are made and all CI checks have passed, you can merge the PR by clicking the “Merge pull request’ button on the “Conversation” tab of the PR. 
+If no changes are needed or if requested changes are made and all CI checks have passed, you can merge the PR by clicking the “Merge pull request’ button on the “Conversation” tab of the PR.
 
 After you click this,  GitHub will prompt you to choose which email to associate with the commit and then to click the “Confirm merge” button.
 
@@ -275,7 +275,7 @@ Writing markdown is important to learn when creating project documentation in ma
 
 ##GitHub Magic ✨
 1. Linking PRs to Issues and Issues to PRs
-    1. You can do this by going to the “Development” section of your issue on the right hand side underneath “Milestone”. Click on the cog wheel then select the relevant repository the PR lives in. From there type in the number (e.g. 266) or title of the PR you want to link or select it from the dropdown that appears. 
+    1. You can do this by going to the “Development” section of your issue on the right hand side underneath “Milestone”. Click on the cog wheel then select the relevant repository the PR lives in. From there type in the number (e.g. 266) or title of the PR you want to link or select it from the dropdown that appears.
     2. You can also do this by using a keyword like “closes, fixes, or resolves” followed by # and the issue number, e.g. [Fixes #143](https://github.com/cagov/data-infrastructure/pull/172)
     3. When you use the “closes” keyword, this will close the corresponding issue when the PR is merged
     4. For a full list of [keywords you can use to link a PR to an issue checkout GitHub’s documentation](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue) complete with examples
