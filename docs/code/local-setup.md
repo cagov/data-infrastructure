@@ -11,9 +11,9 @@ Much of the software in this project is written in Python.
 It is usually worthwhile to install Python packages into a virtual environment,
 which allows them to be isolated from those in other projects which might have different version constraints.
 
-Most of our team uses [Anaconda](https://docs.anaconda.com/anaconda/install/).
-Another popular solution for managing Python environments is [Anaconda/Miniconda](https://docs.conda.io/en/latest/miniconda.html).
-A third option is to use [`pyenv`](https://github.com/pyenv/pyenv).
+Some of our team uses [Anaconda](https://docs.anaconda.com/anaconda/install/) for managing Python environments.
+Another popular and lighter-weight solution is [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
+A third option is [`pyenv`](https://github.com/pyenv/pyenv).
 Pyenv is lighter weight, but is Python-only, whereas conda allows you to install packages from other language ecosystems.
 
 Here are instructions for setting up a Python environment using Miniconda:
@@ -34,7 +34,7 @@ Here are instructions for setting up a Python environment using Miniconda:
 
 Python dependencies are specified using [`poetry`](https://python-poetry.org/).
 
-To install them, open a terminal and ensure you are working in the (`data-infrastructure`) root folder with your `infra` environment activated, then enter the following:
+To install them, open a terminal and ensure you are working in the `data-infrastructure` root folder with your `infra` environment activated, then enter the following:
 
 ```bash
 poetry install --with dev --no-root
@@ -53,8 +53,6 @@ First, install Homebrew
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-export PATH=/opt/homebrew/bin:/opt/homebrew/sbin:$PATH
 ```
 
 Then install the go dependencies:
@@ -129,6 +127,9 @@ in a YAML file. Run the following command to create the necessary folder and fil
 ```bash
 mkdir ~/.dbt && touch ~/.dbt/profiles.yml
 ```
+
+!!! note
+    This will only work on posix-y systems. Windows users will have a different command.
 
 Instructions for writing a `profiles.yml` are documented
 [here](https://docs.getdbt.com/docs/get-started/connection-profiles),
@@ -216,7 +217,7 @@ This project uses [pre-commit](https://pre-commit.com/) to lint, format,
 and generally enforce code quality. These checks are run on every commit,
 as well as in CI.
 
-To set up your pre-commit environment locally run the following in the data-infrastructure repo root folder:
+To set up your pre-commit environment locally run the following in the `data-infrastructure` repo root folder:
 
 ```bash
 pre-commit install
