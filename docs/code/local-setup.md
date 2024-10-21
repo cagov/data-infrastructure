@@ -82,10 +82,11 @@ If you use zsh or bash, open your shell configuration file, and add the followin
 ```bash
 export SNOWFLAKE_ACCOUNT=<account-locator>
 export SNOWFLAKE_DATABASE=TRANSFORM_DEV
-export SNOWFLAKE_USER=<your-username>
-export SNOWFLAKE_PASSWORD=<your-password>
+export SNOWFLAKE_USER=<your-username> # this should be your OKTA email
+export SNOWFLAKE_PASSWORD=<your-password> # this should be your OKTA password
 export SNOWFLAKE_ROLE=TRANSFORMER_DEV
 export SNOWFLAKE_WAREHOUSE=TRANSFORMING_XS_DEV
+export SNOWFLAKE_AUTHENTICATOR=ExternalBrowser
 ```
 
 This will enable you to perform transforming activities which is needed for dbt.
@@ -96,10 +97,11 @@ Open a new terminal and verify that the environment variables are set.
 ```bash
 export SNOWFLAKE_ACCOUNT=<account-locator>
 export SNOWFLAKE_DATABASE=RAW_DEV
-export SNOWFLAKE_USER=<your-username>
-export SNOWFLAKE_PASSWORD=<your-password>
+export SNOWFLAKE_USER=<your-username> # this should be your OKTA email
+export SNOWFLAKE_PASSWORD=<your-password> # this should be your OKTA password
 export SNOWFLAKE_ROLE=LOADER_DEV
 export SNOWFLAKE_WAREHOUSE=LOADING_XS_DEV
+export SNOWFLAKE_AUTHENTICATOR=ExternalBrowser
 ```
 
 This will enable you to perform loading activities and is needed to which is needed for Airflow or Fivetran.
