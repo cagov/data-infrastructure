@@ -11,8 +11,9 @@ Much of the software in this project is written in Python.
 It is usually worthwhile to install Python packages into a virtual environment,
 which allows them to be isolated from those in other projects which might have different version constraints.
 
-One popular solution for managing Python environments is [Anaconda/Miniconda](https://docs.conda.io/en/latest/miniconda.html).
-Another option is to use [`pyenv`](https://github.com/pyenv/pyenv).
+Some of our team uses [Anaconda](https://docs.anaconda.com/anaconda/install/) for managing Python environments.
+Another popular and lighter-weight solution is [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
+A third option is [`pyenv`](https://github.com/pyenv/pyenv).
 Pyenv is lighter weight, but is Python-only, whereas conda allows you to install packages from other language ecosystems.
 
 Here are instructions for setting up a Python environment using Miniconda:
@@ -33,7 +34,7 @@ Here are instructions for setting up a Python environment using Miniconda:
 
 Python dependencies are specified using [`poetry`](https://python-poetry.org/).
 
-To install them, open a terminal and ensure you are working in the data-infrastructure root folder, then enter the following:
+To install them, open a terminal and ensure you are working in the `data-infrastructure` root folder with your `infra` environment activated, then enter the following:
 
 ```bash
 poetry install --with dev --no-root
@@ -104,9 +105,7 @@ export SNOWFLAKE_WAREHOUSE=LOADING_XS_DEV
 This will enable you to perform loading activities and is needed to which is needed for Airflow or Fivetran.
 Again, open a new terminal and verify that the environment variables are set.
 
-## Configure AWS and GCP (optional)
-
-### AWS
+## Configure AWS (optional)
 
 In order to create and manage AWS resources programmatically,
 you need to create access keys and configure your local setup to use them:
@@ -117,29 +116,35 @@ you need to create access keys and configure your local setup to use them:
 
 ## Configure dbt
 
-The connection information for our data warehouses will,
+dbt core was installed when you created your infra environment and ran the poetry command. The connection information for our data warehouses will,
 in general, live outside of this repository.
-This is because connection information is both user-specific usually sensitive,
-so should not be checked into version control.
+This is because connection information is both user-specific and usually sensitive,
+so it should not be checked into version control.
+
 In order to run this project locally, you will need to provide this information
-in a YAML file located (by default) in `~/.dbt/profiles.yml`.
+in a YAML file. Run the following command to create the necessary folder and file.
+
+```bash
+mkdir ~/.dbt && touch ~/.dbt/profiles.yml
+```
+
+!!! note
+    This will only work on posix-y systems. Windows users will have a different command.
 
 Instructions for writing a `profiles.yml` are documented
 [here](https://docs.getdbt.com/docs/get-started/connection-profiles),
-as well as specific instructions for
-[Snowflake](https://docs.getdbt.com/reference/warehouse-setups/snowflake-setup).
+there are specific instructions for Snowflake
+[here](https://docs.getdbt.com/reference/warehouse-setups/snowflake-setup), and you can find examples for ODI and external users below as well.
 
-You can verify that your `profiles.yml` is configured properly by running
+You can verify that your `profiles.yml` is configured properly by running the following command in the project root directory (`transform`).
 
 ```bash
 dbt debug
 ```
 
-from a project root directory (`transform`).
-
 ### Snowflake project
 
-A minimal version of a `profiles.yml` for dbt development with is:
+A minimal version of a `profiles.yml` for dbt development is:
 
 **ODI users**
 ```yml
@@ -202,7 +207,7 @@ Here is one possible configuration for VS Code:
     * dbt Power User (query previews, compilation, and auto-completion)
     * Python (Microsoft's bundle of Python linters and formatters)
     * sqlfluff (SQL linter)
-1. Configure the VS Code Python extension to use your virtual environment by choosing `Python: Select Interpreter` from the command palette and selecting your virtual environment from the options.
+1. Configure the VS Code Python extension to use your virtual environment by choosing `Python: Select Interpreter` from the command palette and selecting your virtual environment (`infra`) from the options.
 1. Associate `.sql` files with the `jinja-sql` language by going to `Code` -> `Preferences` -> `Settings` -> `Files: Associations`, per [these](https://github.com/innoverio/vscode-dbt-power-user#associate-your-sql-files-the-jinja-sql-language) instructions.
 1. Test that the `vscode-dbt-power-user` extension is working by opening one of the project model `.sql` files and pressing the "▶" icon in the upper right corner. You should have query results pane open that shows a preview of the data.
 
@@ -212,7 +217,7 @@ This project uses [pre-commit](https://pre-commit.com/) to lint, format,
 and generally enforce code quality. These checks are run on every commit,
 as well as in CI.
 
-To set up your pre-commit environment locally run the following in the data-infrastructure repo root folder:
+To set up your pre-commit environment locally run the following in the `data-infrastructure` repo root folder:
 
 ```bash
 pre-commit install
