@@ -2,8 +2,8 @@
 
 ## Housekeeping
 
-- Bookmark our project’s GitHub [repository](https://github.com/cagov/caldata-mdsa-caltrans-pems)
--  Update your [progress tracker](https://docs.google.com/spreadsheets/d/1ZuXqnR41VuaGLolKn0qq9ob1kLJ77ZZtshgWkCWfJ4c/edit#gid=0)
+-  Bookmark your project’s GitHub [repository](https://github.com/githubtraining/hellogitworld)
+-  Update your progress tracker
 -  Install [Git for Windows](https://git-scm.com/downloads) or [GitHub for Desktop](https://desktop.github.com/)
 -  Bookmark GitHub’s [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
 
@@ -23,14 +23,14 @@ Git and GitHub are essential tools for software development. They allow develope
 
 1. Go to your command line
 2. Type `cd ~`
-3. Type `git clone https://github.com/cagov/caldata-mdsa-caltrans-pems.git`
+3. Type `git clone https://github.com/[repsoitory_name].git`
 
 
 ##Clone the project repo locally (with GitHub Desktop)
 
 1. Follow these instructions: [install GitHub Desktop](docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)
-2. Be sure to login with the GitHub username you are using for this project -> [find it here](https://github.com/orgs/cagov/teams/caldata-mdsa-caltrans-pems)
-3. Be sure to select the cagov/caldata-mdsa-caltrans-pems repository to clone.
+2. Be sure to login with the GitHub username you are using for this project
+3. Be sure to select the cagov/[repsoitory_name] repository to clone.
 
 ##Pull Requests
 A pull request (PR) is a way to propose changes to a code repository. It is a formal request to the repository owner(s) to merge your changes into their codebase, often the “main” branch.
@@ -47,12 +47,12 @@ Here are some of the benefits of using PRs:
 
 ##Creating or switching branches
 
-1. Go to your Repository > https://github.com/cagov/caldata-mdsa-caltrans-pems
+1. Go to your Repository > https://github.com/cagov/[repsoitory_name]
 2. Click on the Branch Dropdown
     1. On the main page of your repository, you'll see a dropdown menu on the top left, displaying the current branch (usually “main”). Click on this dropdown.
 3. Type or click on an Branch Name
     1. In the dropdown that appears, there’s a textbox at the top, type the name for the branch you want to switch to or create.
-    2. When creating a new branch, choose a descriptive and relevant name. e.g. `pems_staging_model`
+    2. When creating a new branch, choose a descriptive and relevant name. e.g. `project_staging_model`
     3. **If you’re just switching branches you are done after this step!**
 4. Choose a base for the New Branch
     1. Usually this is “main” as you want to work off of the most up-to-date version of code, but you can also choose another branch to base your new one off of if you want to add to someone else’s work in progress without making edits directly to their branch and causing a merge conflict! 😬
@@ -68,7 +68,7 @@ If you're working with git locally, you can create and switch branches as well a
     - If this doesn’t work it’s likely that you have to pull down the remote branch you want to work with first using `git fetch`
     - Then you can run git switch `<branch_name`> again
 
-🛎️Note: replace `<branch_name>` with the actual name of your new branch e.g. `writing_pems_docs`.
+🛎️Note: replace `<branch_name>` with the actual name of your new branch e.g. `writing_project_docs`.
 
 - Check which branch you are on: `git branch --show-current`
 - Optional – persistently show your full path and branch name in command line:
@@ -97,7 +97,7 @@ If you're working with git locally, you can create and switch branches as well a
 
 - Save the file and close it
 - Open a new terminal window
-- Type `cd ~/caldata-mdsa-caltrans-pems/`
+- Type `cd ~/[folder_name]/`
 - You’ll now see something like this:
 
 ![sample output](../images/github/page4.png)
