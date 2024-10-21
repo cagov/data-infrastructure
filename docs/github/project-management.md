@@ -7,9 +7,11 @@ These guidelines are meant to ensure that issues are created in a standardized f
 1. Title: This can be short, but should give enough detail to identify what work this issue is related to and differentiate it from similar task. For example, “Review Documentation for [Specific Project Name]”, as opposed to “Review Documentation” which is too vague.
 2. Description: This should be detailed enough that anyone viewing the issue knows what work needs to be done, and what the ideal outcome or deliverable is once this work is complete (success criteria).
     1. If the work can be broken out into subtasks, make use of the checklist format option to list those subtasks.
+    ![pm-subtasks](../images/github/pm-subtasks.png)
     2. Meta-issues: If the issue is sized Large (1-2 weeks of work) or X-Large (more than 2 weeks of work), turn it into a meta-issue. The subtasks should be turned into their own issues and linked back to this issue. This should also be done if subtasks need to be assigned to someone other than the primary driver of the issue.
     3. Sub-task issues should be sized appropriately so that they can be completed in <1 sprint of work. So Tiny (1 hour), Small (1 day), and Medium (1 week) are appropriate sizes for sub-tasks. A Large (2+ weeks) or X-Large (months) task should be broken up into smaller components and turned into a meta-issue.
     4. Example Meta-Issue: Note that in the screenshot below, there is text between the check-box and the issue name. This will prevent the automation that checks the box when the issue is closed from working. To enable that automation, there should be no text in the check-box besides the issue name.
+    ![pm-eg-metaissue](../images/github/pm-eg-metaissue.png)
 
 3. The following items should always be filled in when creating a new issue. If you are unsure what to enter, reach out to the Project Manager to discuss, or bring it up in daily standup or weekly sprint planning meetings to discuss with the team.
     1. Assignee: If you are unsure who to assign the item to, assign it to yourself to avoid losing track of the issue. Then add a comment that you think it may need to be assigned to someone else and we can discuss in the next team meeting.
