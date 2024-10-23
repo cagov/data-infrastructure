@@ -8,7 +8,7 @@ resource "snowflake_user" "dbt" {
   comment  = "Service user for dbt Cloud"
 
   default_warehouse = module.transforming["XS"].name
-  default_role      = snowflake_role.transformer.name
+  default_role      = snowflake_account_role.transformer.name
 
   must_change_password = false
 }
@@ -20,7 +20,7 @@ resource "snowflake_user" "airflow" {
   comment  = "Service user for Airflow"
 
   default_warehouse = module.loading["XS"].name
-  default_role      = snowflake_role.loader.name
+  default_role      = snowflake_account_role.loader.name
 
   must_change_password = false
 }
@@ -31,7 +31,7 @@ resource "snowflake_user" "fivetran" {
   comment  = "Service user for Fivetran"
 
   default_warehouse = module.loading["XS"].name
-  default_role      = snowflake_role.loader.name
+  default_role      = snowflake_account_role.loader.name
 
   must_change_password = false
 }
@@ -42,7 +42,7 @@ resource "snowflake_user" "github_ci" {
   comment  = "Service user for GitHub CI"
 
   default_warehouse = module.reporting["XS"].name
-  default_role      = snowflake_role.reader.name
+  default_role      = snowflake_account_role.reader.name
 
   must_change_password = false
 }
@@ -53,7 +53,7 @@ resource "snowflake_user" "sentinel" {
   comment  = "Service user for Sentinel"
 
   default_warehouse = module.logging.name
-  default_role      = snowflake_role.logger.name
+  default_role      = snowflake_account_role.logger.name
 
   must_change_password = false
 }
@@ -64,30 +64,30 @@ resource "snowflake_user" "sentinel" {
 
 resource "snowflake_grant_account_role" "transformer_to_dbt" {
   provider  = snowflake.useradmin
-  role_name = snowflake_role.transformer.name
+  role_name = snowflake_account_role.transformer.name
   user_name = snowflake_user.dbt.name
 }
 
 resource "snowflake_grant_account_role" "loader_to_airflow" {
   provider  = snowflake.useradmin
-  role_name = snowflake_role.loader.name
+  role_name = snowflake_account_role.loader.name
   user_name = snowflake_user.airflow.name
 }
 
 resource "snowflake_grant_account_role" "loader_to_fivetran" {
   provider  = snowflake.useradmin
-  role_name = snowflake_role.loader.name
+  role_name = snowflake_account_role.loader.name
   user_name = snowflake_user.fivetran.name
 }
 
 resource "snowflake_grant_account_role" "reader_to_github_ci" {
   provider  = snowflake.useradmin
-  role_name = snowflake_role.reader.name
+  role_name = snowflake_account_role.reader.name
   user_name = snowflake_user.github_ci.name
 }
 
 resource "snowflake_grant_account_role" "logger_to_sentinel" {
   provider  = snowflake.useradmin
-  role_name = snowflake_role.logger.name
+  role_name = snowflake_account_role.logger.name
   user_name = snowflake_user.sentinel.name
 }
