@@ -50,7 +50,7 @@ resource "snowflake_warehouse" "this" {
 #################################
 
 # Monitoring, usage, and operating permissions for the LOADING warehouse.
-resource "snowflake_role" "this" {
+resource "snowflake_account_role" "this" {
   name     = "${var.name}_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the ${var.name} warehouse"
@@ -62,7 +62,7 @@ resource "snowflake_role" "this" {
 
 resource "snowflake_grant_account_role" "this_to_sysadmin" {
   provider         = snowflake.useradmin
-  role_name        = snowflake_role.this.name
+  role_name        = snowflake_account_role.this.name
   parent_role_name = "SYSADMIN"
 }
 
@@ -73,7 +73,7 @@ resource "snowflake_grant_account_role" "this_to_sysadmin" {
 resource "snowflake_grant_privileges_to_account_role" "this" {
   provider          = snowflake.securityadmin
   privileges        = local.warehouse.MOU
-  account_role_name = snowflake_role.this.name
+  account_role_name = snowflake_account_role.this.name
   on_account_object {
     object_type = "WAREHOUSE"
     object_name = snowflake_warehouse.this.name

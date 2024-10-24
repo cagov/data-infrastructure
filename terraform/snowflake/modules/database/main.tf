@@ -105,7 +105,7 @@ resource "snowflake_database" "this" {
 #            Access Roles            #
 ######################################
 
-resource "snowflake_role" "this" {
+resource "snowflake_account_role" "this" {
   provider = snowflake.useradmin
   for_each = toset(keys(local.database))
   name     = "${snowflake_database.this.name}_${each.key}"
@@ -119,7 +119,7 @@ resource "snowflake_role" "this" {
 resource "snowflake_grant_account_role" "this_to_sysadmin" {
   provider         = snowflake.useradmin
   for_each         = toset(keys(local.database))
-  role_name        = snowflake_role.this[each.key].name
+  role_name        = snowflake_account_role.this[each.key].name
   parent_role_name = "SYSADMIN"
 }
 
@@ -140,7 +140,7 @@ resource "snowflake_grant_privileges_to_account_role" "database" {
   provider          = snowflake.securityadmin
   for_each          = local.database
   privileges        = each.value
-  account_role_name = snowflake_role.this[each.key].name
+  account_role_name = snowflake_account_role.this[each.key].name
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.this.name
@@ -151,7 +151,7 @@ resource "snowflake_grant_privileges_to_account_role" "database" {
 # Schema grants
 resource "snowflake_grant_ownership" "schemas" {
   provider          = snowflake.securityadmin
-  account_role_name = snowflake_role.this["READWRITECONTROL"].name
+  account_role_name = snowflake_account_role.this["READWRITECONTROL"].name
   on {
     future {
       object_type_plural = "SCHEMAS"
@@ -164,7 +164,7 @@ resource "snowflake_grant_privileges_to_account_role" "schemas" {
   provider          = snowflake.securityadmin
   for_each          = local.schema
   privileges        = each.value
-  account_role_name = snowflake_role.this[each.key].name
+  account_role_name = snowflake_account_role.this[each.key].name
   on_schema {
     future_schemas_in_database = snowflake_database.this.name
   }
@@ -175,7 +175,7 @@ resource "snowflake_grant_privileges_to_account_role" "public" {
   provider          = snowflake.securityadmin
   for_each          = local.schema
   privileges        = each.value
-  account_role_name = snowflake_role.this[each.key].name
+  account_role_name = snowflake_account_role.this[each.key].name
   on_schema {
     schema_name = "${snowflake_database.this.name}.PUBLIC"
   }
@@ -185,7 +185,7 @@ resource "snowflake_grant_privileges_to_account_role" "public" {
 # Table grants
 resource "snowflake_grant_ownership" "tables" {
   provider          = snowflake.securityadmin
-  account_role_name = snowflake_role.this["READWRITECONTROL"].name
+  account_role_name = snowflake_account_role.this["READWRITECONTROL"].name
   on {
     future {
       object_type_plural = "TABLES"
@@ -198,7 +198,7 @@ resource "snowflake_grant_privileges_to_account_role" "tables" {
   provider          = snowflake.securityadmin
   for_each          = local.table
   privileges        = each.value
-  account_role_name = snowflake_role.this[each.key].name
+  account_role_name = snowflake_account_role.this[each.key].name
   on_schema_object {
     future {
       object_type_plural = "TABLES"
@@ -211,7 +211,7 @@ resource "snowflake_grant_privileges_to_account_role" "tables" {
 # View grants
 resource "snowflake_grant_ownership" "views" {
   provider          = snowflake.securityadmin
-  account_role_name = snowflake_role.this["READWRITECONTROL"].name
+  account_role_name = snowflake_account_role.this["READWRITECONTROL"].name
   on {
     future {
       object_type_plural = "VIEWS"
@@ -224,7 +224,7 @@ resource "snowflake_grant_privileges_to_account_role" "views" {
   provider          = snowflake.securityadmin
   for_each          = local.view
   privileges        = each.value
-  account_role_name = snowflake_role.this[each.key].name
+  account_role_name = snowflake_account_role.this[each.key].name
   on_schema_object {
     future {
       object_type_plural = "VIEWS"
