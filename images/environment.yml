@@ -6,7 +6,9 @@ dependencies:
   - python=3.11
   - fsspec=2023.12.0
   - fiona=1.10.1
-  - geopandas=1.0.1
+  # version that fixes the fiona path module issue
+  # https://github.com/geopandas/geopandas/commit/912f1cd85c747f4be68123852566a0917fcd3c4f 
+  - geopandas=1.0.1  
   - mercantile=1.2.1
   - pandas
   - pyarrow
