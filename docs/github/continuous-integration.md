@@ -195,7 +195,7 @@ In this example, “test” is misspelled so the PR review is adding a suggestio
 
 After adding your suggestion and additional comments if applicable, click the green “Start a review” button.
 
-##Resolving a merge conflict
+## Resolving a merge conflict
 
 Merge conflicts occur in git when the software is unable to automatically merge changes from two different branches. This happens when changes are made to the same part of a file in both the source and target branches (these are often interchanged as feature and destination branches, respectively) and git is unable to determine which of the changes should be kept.
 
