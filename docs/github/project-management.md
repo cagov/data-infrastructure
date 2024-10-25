@@ -16,7 +16,7 @@ These guidelines are meant to ensure that issues are created in a standardized f
 3. The following items should always be filled in when creating a new issue. If you are unsure what to enter, reach out to the Project Manager to discuss, or bring it up in daily standup or weekly sprint planning meetings to discuss with the team.
     1. Assignee: If you are unsure who to assign the item to, assign it to yourself to avoid losing track of the issue. Then add a comment that you think it may need to be assigned to someone else and we can discuss in the next team meeting.
     2. Priority: Indicates how soon the work needs to start. See definitions in the appendix at the end of this document.
-    3. Size: Size indicates how much time the work will take to complete once it has started. See definitions in the appendix at the end of this document.
+    3. Size: Size indicates how much time the work will take to complete oncgite it has started. See definitions in the appendix at the end of this document.
     4. Sprint: If the work will start within the next 6 weeks, assign it either to the current or next 2-3 sprints. Work planned further than 3 sprints out does not need to be assigned to a sprint. In this case set the status to “Backlog” and assign a Due Date. If there is not a known due date for the work, this should be a date by which the work needs to be added to a sprint so it does not get lost.
     5. Project: This field is important because it ensures the issue is surfaced in the correct location. If you are unsure of the project, the Project Manager can help identify the correct selection.
         1. Projects associated with DIF work start with “DIF - “ followed by the project name.

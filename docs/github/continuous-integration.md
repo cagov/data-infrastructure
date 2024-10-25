@@ -23,16 +23,16 @@ Git and GitHub are essential tools for software development. They allow develope
 
 1. Go to your command line
 2. Type `cd ~`
-3. Type `git clone https://github.com/[repsoitory_name].git`
+3. Type `git clone https://github.com/[repository_name].git`
 
 
-##Clone the project repo locally (with GitHub Desktop)
+## Clone the project repo locally (with GitHub Desktop)
 
 1. Follow these instructions: [install GitHub Desktop](docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)
 2. Be sure to login with the GitHub username you are using for this project
-3. Be sure to select the cagov/[repsoitory_name] repository to clone.
+3. Be sure to select the cagov/[repository_name] repository to clone.
 
-##Pull Requests
+## Pull Requests
 A pull request (PR) is a way to propose changes to a code repository. It is a formal request to the repository owner(s) to merge your changes into their codebase, often the “main” branch.
 
 PRs are typically created by cloning or forking the repository, making changes to the code, and then submitting a request to the repository owner to merge your changes. The repository owner can then review your changes, request changes – if necessary, and decide whether to merge them into their codebase.
@@ -45,7 +45,7 @@ Here are some of the benefits of using PRs:
 - **Documentation**: PRs can be used to document changes to the code.
 - **History**: PRs provide a history of changes to the code.
 
-##Creating or switching branches
+## Creating or switching branches
 
 1. Go to your Repository > https://github.com/cagov/[repsoitory_name]
 2. Click on the Branch Dropdown
@@ -165,7 +165,7 @@ This is the option to use if you cannot follow step 2 in Option 1.
 
 1. After you commit your changes you’ll see a light green button on the upper left that says “Create a pull request on GitHub”. This will only appear if you’ve yet to open a PR. If you have already opened a PR and are simply committing more changes to it you will not see this option.
 
-##Reviewing a PR
+## Reviewing a PR
 
 The ODI CalData team put together [documentation on reviewing a PR](https://cagov.github.io/data-infrastructure/code-review/#reviewing-a-pull-request) with the two core messages being, have empathy and get CI (continuous integration) to pass.
 
@@ -185,7 +185,7 @@ In the files changed tab you can leave a comment on any line of code by clicking
 
 After you’re done with your review, if you scroll back to the top there will be a green button on the upper right that says “Finish your review”. Click that and decide if you just want to do one of the following: 1) Comment, 2) Approve or 3) Request changes. Then click the green button on the lower right that says “Submit review”.
 
-##Suggesting changes to a PR
+## Suggesting changes to a PR
 
 When you’re reviewing a PR instead of just commenting on a line of code you may want to suggest changes directly to the code. You can do this by clicking the blue plus sign button next to the line of code you want to suggest changes to.
 
@@ -232,7 +232,7 @@ Below we’ll step through a more detailed explanation of how a merge conflict h
 
 To avoid or reduce the occurrence of merge conflicts, it’s a good practice to regularly pull changes from the main branch into your feature branch. Open communication with your team about changes will also help prevent conflicts.
 
-##Merging a PR
+## Merging a PR
 As a reviewer you have the responsibility to merge a PR after you approve it. PRs should not be merged if any of the following are true:
 - All CI checks have not passed (2 out of 3 passing isn’t good enough)
 - You haven’t approved the PR
@@ -245,11 +245,11 @@ After you click this,  GitHub will prompt you to choose which email to associate
 
 At this point, GitHub will finalize the merge process and these changes will now be incorporated into the main branch. You may delete the feature branch that was used to submit the PR.
 
-##GitHub Issues
+## GitHub Issues
 
 Issues on GitHub are how we document and track our work. Writing a good issue is important because it provides clear information on the what, why, and who relating to a body of work which can enable efficient collaboration. Well documented issues allow for quicker understanding and problem resolution. They serve as a form of documentation capturing decisions and discussion which is valuable to reference for current and future team members. Clear issues also help with task prioritization and milestone tracking across our work.
 
-##Creating an issue
+## Creating an issue
 
 1. Go to the “Issues” tab of the project repository
 2. Find and click on the green “New issue” button in the upper right corner
@@ -269,11 +269,11 @@ Issues on GitHub are how we document and track our work. Writing a good issue is
 Here is [an example GitHub issue] (https://github.com/cagov/caldata-mdsa-caltrans-pems/issues/31)that has all 10 elements and sub-elements listed above.
 
 
-##Writing Markdown
+## Writing Markdown
 
 Writing markdown is important to learn when creating project documentation in markdown files (.md) and for writing GitHub issues. GitHub has [handy documentation on basic Markdown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) which is a great starting point.
 
-##GitHub Magic ✨
+## GitHub Magic ✨
 1. Linking PRs to Issues and Issues to PRs
     1. You can do this by going to the “Development” section of your issue on the right hand side underneath “Milestone”. Click on the cog wheel then select the relevant repository the PR lives in. From there type in the number (e.g. 266) or title of the PR you want to link or select it from the dropdown that appears.
     2. You can also do this by using a keyword like “closes, fixes, or resolves” followed by # and the issue number, e.g. [Fixes #143](https://github.com/cagov/data-infrastructure/pull/172)
