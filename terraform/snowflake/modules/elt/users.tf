@@ -6,6 +6,9 @@ resource "snowflake_user" "dbt" {
   provider = snowflake.useradmin
   name     = "DBT_CLOUD_SVC_USER_${var.environment}"
   comment  = "Service user for dbt Cloud"
+  lifecycle {
+    ignore_changes = [rsa_public_key]
+  }
 
   default_warehouse = module.transforming["XS"].name
   default_role      = snowflake_account_role.transformer.name
@@ -18,6 +21,9 @@ resource "snowflake_user" "airflow" {
   provider = snowflake.useradmin
   name     = "MWAA_SVC_USER_${var.environment}"
   comment  = "Service user for Airflow"
+  lifecycle {
+    ignore_changes = [rsa_public_key]
+  }
 
   default_warehouse = module.loading["XS"].name
   default_role      = snowflake_account_role.loader.name
@@ -29,6 +35,9 @@ resource "snowflake_user" "fivetran" {
   provider = snowflake.useradmin
   name     = "FIVETRAN_SVC_USER_${var.environment}"
   comment  = "Service user for Fivetran"
+  lifecycle {
+    ignore_changes = [rsa_public_key]
+  }
 
   default_warehouse = module.loading["XS"].name
   default_role      = snowflake_account_role.loader.name
@@ -40,6 +49,9 @@ resource "snowflake_user" "github_ci" {
   provider = snowflake.useradmin
   name     = "GITHUB_ACTIONS_SVC_USER_${var.environment}"
   comment  = "Service user for GitHub CI"
+  lifecycle {
+    ignore_changes = [rsa_public_key]
+  }
 
   default_warehouse = module.reporting["XS"].name
   default_role      = snowflake_account_role.reader.name
@@ -51,6 +63,9 @@ resource "snowflake_user" "sentinel" {
   provider = snowflake.useradmin
   name     = "SENTINEL_SVC_USER_${var.environment}"
   comment  = "Service user for Sentinel"
+  lifecycle {
+    ignore_changes = [rsa_public_key]
+  }
 
   default_warehouse = module.logging.name
   default_role      = snowflake_account_role.logger.name
