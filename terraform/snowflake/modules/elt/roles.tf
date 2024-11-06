@@ -122,7 +122,7 @@ resource "snowflake_grant_account_role" "raw_r_to_transformer" {
 # Transformer can use the TRANSFORMING warehouse
 resource "snowflake_grant_account_role" "transforming_to_transformer" {
   provider         = snowflake.useradmin
-  for_each         = toset(values(local.sizes))
+  for_each         = toset(keys(local.sizes))
   role_name        = module.transforming[each.key].access_role_name
   parent_role_name = snowflake_account_role.transformer.name
 }
@@ -130,7 +130,7 @@ resource "snowflake_grant_account_role" "transforming_to_transformer" {
 # Reporter can use the REPORTING warehouse
 resource "snowflake_grant_account_role" "reporting_to_reporter" {
   provider         = snowflake.useradmin
-  for_each         = toset(values(local.sizes))
+  for_each         = toset(keys(local.sizes))
   role_name        = module.reporting[each.key].access_role_name
   parent_role_name = snowflake_account_role.reporter.name
 }
@@ -138,7 +138,7 @@ resource "snowflake_grant_account_role" "reporting_to_reporter" {
 # Loader can use the LOADING warehouse
 resource "snowflake_grant_account_role" "loading_to_loader" {
   provider         = snowflake.useradmin
-  for_each         = toset(values(local.sizes))
+  for_each         = toset(keys(local.sizes))
   role_name        = module.loading[each.key].access_role_name
   parent_role_name = snowflake_account_role.loader.name
 }
@@ -167,7 +167,7 @@ resource "snowflake_grant_account_role" "analytics_r_to_reader" {
 # Reader can use the REPORTING warehouse
 resource "snowflake_grant_account_role" "reporting_to_reader" {
   provider         = snowflake.useradmin
-  for_each         = toset(values(local.sizes))
+  for_each         = toset(keys(local.sizes))
   role_name        = module.reporting[each.key].access_role_name
   parent_role_name = snowflake_account_role.reader.name
 }
