@@ -193,3 +193,17 @@ resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_lo
     object_name = "SNOWFLAKE"
   }
 }
+
+
+##############################################################
+# Grant TRANSFORM_READ role to ANALYTICS_READWRITECONTROL role
+# This is a workaround for sharing views
+# More backgorund information related to this is found
+# here - https://github.com/cagov/data-infrastructure/issues/274
+##############################################################
+
+resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
+  provider         = snowflake.useradmin
+  role_name        = "${module.transform.name}_READ"
+  parent_role_name = "${module.analytics.name}_READWRITECONTROL"
+}
