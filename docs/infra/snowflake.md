@@ -68,8 +68,19 @@ We have three primary databases in our account:
 There are warehouse groups for processing data in the databases,
 corresponding to the primary purposes of the above databases.
 They are available in a few different sizes, depending upon the needs of the the data processing job,
-X-small (denoted by (`XS`), X-Large (denoted by (`XL`), and 4X-Large (denoted by `4XL`).
+X-small denoted by (`XS`), Small (denoted by `S`), Medium (denoted by `M`), Large denoted by (`L`), X-Large denoted by (`XL`), 2X-Large (denoted by `2XL`), 3X-Large (denoted by `3XL`) and 4X-Large (denoted by `4XL`).
 Most jobs on small data should use the relevant X-small warehouse.
+
+Following is a general guideline from Snowflake for choosing a warehouse size.
+
+X-Small: Good for small tasks and experimenting.
+Small: Suitable for single-user workloads and development.
+Medium: Handles moderate concurrency and data volumes.
+Large: Manages larger queries and higher concurrency.
+X-Large: Powerful for demanding workloads and data-intensive operations.
+2X-Large: Double the capacity of X-Large.
+3X-Large: Triple the capacity of X-Large.
+4X-Large: Quadruple the capacity of X-Large.
 
 1. **`LOADING_{size}_{env}`**: These warehouse is for loading data to `RAW`.
 1. **`TRANSFORMING_{size}_{env}`**: This warehouse is for transforming data in `TRANSFORM` and `ANALYTICS`.

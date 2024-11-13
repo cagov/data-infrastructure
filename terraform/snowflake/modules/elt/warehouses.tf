@@ -2,10 +2,24 @@
 #           Warehouses          #
 #################################
 
+#X-Small: Good for small tasks and experimenting.
+#Small: Suitable for single-user workloads and development.
+#Medium: Handles moderate concurrency and data volumes.
+#Large: Manages larger queries and higher concurrency.
+#X-Large: Powerful for demanding workloads and data-intensive operations.
+#2X-Large: Double the capacity of X-Large.
+#3X-Large: Triple the capacity of X-Large.
+#4X-Large: Quadruple the capacity of X-Large.
+
 locals {
   sizes = {
     "XS"  = "X-SMALL",
+    "S"   = "SMALL",
+    "M"   = "MEDIUM",
+    "L"   = "LARGE",
     "XL"  = "X-LARGE",
+    "2XL" = "2X-LARGE",
+    "3XL" = "3X-LARGE",
     "4XL" = "4X-LARGE",
   }
 }
