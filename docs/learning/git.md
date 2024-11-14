@@ -54,10 +54,8 @@ On the CalData Data Services and Engineering team we make heavy use of git and G
 and have our own set of [guidelines and best practices](../code/code-review.md) for code review.
 
 
-## Housekeeping
+## Resources
 
--  Bookmark your project’s GitHub [repository](https://github.com/githubtraining/hellogitworld)
--  Update your progress tracker
 -  Install [Git for Windows](https://git-scm.com/downloads) or [GitHub for Desktop](https://desktop.github.com/)
 -  Bookmark GitHub’s [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
 
@@ -111,7 +109,8 @@ If you're working with git locally, you can create and switch branches as well a
     - If this doesn’t work it’s likely that you have to pull down the remote branch you want to work with first using `git fetch`
     - Then you can run git switch `<branch_name`> again
 
-🛎️Note: replace `<branch_name>` with the actual name of your new branch e.g. `writing_project_docs`.
+!!! note 
+        Replace `<branch_name>` with the actual name of your new branch e.g. `writing_project_docs`.
 
 - Check which branch you are on: `git branch --show-current`
 - Optional – persistently show your full path and branch name in command line:
@@ -191,7 +190,8 @@ This works whether you commit changes locally or via dbt Cloud
     5. You’ll have options to fill in other details like projects, we’ll cover those later
 5. Click the green button on the lower right that says “Create pull request”
 
-🛎️Note: This option only works for an hour after you have pushed your changes. If you don’t open a pull request within that 60 minute window this button will disappear. Fear not! There is a second way to open a pull request outlined below.
+!!! note 
+        This option only works for an hour after you have pushed your changes. If you don’t open a pull request within that 60 minute window this button will disappear. Fear not! There is a second way to open a pull request outlined below.
 
 **Option 2**:
 This is the option to use if you cannot follow step 2 in Option 1.

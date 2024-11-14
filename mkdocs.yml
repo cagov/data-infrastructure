@@ -44,6 +44,7 @@ nav:
       - Code Review: code/code-review.md
       - Writing Documentation: code/writing-documentation.md
       - Terraform Setup: code/terraform-local-setup.md
+      - GitHub Project Management: code/project-management.md
   - Project Infrastructure:
       - Cloud Infrastructure: infra/cloud-infrastructure.md
       - Project Architecture: infra/architecture.md
@@ -60,8 +61,6 @@ nav:
       - dbt Overview: dbt/dbt.md
       - dbt Performance: dbt/dbt-performance.md
       - dbt Snowflake Project: dbt_docs_snowflake/index.html
-  - GitHub:
-      - GitHub Project Management: github/project-management.md
   - Data:
       - Building Footprints: data/footprints.md
   - Learning:
