@@ -131,7 +131,7 @@ There are six primary functional roles:
 
 ## Reporting and analysis
 
-The most prominent consumer of the data products from this project are PowerBI and Tableau dashboards and the CalInnovate team.
+The most prominent consumers of the data products from this project are PowerBI and Tableau dashboards and the CalInnovate team.
 
 ## Custom schema names
 
@@ -139,7 +139,7 @@ dbt's default method for generating [custom schema names](https://docs.getdbt.co
 works well for a single-database setup:
 
 * It allows development work to occur in a separate schema from production models.
-* It allows analytics engineers to develop side-by-side without stepping on each others toes.
+* It allows analytics engineers to develop side-by-side without stepping on each other's toes.
 
 A downside of the default is that production models all get a prefix,
 which may not be an ideal naming convention for end-users.
@@ -169,7 +169,7 @@ So your data access looks like the following:
 
 ![developer](../images/developer.png)
 
-Now let's consider the nigthly production build. This service account builds the production models
+Now let's consider the nightly production build. This service account builds the production models
 in `TRANSFORM_PRD` and `ANALYTICS_PRD` based on the raw data in `RAW_PRD`.
 The development environment effectively doesn't exist to this account, and data access looks like the following:
 

@@ -1,8 +1,7 @@
-# dbt Performance Evaluation and Tuning
+# dbt performance evaluation and tuning
 
-
-## Considerations: When Does Performance Matter?
-In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if you need to run models every hour then the entire job cannot take longer than an hour to run. In general compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.
+## Considerations: When does performance matter?
+In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if you need to run models every hour then the entire job cannot take longer than an hour to run. In general, compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.
 
 ### Costs
 Although compute time is relatively cheap, it's sometimes possible with larger datasets that need to be frequently refreshed to optimize performance to save enough costs to be worth the time to optimize. In Snowflake you can easily monitor costs in the Admin/Usage section of the Snowflake UI, where you can see credits used by warehouse and role.
@@ -12,25 +11,25 @@ Typically, unless model performance is obviously very poor you are better off ad
 
 In other words, very often the questions you should be asking are not in the category of SQL performance tuning but rather "do we need this data to be this fresh?" and "do we need all this data?".
 
-### Scheduling Conflicts:
+### Scheduling conflicts
 Often performance issues show up in scheduling. If you are running jobs once a day it is extremely unlikely you will run into any scheduling conflicts. However, if a much higher frequency is required, it's possible for jobs to take longer than that time between runs. In this case a common first approach is to break up model runs so that things that don't need to run as frequently can run separately from models that require more frequent updating. A typical way of doing this is to either use dbt run --select or dbt tags [dbt tags ](https://docs.getdbt.com/reference/resource-configs/tags) to select models in groups.
 This is not to say performance tuning of individual queries is never worth it but that the big macro gains come more from running models less frequently and/or with less data, e.g. using filtering or [incremental models](#2-materialization-matters).
 
-### The Tradeoffs
-It is extremely important to balance time spent in optimizing model performance with compute costs and other concerns. If it takes you a day to optimize a model to run only a few seconds faster and save a few pennies per run, it's not likely worth the effort. Similarly, the use of incremental materilization can certainly reduce build time but introduce complexity and require a degree of monitoring to ensure integrity. See also [Materialization Matters](#2-materialization-matters) below.
+### The tradeoffs
+It is extremely important to balance time spent in optimizing model performance with compute costs and other concerns. If it takes you a day to optimize a model to run only a few seconds faster and save a few pennies per run, it's not likely worth the effort. Similarly, the use of incremental materialization can certainly reduce build time but introduce complexity and require a degree of monitoring to ensure integrity. See also [Materialization Matters](#2-materialization-matters) below.
 
-## Analyzing Performance in dbt
+## Analyzing performance in dbt
 With every dbt run or build several artifacts are generated in the target/ directory, including the run_results.json file. This includes detailed information on run execution and many people parse this to create dashboards to report on dbt performance and help with optimization and cost monitoring. There is an important caveat here: simply knowing how long a model took to run is important to uncover which models might need optimization, but cannot tell you anything about why they are performing poorly.
 
-### Getting model timing: Local Development
-Every time you run a model dbt outputs timing, information which you can easily use identify non-performance models. The output will look like:
+### Getting model timing: Local development
+Every time you run a model dbt outputs timing, information which you can easily use to identify non-performance models. The output will look like:
 ```
 14:16:39.438935 [info ] [Thread-4  ]: 136 of 160 OK created sql table model dbt_aerishan.JobControl_Published_CertEligActions  [SUCCESS 1 in 43.00s]
 ```
-This is extremely useful during development in order to understand potential problems with your models performance.
+This is extremely useful during development to understand potential problems with your model's performance.
 
 ### Getting model timing: dbt Cloud
-dbt Cloud has a nicer interface for finding which models in a project are running longest. Visit the Deploy > Runs section of dbt Cloud. You'll see a full list of jobs and how long each one toook. To drill down to the model timing level click on a run name. You can expand the "Invoke dbt build" section under "Run Summary" to get a detailed summary of your run as well as timing for each model and test. There is also a "Debug logs" section for even more detail, including the exact queries run and an option to download the logs for easier viewing. Of course this is also where you go to find model and test errors and warnings!
+dbt Cloud has a nicer interface for finding which models in a project are running longest. Visit the Deploy > Runs section of dbt Cloud. You'll see a full list of jobs and how long each took. To drill down to the model timing level click on a run name. You can expand the "Invoke dbt build" section under "Run Summary" to get a detailed summary of your run and timing for each model and test. There is also a "Debug logs" section for even more detail, including the exact queries run and an option to download the logs for easier viewing. Of course this is also where you go to find model and test errors and warnings!
 
 ![dbt Model Run Summary](../images/dbt_run_summary.png)
 
@@ -39,9 +38,9 @@ For a quick visual reference of which models take up the most time in a run, cli
 ![dbt Model Timing Graph](../images/dbt_model_timing.png)
 
 ### Getting model timing: Snowflake
-Snowflake has quite a lot of performance data readily available through it's `information_schema.QUERY_HISTORY()` table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.
+Snowflake has quite a lot of performance data readily available through its `information_schema.QUERY_HISTORY()` table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.
 
-#### Query History
+#### Query history
 The [Query History](https://docs.snowflake.com/en/sql-reference/functions/query_history) gives you real time data while the Account Usage is delayed. So Query History is great for analyzing your own queries in development and for current query performance in production.
 
 Example Query: Get top time-consuming queries for the dbt Cloud production loads
@@ -62,8 +61,7 @@ As you might have guessed this also lets you search for a model on query text, s
     WHERE query_text LIKE '%stg_%'
 ```
 
-
-#### Account Usage
+#### Account usage
 The [Account Usage schema](https://docs.snowflake.com/en/sql-reference/account-usage) (snowflake.account_usage) has multiple views that are of interest for monitoring not just query performance and credit usage but warehouse and database usage and more. This data is delayed 45 minutes but has a much longer history.
 
 Example Query: Find the queries with highest total execution time this month for the dbt cloud production loads.
@@ -80,8 +78,6 @@ ORDER BY total_exec_time_mins DESC
 LIMIT 20
 ```
 
-
-
 Example Query: Get Credits used by Warehouse this month
 ```sql
 select warehouse_name,
@@ -92,13 +88,11 @@ group by 1
 order by 2 desc;
 ```
 
-
-
-## Solutions: How to Tackle dbt Performance Issues
+## Solutions: How to tackle dbt performance issues
 Now that you've identified which models might need optimization, it's time to figure out how to get them to run faster. These options are roughly in order of bang-for-buck in most situations.
 
-### 1. Job Level: Adjust Frequency and Break Up Runs
-It's common for end-users to say they want the freshest data (who doesn't?) but in practice require a much lower frequency of refreshing. To gain an understand of the real-world needs it's helpful to see the frequency with which end-users actually view reporting and to consider the time scales involved. If someone only cares about monthly results, for example, you can *in theory* have a 30 day frequency for model runs.
+### 1. Job Level: Adjust frequency and break up runs
+It's common for end-users to say they want the freshest data (who doesn't?) but in practice require a much lower frequency of refreshing. To gain an understanding of the real-world needs it's helpful to see the frequency with which end-users actually view reporting and to consider the time scales involved. If someone only cares about monthly results, for example, you can *in theory* have a 30 day frequency for model runs.
 It's also quite common to have parts of the data be relatively static, and only need to be refreshed occasionally whereas other parts of the data might change much more often.
 An easy way to break up model runs is by using dbt tags.
 ```yaml
@@ -119,22 +113,21 @@ Of course this works in dbt Cloud as well!
 
 For more information refer to the [dbt tags documentation](https://docs.getdbt.com/reference/resource-configs/tags).
 
-
-### 2. Model Level: Materialization Matters
+### 2. Model-level: Materialization matters
 
 For a good comparison of materialization options and their trade-offs see the [Materialization Best Practices](https://docs.getdbt.com/guides/best-practices/materializations/2-available-materializations) section of the dbt docs.
 
 **Views**: Are a trade-off between build performance and read/reporting performance. In cases where you are using a BI tool, you should almost always use table materializations unless data storage size is an issue or refresh frequency is so high that cost or scheduling conflicts become a problem. In cases where performance at time of reporting is not an issue (say, you are generating an aggregated report on a monthly basis) then views can be a great way to cut run time. Another case where views can be a good option is with staging data of relatively small size, where your queries are relatively light-weight and you want to ensure fresh data without having to configure separate runs for those models.
 
 **Incremental Models**:
-For a very large data sets, it can be essential to use [incremental models](https://docs.getdbt.com/docs/build/incremental-models). For this to work, you need some means of filtering records from the source table, typically using a timestamp. You then add a conditional block into your model to only select new records unless you're doing a full refresh. It's worth noting that incremental models can be tricky to get right and you will often want to implement some additional data integrity testing to ensure data is fresh and complete. For a more detailed discussion of Incremental Models, see [Incremental models in-depth](https://docs.getdbt.com/guides/best-practices/materializations/4-incremental-models)
+For very large data sets, it can be essential to use [incremental models](https://docs.getdbt.com/docs/build/incremental-models). For this to work, you need some means of filtering records from the source table, typically using a timestamp. You then add a conditional block into your model to only select new records unless you're doing a full refresh. It's worth noting that incremental models can be tricky to get right and you will often want to implement some additional data integrity testing to ensure data is fresh and complete. For a more detailed discussion of Incremental Models, see [Incremental models in-depth](https://docs.getdbt.com/guides/best-practices/materializations/4-incremental-models)
 
-An example in our current projects is the CalHR Ecos model [stg_CertEligibles](https://github.com/cagov/caldata-mdsa-calhr-ecos/blob/main/transform/models/stage/ecos/certification/stg_CertEligibles.sql). This query takes over three minutes to run and no wonder - it generates 858 million rows! This is clearly a case where we should ask if we need all of that data or can filtered in someway and if the answer is yes, then we should consider using an incremental materialization.
+An example in our current projects is the CalHR Ecos model [stg_CertEligibles](https://github.com/cagov/caldata-mdsa-calhr-ecos/blob/main/transform/models/stage/ecos/certification/stg_CertEligibles.sql). This query takes over three minutes to run and no wonder - it generates 858 million rows! This is clearly a case where we should ask if we need all of that data or can it be filtered in some way and if the answer is yes, then we should consider using an incremental materialization.
 
-### 4. Query Level: Optimizing Queries
-A great many books have been written on this subject! The good news is that most of the tools we use provide excellent resources for analyzing query performance.
+### 4. Query-level: Optimizing queries
+So many books have been written on this subject! The good news is that most tools we use provide excellent resources for analyzing query performance.
 
-#### Write or Read?
+#### Write or read?
 Because models are often created using a CREATE TABLE... SELECT statement you need to separate out read from write performance to understand if the issue is that your original query is slow or you are simply moving a lot of data and it takes time. It's worth saying that the chances are good that if you are moving a lot of data you are also querying a lot of data and in fact both read and write may be very time consuming but this is not a given -- if you are doing lots of joins on big data sets along with aggregations that output a small number of rows, then probably your model performance is read-bound. If this is the case the first question you should probably ask is can you break up that model into smaller chunks using staging and intermediate models.
 
 A good way to get a sense of read vs write performance is to do one or more of:
@@ -144,24 +137,21 @@ Be careful if you are comparing queries across runs - most databases use caching
 3. Switch the materialization to view. Typically a view will take a fraction of the time to generate, and if that's the case you know your model is slow in writes.
 4. Run the query separately in the database without the CREATE TABLE part. When you do this you can typically assess the execution plan
 
-#### Snowflake Query Profile
+#### Snowflake query profile
 You can easily pull up the query profile for any query that has been run in Snowflake either from a worksheet or from the query history page. This includes queries run from dbt Cloud! This profile is essential in understanding the elements of your query that are most costly in terms of time, and which might be improved through optimization. Refer to the [Analyzing Queries Using Query Profile](https://docs.snowflake.com/en/user-guide/ui-query-profile) page in the Snowflake Documentation for complete information including common problems and their solutions.
 
-#### Big Query Query Plan
+#### BigQuery query plan
 Big Query offers similar query execution profiling in the Google Cloud Console. See [Query plan and timeline](https://cloud.google.com/bigquery/docs/query-plan-explanation) as well as Big Query's [Introduction to optimizing query performance](https://cloud.google.com/bigquery/docs/best-practices-performance-overview)
 
-#### Caching Notes
-Most databases use some type of caching which needs to be turned off in order to properly test performance. Snowflake uses both a results cache and a disk cache, but only one can be turned off with a session variable:
+#### Caching notes
+Most databases use some type of caching which needs to be turned off to properly test performance. Snowflake uses both a results cache and a disk cache, but only one can be turned off with a session variable:
 ```
 alter session set use_cached_result = false;
 ```
 See this in-depth discussion for more details: [Deep Dive on Snowflake Caching](https://medium.com/snowflake/deep-dive-on-caching-in-snowflake-201a9ce56b43)
 A general workaround (other than to shutdown and restart the warehouse) is to use slightly different result sets which do the same operations and return the same number of rows.
 
-
-
-
-## Local Development Tips
+## Local development tips
 1. Use Tags or dbt run --select to limit what you are building
 2. Use --select state:modified+ result:error+ to limit runs
 3. You can also include limits on data when working with a development target, e.g.
