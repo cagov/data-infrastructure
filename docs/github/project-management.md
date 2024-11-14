@@ -34,7 +34,7 @@ These guidelines are meant to ensure that issues are created in a standardized f
 
 **Tiny**
 
-- Easy task, something that can be completed in about an hour May not require issue creation but could use as a reminder to complete the task later in the sprint (if something takes less than 30 minutes, no need for an issue).
+- Easy task, something that can be completed in about an hour. It may not require issue creation but could use as a reminder to complete the task later in the sprint (if something takes less than 30 minutes, no need for an issue).
 - Example: Sending a follow-up email
 
 **Small**
