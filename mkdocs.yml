@@ -62,7 +62,6 @@ nav:
       - dbt Snowflake Project: dbt_docs_snowflake/index.html
   - GitHub:
       - GitHub Project Management: github/project-management.md
-      - GitHub Continuous Integration: github/continuous-integration.md
   - Data:
       - Building Footprints: data/footprints.md
   - Learning:
