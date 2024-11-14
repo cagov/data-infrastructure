@@ -1,4 +1,4 @@
-# Cloud Data Warehouses
+# Cloud data warehouses
 
 ## What is a cloud data warehouse?
 

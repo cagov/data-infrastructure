@@ -1,4 +1,4 @@
-# Modern Data Stack Glossary
+# Modern data stack glossary
 
 This glossary is a reference for commonly used acronyms, terms, and tools associated with the modern data stack and data and analytics engineering practices.
 
