@@ -55,16 +55,18 @@ These guidelines are meant to ensure that issues are created in a standardized f
 
 - Tasks that may take a month or longer to complete
 - Consider breaking up into sub-tasks if appropriate, or create a meta-issue when there are dependencies
-- Example: Building a data model
+- Example: Refactoring a code base
 
 ## Priority Definitions
 
 **Urgent**
 
-- Top priority / emergency
+- Top priority
+- Reserved for unexpected emergency items
 - Putting everything else on backburner
 - Aiming for completion ASAP
 - Due Date assigned must be kept
+- Not assigned as part of regular sprint planning process
 
 **High**
 
@@ -89,6 +91,6 @@ These guidelines are meant to ensure that issues are created in a standardized f
 4. **In Progress**: Choose this status once work has started on the issue.
 5. **Needs Review**: Indicates that review is needed from other team members.
 6. **Blocked**: Choose this if work on the issue cannot move forward due to something outside of your team’s control, for example if waiting on another team to respond to a question.
-7. **Paused**:
+7. **Paused**: Work has started on this task but has been put on hold due to competing priorities.
 8. **Done**: Indicates the issue is completed. This status is set automatically when the issue is closed, you do not need to select it.
     1. Note: The correct way to close an issue is to scroll to the bottom of the issue page and choose “Close Issue”.
