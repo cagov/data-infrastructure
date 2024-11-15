@@ -5,7 +5,7 @@ To set up a new project on dbt Cloud follow these steps:
 1. Give your new project a name.
 1. Click *Advanced settings* and in the *Project subdirectory* field, enter "transform"
 1. Select a data warehouse connection. (e.g. Snowflake, BigQuery, Redshift)
-1. For the *Development credentials* section you'll want to choose between Snowflake OAuth or Key pair:
+1. For the *Development credentials* section you'll want to choose between Snowflake OAuth or Key pair. In general, Snowflake OAuth is preferred for human users (which is what the development environment is for). It is also an enterprise dbt Cloud feature, so if working with a standard account, you'll need to use key pair.
 
     1. For Snowflake OAuth:
         1. Follow dbt's instructions for set up [here](https://docs.getdbt.com/docs/cloud/manage-access/set-up-snowflake-oauth)
