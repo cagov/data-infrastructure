@@ -82,7 +82,7 @@ X-Large: Powerful for demanding workloads and data-intensive operations.
 3X-Large: Triple the capacity of X-Large.
 4X-Large: Quadruple the capacity of X-Large.
 
-1. **`LOADING_{size}_{env}`**: These warehouse is for loading data to `RAW`.
+1. **`LOADING_{size}_{env}`**: This warehouse is for loading data to `RAW`.
 1. **`TRANSFORMING_{size}_{env}`**: This warehouse is for transforming data in `TRANSFORM` and `ANALYTICS`.
 1. **`REPORTING_{size}_{env}`**: This warehouse is the role for BI tools and other end-users of the data.
 
@@ -90,7 +90,7 @@ X-Large: Powerful for demanding workloads and data-intensive operations.
 
 There are four primary functional roles:
 
-1. **`LOADER_{env}`**: This role is for tooling like Fivetran or Airflow to load raw data in to the `RAW` database.
+1. **`LOADER_{env}`**: This role is for tooling like Fivetran or Airflow to load raw data into the `RAW` database.
 1. **`TRANSFORMER_{env}`**: This is the analytics engineer/dbt role, for transforming raw data into something analysis-ready. It has read/write/control access to both `TRANSFORM` and `ANALYTICS`, and read access to `RAW`.
 1. **`REPORTER_{env}`**: This role read access to `ANALYTICS`, and is intended for BI tools and other end-users of the data.
 1. **`READER_{env}`**: This role has read access to all three databases, and is intended for CI service accounts to generate documentation.

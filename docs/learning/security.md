@@ -1,9 +1,9 @@
-# Security Guidelines
+# Security guidelines
 
 This document describes security conventions for CalData's Data Services and Engineering team,
 especially as it relates to cloud and SaaS services.
 
-## Cloud Security and IAM
+## Cloud security and IAM
 
 The major public clouds (AWS, GCP, Azure) all have a service for Identity and Access Management (IAM).
 This allows us to manage which users or services are able to perform actions on which resources.
@@ -17,7 +17,7 @@ In general, IAM is described by:
 
 Most of the work of IAM is managing users, permissions, groups, policies, and roles to perform tasks in a secure way.
 
-### Principle of Least-Privilege
+### Principle of least-privilege
 
 In general, users and roles should be assigned permissions according to the
 [Principle of Least Privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege),
@@ -48,11 +48,11 @@ Some good practices around the use of service accounts
   and being able to edit or decommission accounts separately from each other is a good idea.
 * Regularly rotate access keys for long-term service accounts.
 
-### Production and Development Environments
+### Production and development environments
 
 Production environments should be treated with greater care than development ones.
 In the testing and developing of a service, roles and policies are often crafted
-which do not follow the principal of least privilege (i.e., they have too many permissions).
+which do not follow the principle of least privilege (i.e., they have too many permissions).
 
 When productionizing a service or application, make sure to review the relevant
 roles and service accounts to ensure they only have the necessary policies,
@@ -72,7 +72,7 @@ GCS buckets in a project, when their application only requires access to one.
 AWS has a nice [user guide](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html)
 for how to work with IAM, including some [best-practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html).
 
-## Third-party SaaS Integrations
+## Third-party SaaS integrations
 
 Often a third-party software-as-a-service (SaaS) provider will require service accounts
 to access resources within a cloud account.
@@ -116,6 +116,6 @@ The DSE team both manages CalData projects and onboards clients into Fivetran, a
 Security policies for Snowflake can be found
 [here](../infra/snowflake.md#security-policies).
 
-## Security Review Standard Practices
+## Security review standard practices
 
 (TODO, possibly pulling from [Agile Application Security](https://www.amazon.com/Agile-Application-Security-Enabling-Continuous/dp/1491938846/ref=cm_cr_arp_d_product_top))
