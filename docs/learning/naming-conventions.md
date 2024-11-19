@@ -1,8 +1,8 @@
-# Naming Conventions
+# Naming conventions
 
 This page documents the Data Services and Engineering (DSE) team's naming conventions for cloud resources.
 
-## General Approach
+## General approach
 
 Our approach is adapted from [this blog post](https://stepan.wtf/cloud-naming-convention/).
 The goals of establishing a naming convention are:

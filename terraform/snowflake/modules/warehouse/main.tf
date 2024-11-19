@@ -6,7 +6,7 @@ terraform {
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
-      version = "~> 0.61"
+      version = "~> 0.88"
       configuration_aliases = [
         snowflake.securityadmin,
         snowflake.sysadmin,
@@ -50,7 +50,7 @@ resource "snowflake_warehouse" "this" {
 #################################
 
 # Monitoring, usage, and operating permissions for the LOADING warehouse.
-resource "snowflake_role" "this" {
+resource "snowflake_account_role" "this" {
   name     = "${var.name}_WH_MOU"
   provider = snowflake.useradmin
   comment  = "Monitoring, usage, and operating permissions for the ${var.name} warehouse"
@@ -60,22 +60,23 @@ resource "snowflake_role" "this" {
 #          Role Grants          #
 #################################
 
-resource "snowflake_role_grants" "this_to_sysadmin" {
-  provider               = snowflake.useradmin
-  role_name              = snowflake_role.this.name
-  enable_multiple_grants = true
-  roles                  = ["SYSADMIN"]
+resource "snowflake_grant_account_role" "this_to_sysadmin" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_account_role.this.name
+  parent_role_name = "SYSADMIN"
 }
 
 #################################
 #       Warehouse Grants        #
 #################################
 
-resource "snowflake_warehouse_grant" "this" {
+resource "snowflake_grant_privileges_to_account_role" "this" {
   provider          = snowflake.securityadmin
-  for_each          = toset(local.warehouse.MOU)
-  warehouse_name    = snowflake_warehouse.this.name
-  privilege         = each.key
-  roles             = [snowflake_role.this.name]
+  privileges        = local.warehouse.MOU
+  account_role_name = snowflake_account_role.this.name
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = snowflake_warehouse.this.name
+  }
   with_grant_option = false
 }

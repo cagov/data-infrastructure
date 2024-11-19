@@ -1,4 +1,4 @@
-# Cloud Infrastructure
+# Cloud infrastructure
 
 The DSE team [uses Terraform](../code/terraform-local-setup.md) to manage cloud infrastructure.
 Our stack includes:

@@ -1,4 +1,4 @@
-# New Project Setup
+# New project setup
 
 The DSE team regularly creates new Snowflake accounts in our Snowflake org.
 We do this instead of putting all of our data projects into our main account for a few reasons:
@@ -64,7 +64,7 @@ conda install -c conda-forge terraform tflint  # Install terraform and tflint
     1. Select "Business Critical" for the Snowflake Edition.
     1. You will be prompted to create an initial user with `ACCOUNTADMIN` privileges. This should be you.
         You will be prompted to create a password for your user. Create one using your password manager,
-        but know that it will ask you change your password upon first log-in.
+        but know that it will ask you to change your password upon first log-in.
     1. Save the Account Locator and Account URL for your new account.
 1. Log into your new account. You should be prompted to change your password. Save the updated password in your password manager.
 

@@ -95,8 +95,19 @@ Where data from our **Marts** models lives
 There are six warehouse groups for processing data in the databases,
 corresponding to the primary purposes of the above databases.
 They are available in a few different sizes, depending upon the needs of the the data processing job,
-X-small (denoted by (`XS`), X-Large (denoted by (`XL`), and 4X-Large (denoted by `4XL`).
+X-small denoted by (`XS`), Small (denoted by `S`), Medium (denoted by `M`), Large denoted by (`L`), X-Large denoted by (`XL`), 2X-Large (denoted by `2XL`), 3X-Large (denoted by `3XL`) and 4X-Large (denoted by `4XL`).
 Most jobs on small data should use the relevant X-small warehouse.
+
+Following is a general guideline from Snowflake for choosing a warehouse size.
+
+X-Small: Good for small tasks and experimenting.
+Small: Suitable for single-user workloads and development.
+Medium: Handles moderate concurrency and data volumes.
+Large: Manages larger queries and higher concurrency.
+X-Large: Powerful for demanding workloads and data-intensive operations.
+2X-Large: Double the capacity of X-Large.
+3X-Large: Triple the capacity of X-Large.
+4X-Large: Quadruple the capacity of X-Large.
 
 1. **`LOADING_{size}_DEV`**: This warehouse is for loading data to `RAW_DEV`. It is used for testing new data loading scripts.
 1. **`TRANSFORMING_{size}_DEV`**: This warehouse is for transforming data in `TRANSFORM_DEV` and `ANALYTICS_DEV`. Most dbt developers will use this warehouse for daily work.
@@ -120,7 +131,7 @@ There are six primary functional roles:
 
 ## Reporting and analysis
 
-The most prominent consumer of the data products from this project are PowerBI and Tableau dashboards and the CalInnovate team.
+The most prominent consumers of the data products from this project are PowerBI and Tableau dashboards and the CalInnovate team.
 
 ## Custom schema names
 
@@ -128,7 +139,7 @@ dbt's default method for generating [custom schema names](https://docs.getdbt.co
 works well for a single-database setup:
 
 * It allows development work to occur in a separate schema from production models.
-* It allows analytics engineers to develop side-by-side without stepping on each others toes.
+* It allows analytics engineers to develop side-by-side without stepping on each other's toes.
 
 A downside of the default is that production models all get a prefix,
 which may not be an ideal naming convention for end-users.
@@ -158,7 +169,7 @@ So your data access looks like the following:
 
 ![developer](../images/developer.png)
 
-Now let's consider the nigthly production build. This service account builds the production models
+Now let's consider the nightly production build. This service account builds the production models
 in `TRANSFORM_PRD` and `ANALYTICS_PRD` based on the raw data in `RAW_PRD`.
 The development environment effectively doesn't exist to this account, and data access looks like the following:
 
