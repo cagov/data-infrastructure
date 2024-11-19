@@ -88,7 +88,7 @@ Here are some of the benefits of using PRs:
 
 ## Creating or switching branches
 
-1. Go to your Repository > https://github.com/cagov/[repsoitory_name]
+1. Go to your Repository > https://github.com/cagov/[repository_name]
 2. Click on the Branch Dropdown
     1. On the main page of your repository, you'll see a dropdown menu on the top left, displaying the current branch (usually “main”). Click on this dropdown.
 3. Type or click on an Branch Name
