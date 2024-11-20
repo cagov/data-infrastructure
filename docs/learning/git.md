@@ -125,7 +125,7 @@ If you're working with git locally, you can create and switch branches as well a
     }
     export PS1="\u@\h \[\033[32m\]\w -\$(parse_git_branch)\[\033[00m\] $ "`
 
-**Windows OS (Linux-based)**
+**Windows OS**
 
 - If you do not have git bash installed please download it [here](https://git-scm.com/download/win)
 - Showing branch names is a built-in feature of git bash. If branches do not show in your command prompt, follow the following steps.
