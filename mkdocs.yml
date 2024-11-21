@@ -41,6 +41,22 @@ nav:
   - Code development:
       - Local environment setup: code/local-setup.md
       - Codespaces: code/codespaces.md
+      - Code Review: code/code-review.md
+      - Writing Documentation: code/writing-documentation.md
+      - Terraform Setup: code/terraform-local-setup.md
+      - GitHub Project Management: code/project-management.md
+  - Project Infrastructure:
+      - Cloud Infrastructure: infra/cloud-infrastructure.md
+      - Project Architecture: infra/architecture.md
+      - Snowflake Overview: infra/snowflake.md
+  - Project Setup:
+      - Snowflake Setup: setup/snowflake-setup.md
+      - Git/Github Setup: setup/repo-setup.md
+      - Terraform Setup: setup/terraform-project-setup.md
+      - Sentinel Setup: setup/sentinel-setup.md
+      - dbt Setup: setup/dbt-setup.md
+      - Adding Service Accounts: setup/snowflake-service-accounts.md
+      - Project Teardown: setup/project-teardown.md
       - Code review: code/code-review.md
       - Writing documentation: code/writing-documentation.md
       - Terraform setup: code/terraform-local-setup.md
