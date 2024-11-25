@@ -6,11 +6,11 @@ models:
     columns:
       - name: name
         description: The name of the state agency
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: agency_code
         description: The numeric code of the state agency
-        tests:
+        data_tests:
           - unique
           - not_null

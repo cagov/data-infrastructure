@@ -11,7 +11,7 @@ sources:
           - name: A
             description: Agency code for entity
             quote: true
-            tests:
+            data_tests:
               - not_null
           - name: B
             description: Subagency code for entity
@@ -22,14 +22,14 @@ sources:
           - name: L3
             description: Level beneath L2
             quote: true
-            tests:
+            data_tests:
               - unique
           - name: name
             description: Name of entity
             quote: true
-            tests:
+            data_tests:
               - not_null
-        tests:
+        data_tests:
           - dbt_utils.unique_combination_of_columns:
               combination_of_columns: [A, B, L1, L2, L3]
       - name: ebudget_agency_and_department_budgets
@@ -39,13 +39,13 @@ sources:
           - name: org_cd
             description: Four digit business unit code
             quote: true
-            tests:
+            data_tests:
               - not_null
               - unique
           - name: web_agency_cd
             description: Four digit business unit code (same as org_cd, it seems)
             quote: true
-            tests:
+            data_tests:
               - not_null
               - unique
           - name: org_id
