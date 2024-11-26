@@ -12,7 +12,5 @@ active_entities as (
         and not regexp_like(lower(name_raw), 'moved to|renum\.? to')
 )
 
-select
-    *,
-    1 as test_column
+select *
 from active_entities
