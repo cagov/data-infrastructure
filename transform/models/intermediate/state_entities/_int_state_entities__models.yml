@@ -11,7 +11,7 @@ models:
         description: Name of the entity
       - name: primary_code
         description: The most specific non-null entity code
-        tests:
+        data_tests:
           - not_null
           - unique
       - name: agency_code
@@ -54,7 +54,7 @@ models:
         description: Name of the entity
       - name: primary_code
         description: The most specific non-null entity code
-        tests:
+        data_tests:
           - not_null
       - name: agency_code
         description: Agency code for entity
@@ -94,7 +94,7 @@ models:
     columns:
       - name: primary_code
         description: Four digit business unit code for entity.
-        tests:
+        data_tests:
           # There are duplicates!
           # - unique
           - not_null

@@ -7,6 +7,10 @@ flags:
   send_anonymous_usage_stats: false
   use_colors: true
   warn_error: false
+  state_modified_compare_more_unrendered_values: true
+  skip_nodes_if_on_run_start_fails: true
+  require_explicit_package_overrides_for_builtin_materializations: true
+  source_freshness_run_project_hooks: false
 
 # This setting configures which "profile" dbt uses for this project.
 profile: "dse_snowflake"
