@@ -207,3 +207,16 @@ resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
   role_name        = "${module.transform.name}_READ"
   parent_role_name = "${module.analytics.name}_READWRITECONTROL"
 }
+
+##############################################################
+# Assign LOGGER role to TRANSFORMER role
+# This is only needed for the ODI default snowflake instance
+# More backgorund information related to this is found
+# here - https://github.com/cagov/data-infrastructure/issues/428
+##############################################################
+
+resource "snowflake_grant_account_role" "logger_to_transformer" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_account_role.logger.name
+  parent_role_name = snowflake_account_role.transformer.name
+}
