@@ -81,3 +81,16 @@ module "elt" {
 
   environment = var.environment
 }
+
+##############################################################
+# Assign LOGGER role to TRANSFORMER role
+# This is only needed for the ODI default snowflake instance
+# More backgorund information related to this is found
+# here - https://github.com/cagov/data-infrastructure/issues/428
+##############################################################
+
+resource "snowflake_grant_account_role" "logger_to_transformer" {
+  provider         = snowflake.useradmin
+  role_name        = "LOGGER_${var.environment}"
+  parent_role_name = "TRANSFORMER_${var.environment}"
+}

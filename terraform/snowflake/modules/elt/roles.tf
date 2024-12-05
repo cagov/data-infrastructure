@@ -194,7 +194,6 @@ resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_lo
   }
 }
 
-
 ##############################################################
 # Grant TRANSFORM_READ role to ANALYTICS_READWRITECONTROL role
 # This is a workaround for sharing views
