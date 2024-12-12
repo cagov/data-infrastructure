@@ -46,6 +46,7 @@ def snowflake_connection_from_environment(**kwargs):
     # Required parameters
     account = os.environ["SNOWFLAKE_ACCOUNT"]
     user = os.environ["SNOWFLAKE_USER"]
+    authenticator = os.environ.get("SNOWFLAKE_AUTHENTICATOR")
 
     # Optional parameters
     warehouse = os.environ.get("SNOWFLAKE_WAREHOUSE")
@@ -66,6 +67,7 @@ def snowflake_connection_from_environment(**kwargs):
         "database": database,
         "schema": schema,
         "role": role,
+        "authenticator": authenticator,
     }
 
     # Check that there is only one authentication mechanism implied between
