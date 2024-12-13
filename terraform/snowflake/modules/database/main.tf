@@ -51,6 +51,7 @@ locals {
       "CREATE MATERIALIZED VIEW",
       "CREATE PIPE",
       "CREATE PROCEDURE",
+      "CREATE SCHEMA",
       "CREATE STAGE",
       "CREATE TABLE",
       "CREATE TEMPORARY TABLE",
