@@ -1,0 +1,449 @@
+version: 2
+
+sources:
+  - name: organization_usage
+    database: "{{ env_var('DBT_RAW_DB', 'SNOWFLAKE') }}"
+    schema: organization_usage
+    description: TBD
+    tables:
+      - name: warehouse_metering_history
+        description: TBD
+        columns:
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: ACCOUNT_NAME
+            description: ACCOUNT_NAME
+          - name: REGION
+            description: REGION
+          - name: SERVICE_TYPE
+            description: SERVICE_TYPE
+          - name: START_TIME
+            description: START_TIME
+          - name: END_TIME
+            description: END_TIME
+          - name: WAREHOUSE_ID
+            description: WAREHOUSE_ID
+          - name: WAREHOUSE_NAME
+            description: WAREHOUSE_NAME
+          - name: CREDITS_USED
+            description: CREDITS_USED
+          - name: CREDITS_USED_COMPUTE
+            description: CREDITS_USED_COMPUTE
+          - name: CREDITS_USED_CLOUD_SERVICES
+            description: CREDITS_USED_CLOUD_SERVICES
+          - name: ACCOUNT_LOCATOR
+            description: ACCOUNT_LOCATOR
+      - name: stage_storage_usage_history
+        description: Historical data of stage storage usage.
+        columns:
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: REGION
+            description: Geographical region
+          - name: USAGE_DATE
+            description: Date of usage
+          - name: AVERAGE_STAGE_BYTES
+            description: Average storage bytes used in the stage
+      - name: data_transfer_history
+        description: Data transfer history across regions and clouds.
+        columns:
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: USAGE_DATE
+            description: Date of the transfer
+          - name: TRANSFER_TYPE
+            description: Type of transfer (e.g., in, out)
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: TARGET_REGION
+            description: Region where data was transferred
+          - name: SOURCE_CLOUD
+            description: Cloud where data originated
+          - name: BYTES_TRANSFERRED
+            description: Amount of data transferred
+          - name: SOURCE_REGION
+            description: Source region for data transfer
+          - name: REGION
+            description: The region associated with the transfer
+          - name: TARGET_CLOUD
+            description: Cloud where data was transferred to
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+      - name: automatic_clustering_history
+        description: Data related to automatic clustering and reclustering.
+        columns:
+          - name: NUM_ROWS_RECLUSTERED
+            description: Number of rows reclustered
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: DATABASE_ID
+            description: ID of the database
+          - name: SCHEMA_NAME
+            description: Name of the schema
+          - name: DATABASE_NAME
+            description: Name of the database
+          - name: TABLE_ID
+            description: ID of the table
+          - name: SCHEMA_ID
+            description: ID of the schema
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: REGION
+            description: Geographical region
+          - name: CREDITS_USED
+            description: Credits used during reclustering
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: TABLE_NAME
+            description: Name of the table
+          - name: USAGE_DATE
+            description: Date of the clustering activity
+          - name: NUM_BYTES_RECLUSTERED
+            description: Number of bytes reclustered
+      - name: storage_daily_history
+        description: Daily data usage and storage consumption.
+        columns:
+          - name: USAGE_DATE
+            description: Date of usage
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: REGION
+            description: Geographical region
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: SERVICE_TYPE
+            description: Type of service used
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: AVERAGE_BYTES
+            description: Average bytes used for storage
+          - name: CREDITS
+            description: Credits consumed for storage
+      - name: metering_daily_history
+        description: Metering information of cloud usage on a daily basis.
+        columns:
+          - name: CREDITS_ADJUSTMENT_CLOUD_SERVICES
+            description: Adjustments made to cloud service credits
+          - name: REGION
+            description: Geographical region
+          - name: CREDITS_USED
+            description: Credits used
+          - name: SERVICE_TYPE
+            description: Service type (e.g., compute, storage)
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: USAGE_DATE
+            description: Date of usage
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: CREDITS_BILLED
+            description: Credits billed for usage
+          - name: CREDITS_USED_CLOUD_SERVICES
+            description: Credits used for cloud services
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: CREDITS_USED_COMPUTE
+            description: Credits used for compute services
+      - name: materialized_view_refresh_history
+        description: Materialized view refresh history.
+        columns:
+          - name: SCHEMA_NAME
+            description: Name of the schema
+          - name: CREDITS_USED
+            description: Credits consumed for refreshes
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: DATABASE_ID
+            description: ID of the database
+          - name: SCHEMA_ID
+            description: ID of the schema
+          - name: TABLE_ID
+            description: ID of the table
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: REGION
+            description: Geographical region
+          - name: DATABASE_NAME
+            description: Name of the database
+          - name: TABLE_NAME
+            description: Name of the table
+          - name: USAGE_DATE
+            description: Date of the materialized view refresh
+      - name: database_storage_usage_history
+        description: History of database storage usage.
+        columns:
+          - name: REGION
+            description: Geographical region
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: BYTES_INSERTED
+            description: Bytes inserted into the database
+          - name: FILES_INSERTED
+            description: Files inserted into the database
+          - name: USAGE_DATE
+            description: Date of usage
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: CREDITS_USED
+            description: Credits used for database storage
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: PIPE_ID
+            description: ID of the pipe
+          - name: PIPE_NAME
+            description: Name of the pipe
+      - name: pipe_usage_history
+        description: Usage history of pipes.
+        columns:
+          - name: REGION
+            description: Geographical region
+          - name: ORGANIZATION_NAME
+            description: Agency code for entity
+          - name: BYTES_INSERTED
+            description: Bytes inserted through the pipe
+          - name: FILES_INSERTED
+            description: Files inserted through the pipe
+          - name: USAGE_DATE
+            description: Date of usage
+          - name: ACCOUNT_LOCATOR
+            description: Locator for the account
+          - name: CREDITS_USED
+            description: Credits used for pipe usage
+          - name: ACCOUNT_NAME
+            description: Name of the account
+          - name: PIPE_ID
+            description: ID of the pipe
+          - name: PIPE_NAME
+            description: Name of the pipe
+
+models:
+  - name: stg_warehouse_metering_history
+    description: TBD
+    columns:
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: ACCOUNT_NAME
+        description: ACCOUNT_NAME
+      - name: REGION
+        description: REGION
+      - name: SERVICE_TYPE
+        description: SERVICE_TYPE
+      - name: START_TIME
+        description: START_TIME
+      - name: END_TIME
+        description: END_TIME
+      - name: WAREHOUSE_ID
+        description: WAREHOUSE_ID
+      - name: WAREHOUSE_NAME
+        description: WAREHOUSE_NAME
+      - name: CREDITS_USED
+        description: CREDITS_USED
+      - name: CREDITS_USED_COMPUTE
+        description: CREDITS_USED_COMPUTE
+      - name: CREDITS_USED_CLOUD_SERVICES
+        description: CREDITS_USED_CLOUD_SERVICES
+      - name: ACCOUNT_LOCATOR
+        description: ACCOUNT_LOCATOR
+
+  - name: stg_stage_storage_usage_history
+    description: Historical data of stage storage usage.
+    columns:
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: REGION
+        description: Geographical region
+      - name: USAGE_DATE
+        description: Date of usage
+      - name: AVERAGE_STAGE_BYTES
+        description: Average storage bytes used in the stage
+
+  - name: stg_data_transfer_history
+    description: Data transfer history across regions and clouds.
+    columns:
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: USAGE_DATE
+        description: Date of the transfer
+      - name: TRANSFER_TYPE
+        description: Type of transfer (e.g., in, out)
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: TARGET_REGION
+        description: Region where data was transferred
+      - name: SOURCE_CLOUD
+        description: Cloud where data originated
+      - name: BYTES_TRANSFERRED
+        description: Amount of data transferred
+      - name: SOURCE_REGION
+        description: Source region for data transfer
+      - name: REGION
+        description: The region associated with the transfer
+      - name: TARGET_CLOUD
+        description: Cloud where data was transferred to
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+
+  - name: stg_automatic_clustering_history
+    description: Data related to automatic clustering and reclustering.
+    columns:
+      - name: NUM_ROWS_RECLUSTERED
+        description: Number of rows reclustered
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: DATABASE_ID
+        description: ID of the database
+      - name: SCHEMA_NAME
+        description: Name of the schema
+      - name: DATABASE_NAME
+        description: Name of the database
+      - name: TABLE_ID
+        description: ID of the table
+      - name: SCHEMA_ID
+        description: ID of the schema
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: REGION
+        description: Geographical region
+      - name: CREDITS_USED
+        description: Credits used during reclustering
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: TABLE_NAME
+        description: Name of the table
+      - name: USAGE_DATE
+        description: Date of the clustering activity
+      - name: NUM_BYTES_RECLUSTERED
+        description: Number of bytes reclustered
+
+  - name: stg_storage_daily_history
+    description: Daily data usage and storage consumption.
+    columns:
+      - name: USAGE_DATE
+        description: Date of usage
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: REGION
+        description: Geographical region
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: SERVICE_TYPE
+        description: Type of service used
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: AVERAGE_BYTES
+        description: Average bytes used for storage
+      - name: CREDITS
+        description: Credits consumed for storage
+
+  - name: stg_metering_daily_history
+    description: Metering information of cloud usage on a daily basis.
+    columns:
+      - name: CREDITS_ADJUSTMENT_CLOUD_SERVICES
+        description: Adjustments made to cloud service credits
+      - name: REGION
+        description: Geographical region
+      - name: CREDITS_USED
+        description: Credits used
+      - name: SERVICE_TYPE
+        description: Service type (e.g., compute, storage)
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: USAGE_DATE
+        description: Date of usage
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: CREDITS_BILLED
+        description: Credits billed for usage
+      - name: CREDITS_USED_CLOUD_SERVICES
+        description: Credits used for cloud services
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: CREDITS_USED_COMPUTE
+        description: Credits used for compute services
+
+  - name: stg_materialized_view_refresh_history
+    description: Materialized view refresh history.
+    columns:
+      - name: SCHEMA_NAME
+        description: Name of the schema
+      - name: CREDITS_USED
+        description: Credits consumed for refreshes
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: DATABASE_ID
+        description: ID of the database
+      - name: SCHEMA_ID
+        description: ID of the schema
+      - name: TABLE_ID
+        description: ID of the table
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: REGION
+        description: Geographical region
+      - name: DATABASE_NAME
+        description: Name of the database
+      - name: TABLE_NAME
+        description: Name of the table
+      - name: USAGE_DATE
+        description: Date of the materialized view refresh
+
+  - name: stg_database_storage_usage_history
+    description: History of database storage usage.
+    columns:
+      - name: REGION
+        description: Geographical region
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: BYTES_INSERTED
+        description: Bytes inserted into the database
+      - name: FILES_INSERTED
+        description: Files inserted into the database
+      - name: USAGE_DATE
+        description: Date of usage
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: CREDITS_USED
+        description: Credits used for database storage
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: PIPE_ID
+        description: ID of the pipe
+      - name: PIPE_NAME
+        description: Name of the pipe
+
+  - name: stg_pipe_usage_history
+    description: Usage history of pipes.
+    columns:
+      - name: REGION
+        description: Geographical region
+      - name: ORGANIZATION_NAME
+        description: Agency code for entity
+      - name: BYTES_INSERTED
+        description: Bytes inserted through the pipe
+      - name: FILES_INSERTED
+        description: Files inserted through the pipe
+      - name: USAGE_DATE
+        description: Date of usage
+      - name: ACCOUNT_LOCATOR
+        description: Locator for the account
+      - name: CREDITS_USED
+        description: Credits used for pipe usage
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: PIPE_ID
+        description: ID of the pipe
+      - name: PIPE_NAME
+        description: Name of the pipe
+
