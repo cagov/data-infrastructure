@@ -17,7 +17,7 @@ def load_state_footprints(conn) -> None:
 
     print("Identifying California quadkeys")
     df = pandas.read_csv(
-        "https://minedbuildings.blob.core.windows.net/global-buildings/dataset-links.csv",
+        "https://minedbuildings.z5.web.core.windows.net/global-buildings/dataset-links.csv",
         dtype={"QuadKey": "str"},  # Don't use an int, since there are leading zeros!
     )
 
@@ -42,7 +42,7 @@ def load_state_footprints(conn) -> None:
         )
 
     # As a second pass, prune out the tiles which don't actually intersect California
-    quadkeys = geopandas.GeoDataFrame.from_records(features)
+    quadkeys = geopandas.GeoDataFrame.from_records(features).set_geometry("geometry")
     california_quadkeys = quadkeys[quadkeys.intersects(california)]
 
     # Now get a list of all the URLs which have a quadkey intersecting California
