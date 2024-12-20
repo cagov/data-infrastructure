@@ -446,4 +446,3 @@ models:
         description: ID of the pipe
       - name: PIPE_NAME
         description: Name of the pipe
-
