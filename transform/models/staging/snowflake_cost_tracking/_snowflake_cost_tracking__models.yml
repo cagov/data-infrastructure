@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: organization_usage
-    database: "{{ env_var('DBT_RAW_DB', 'SNOWFLAKE') }}"
+    database: snowflake
     schema: organization_usage
     description: TBD
     tables:
