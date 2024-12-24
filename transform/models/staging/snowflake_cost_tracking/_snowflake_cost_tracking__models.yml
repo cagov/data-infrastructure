@@ -4,10 +4,10 @@ sources:
   - name: organization_usage
     database: snowflake
     schema: organization_usage
-    description: TBD
+    description: Contains usage data for Snowflake resources within the organization.
     tables:
       - name: warehouse_metering_history
-        description: TBD
+        description: Contains usage data for Snowflake warehouses within the organization.
         columns:
           - name: ORGANIZATION_NAME
             description: Agency code for entity
@@ -224,7 +224,7 @@ sources:
 
 models:
   - name: stg_warehouse_metering_history
-    description: TBD
+    description: Contains usage data for Snowflake warehouses within the organization.
     columns:
       - name: ORGANIZATION_NAME
         description: Agency code for entity
