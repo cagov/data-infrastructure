@@ -1,3 +1,3 @@
-locator     = "heb41095"
+account_name = "HJB86910"
 environment = "DEV"
-organization= "VSB79059"
+organization_name= "VSB79059"
