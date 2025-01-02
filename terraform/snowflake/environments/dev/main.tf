@@ -7,8 +7,13 @@ variable "environment" {
   type        = string
 }
 
-variable "locator" {
-  description = "Snowflake account locator"
+variable "account_name" {
+  description = "Snowflake account name"
+  type        = string
+}
+
+variable "organization_name" {
+  description = "Snowflake account organization"
   type        = string
 }
 
@@ -20,7 +25,7 @@ terraform {
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
-      version = "0.97"
+      version = "1.0.1"
     }
   }
   required_version = ">= 1.0"
@@ -34,36 +39,41 @@ terraform {
 # blocks with different roles, and require that all snowflake resources explicitly
 # flag the role they want for the creator.
 provider "snowflake" {
-  account = var.locator
+  account_name      = var.account_name
+  organization_name = var.organization_name
   role    = "PUBLIC"
 }
 
 # Snowflake provider for account administration (to be used only when necessary).
 provider "snowflake" {
   alias   = "accountadmin"
-  account = var.locator
   role    = "ACCOUNTADMIN"
+  account_name      = var.account_name
+  organization_name = var.organization_name
 }
 
 # Snowflake provider for creating databases, warehouses, etc.
 provider "snowflake" {
   alias   = "sysadmin"
-  account = var.locator
   role    = "SYSADMIN"
+  account_name      = var.account_name
+  organization_name = var.organization_name
 }
 
 # Snowflake provider for managing grants to roles.
 provider "snowflake" {
   alias   = "securityadmin"
-  account = var.locator
   role    = "SECURITYADMIN"
+  account_name      = var.account_name
+  organization_name = var.organization_name
 }
 
 # Snowflake provider for managing user accounts and roles.
 provider "snowflake" {
   alias   = "useradmin"
-  account = var.locator
   role    = "USERADMIN"
+  account_name      = var.account_name
+  organization_name = var.organization_name
 }
 
 ############################
