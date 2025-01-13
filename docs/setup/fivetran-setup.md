@@ -3,7 +3,7 @@
 To set up a new project in Fivetran follow these steps:
 
 1. First, ensure you have met the following pre-requisites:
-    - You have set up a Snowflake Account for the project (follow all instructions from snowflake-setup.md)
+    - You have set up a Snowflake Account for the project (follow all instructions from [here](./snowflake-setup.md))
     - Ensure that your Snowflake project has a **LOADER_PRD** role with privileges to write data to the **RAW_PRD** database
     - You have created a Snowflake User called **FIVETRAN_SVC_USER_PRD** and ensured this user has the **LOADER_PRD** role
     - You have set up an auth key pair for this user and saved it to the ODI OnePass account
