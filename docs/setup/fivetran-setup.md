@@ -16,12 +16,11 @@ To set up a new project in Fivetran follow these steps:
 7. To set up the Snowflake connector:
     1. Name the destination **RAW_PRD**
     2. Add the Snowflake URL for your project as the _Host_
-    3. Add the Port for your Snowflake project as the _Port_
-    4. Add **FIVETRAN_SVC_USER_PRD** as the _User_
-    5. Add **RAW_PRD** as the _Database_
-    6. For _Auth_ select **KEY_PAIR** and enter the key pair details for the FIVETRAN_SVC_USER_PRD user
+    3. Add **FIVETRAN_SVC_USER_PRD** as the _User_
+    4. Add **RAW_PRD** as the _Database_
+    5. For _Auth_ select **KEY_PAIR** and enter the key pair details for the FIVETRAN_SVC_USER_PRD user
     6. Add **LOADER_PRD** as the _Role_
-    7. Select your _Cloud service provider_, _Cloud region_, and _Default Time Zone_ 
-8. Click the _Save & Test_ button
+    7. Optional: Most of the time, the cloud provider and region don't matter, but if a client is operating in a particular cloud/region and wants to minimize data transfer, it makes sense to select the client's _Cloud service provider_, _Cloud region_, and _Default Time Zone_
+    8. Click the _Save & Test_ button
 
 Once you are through with these steps, you can proceed to creating and assigning permissions to Users in the Fivetran account.
