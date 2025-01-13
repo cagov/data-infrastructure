@@ -17,7 +17,7 @@ To set up a new project in Fivetran follow these steps:
     1. Name the destination **RAW_PRD**
     2. Add the Snowflake URL for your project as the _Host_
     3. Add the Port for your Snowflake project as the _Port_
-    4. Add **FIVETRA_SVC_USER_PRD** as the _User_
+    4. Add **FIVETRAN_SVC_USER_PRD** as the _User_
     5. Add **RAW_PRD** as the _Database_
     6. For _Auth_ select **KEY_PAIR** and enter the key pair details for the FIVETRAN_SVC_USER_PRD user
     6. Add **LOADER_PRD** as the _Role_
