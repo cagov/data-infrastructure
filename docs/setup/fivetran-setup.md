@@ -9,9 +9,9 @@ To set up a new project in Fivetran follow these steps:
     - You have set up an auth key pair for this user and saved it to the ODI OnePass account
 
 2. In Fivetran, navigate to Organization -> Accounts
-3. Click _Add Acount_ 
+3. Click _Add Acount_
 4. Choose an Account Name, select _Enterprise_ for Account Tier and _No restrictions_ for Required Authentication Type
-5. Next, navigate to Destinations 
+5. Next, navigate to Destinations
 6. Search for **Snowflake** and click _Select_
 7. To set up the Snowflake connector:
     1. Name the destination **RAW_PRD**
