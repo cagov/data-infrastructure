@@ -1,4 +1,4 @@
-# fivetran project setup
+# Fivetran project setup
 
 To set up a new project in Fivetran follow these steps:
 
