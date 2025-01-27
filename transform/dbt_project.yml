@@ -47,6 +47,9 @@ models:
       +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
       state_entities:
         +schema: state_entities
+      snowflake_cost_tracking:
+        +schema: snowflake_cost_tracking
+        +materialized: view
 
     marts:
       # All marts models as tables to avoid needing write access to TRANSFORM
@@ -55,3 +58,6 @@ models:
       +database: "{{ env_var('DBT_ANALYTICS_DB', 'ANALYTICS_DEV') }}"
       state_entities:
         +schema: state_entities
+      snowflake_cost_tracking:
+        +schema: snowflake_cost_tracking
+        +materialized: table
