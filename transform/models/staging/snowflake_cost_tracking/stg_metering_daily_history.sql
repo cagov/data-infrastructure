@@ -1,3 +1,13 @@
+{{ config(
+  materialized="incremental",
+  unique_key=[
+    "ORGANIZATION_NAME",
+    "ACCOUNT_NAME",
+    "USAGE_DATE",
+    ],
+  )
+}}
+
 WITH source AS (
     SELECT
         credits_adjustment_cloud_services,
@@ -15,8 +25,17 @@ WITH source AS (
 ),
 
 metering_daily_history AS (
-    SELECT *
+    SELECT
+        organization_name,
+        account_name,
+        usage_date,
+        sum(credits_used_compute) AS credits_used_compute,
+        sum(credits_used_cloud_services) AS credits_used_cloud_services,
+        sum(credits_adjustment_cloud_services) AS credits_adjustment_cloud_services,
+        sum(credits_used) AS credits_used,
+        sum(credits_billed) AS credits_billed
     FROM source
+    GROUP BY ALL
 )
 
 SELECT *

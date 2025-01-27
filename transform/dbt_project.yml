@@ -38,6 +38,10 @@ models:
         +schema: department_of_finance
       snowflake_cost_tracking:
         +schema: snowflake_cost_tracking
+        +materialized: incremental
+        # Never do a full refresh so that we avoid overwriting any old data.
+        # Otherwise we risk losing data beyond the 1 year retention window
+        +full_refresh: false
 
     intermediate:
       +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
