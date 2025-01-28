@@ -43,6 +43,15 @@ repos:
     hooks:
       - id: yamllint
         args: []
+  - repo: local
+    hooks:
+      - name: Dbt deps
+        id: dbt-deps
+        language: system
+        entry: poetry run dbt deps --project-dir transform
+        always_run: false
+        pass_filenames: false
+        types: [sql]
   # Note: for SQLFluff we don't use the default pre-commit hook for a few reasons:
   #   1. dbt cloud looks for config in the dbt project directory, so we put it in
   #      transform/, however sqlfluff requires the templater config to be in the
@@ -60,6 +69,9 @@ repos:
         language: system
         description: "Lints sql files with `SQLFluff`"
         types: [sql]
-        require_serial: false
-        entry: poetry run python sqlfluff_pre_commit.py
-        pass_filenames: true
+        require_serial: true
+        entry: >
+          poetry run python -c "import os, subprocess; os.chdir('transform');
+          subprocess.run(['sqlfluff', 'fix', '--force', '--processes', '1',
+          '--nocolor', '--show-lint-violations', '--disable-progress-bar'],
+          check=True, )"
