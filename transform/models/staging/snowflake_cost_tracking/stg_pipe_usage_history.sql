@@ -1,3 +1,14 @@
+{{ config(
+  materialized="incremental",
+  unique_key=[
+    "ORGANIZATION_NAME",
+    "ACCOUNT_NAME",
+    "PIPE_NAME",
+    "USAGE_DATE",
+    ],
+  )
+}}
+
 WITH source AS (
     SELECT
         region,
@@ -14,8 +25,16 @@ WITH source AS (
 ),
 
 pipe_usage_history AS (
-    SELECT *
+    SELECT
+        organization_name,
+        account_name,
+        pipe_name,
+        usage_date,
+        sum(bytes_inserted) AS bytes_inserted,
+        sum(files_inserted) AS files_inserted,
+        sum(credits_used) AS credits_used
     FROM source
+    GROUP BY ALL
 )
 
 SELECT *

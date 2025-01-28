@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: int_automatic_clustering_history
+    description: |
+      Credits used by automatic clustering, aggregated to account and usage date.
+    columns:
+      - name: organization_name
+        description: Organization name
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: The date on which the usage occurred.
+      - name: credits_used
+        description: The total credits used for automatic clustering
+
+  - name: int_materialized_view_refresh_history
+    description: |
+      Credits used by materialized view refreshes, aggregated to account and usage date.
+    columns:
+      - name: organization_name
+        description: Organization name
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: The date on which the usage occurred.
+      - name: credits_used
+        description: The total credits used for materialized view refreshes
+
+  - name: int_pipe_usage_history
+    description: |
+      Credits used by pipes, aggregated to account and usage date.
+    columns:
+      - name: organization_name
+        description: Organization name
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: The date on which the usage occurred.
+      - name: credits_used
+        description: The total credits used by pipes
+
+  - name: int_storage_daily_history
+    description: |
+      Credits used by storage, aggregated to account and usage date.
+    columns:
+      - name: organization_name
+        description: Organization name
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: The date on which the usage occurred.
+      - name: credits_used
+        description: The total credits used by storage
+
+  - name: int_warehouse_metering_history
+    description: |
+      Credits used by compute warehouses, aggregated to account and usage date.
+    columns:
+      - name: organization_name
+        description: Organization name
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: The date on which the usage occurred.
+      - name: credits_used
+        description: The total credits used by warehouses

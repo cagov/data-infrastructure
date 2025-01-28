@@ -1,3 +1,16 @@
+{{ config(
+  materialized="incremental",
+  unique_key=[
+    "ORGANIZATION_NAME",
+    "ACCOUNT_NAME",
+    "DATABASE_NAME",
+    "SCHEMA_NAME",
+    "TABLE_NAME",
+    "USAGE_DATE",
+    ],
+  )
+}}
+
 WITH source AS (
     SELECT
         schema_name,
@@ -16,8 +29,16 @@ WITH source AS (
 ),
 
 materialized_view_refresh_history AS (
-    SELECT *
+    SELECT
+        organization_name,
+        account_name,
+        database_name,
+        schema_name,
+        table_name,
+        usage_date,
+        sum(credits_used) AS credits_used
     FROM source
+    GROUP BY ALL
 )
 
 SELECT *

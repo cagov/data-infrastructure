@@ -1,3 +1,13 @@
+{{ config(
+  materialized="incremental",
+  unique_key=[
+    "ORGANIZATION_NAME",
+    "ACCOUNT_NAME",
+    "USAGE_DATE",
+    ],
+  )
+}}
+
 WITH source AS (
     SELECT
         organization_name,
@@ -10,8 +20,13 @@ WITH source AS (
 ),
 
 stage_storage_usage_history AS (
-    SELECT *
+    SELECT
+        organization_name,
+        account_name,
+        usage_date,
+        avg(average_stage_bytes) AS average_stage_bytes
     FROM source
+    GROUP BY ALL
 )
 
 SELECT *

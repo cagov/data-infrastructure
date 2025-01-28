@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: snowflake_costs_by_date.sql
+    description: |
+      Snowflake costs by date for the following:
+
+        * Automatic clustering
+        * Materialized view refreshes
+        * Pipe usage
+        * Storage
+        * Warehouse usage
+
+      Data are in long form, where `usage_type` indicates which
+      type of usage is measured in credits.
+    columns:
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: Date on which the usage occurred
+      - name: usage_type
+        description: |
+          One of the following usage types:
+
+          * `'automatic clustering'`
+          * `'materialized view'`
+          * `'pipe'`
+          * `'storage'`
+          * `'warehouse'`
+      - name: credits_used
+        description: The credits used for the usage type and date.
