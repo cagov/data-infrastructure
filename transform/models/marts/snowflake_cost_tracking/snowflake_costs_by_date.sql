@@ -1,3 +1,11 @@
+/*
+TODO: this does not yet account for credits consumed by:
+
+  * Query acceleration
+  * Search optimization
+  * Replication/failover groups
+*/
+
 with automatic_clustering_history as (
     select
         account_name,
@@ -43,6 +51,8 @@ warehouse_metering_history as (
     from {{ ref('int_warehouse_metering_history') }}
 ),
 
+-- Combine the data in long form to allow for easy
+-- aggregations and visualizations.
 combined as (
     select * from automatic_clustering_history
     union all

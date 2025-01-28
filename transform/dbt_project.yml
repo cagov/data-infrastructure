@@ -38,7 +38,21 @@ models:
         +schema: department_of_finance
       snowflake_cost_tracking:
         +schema: snowflake_cost_tracking
+
+        # These staging models are a little unusual for two reasons:
+        #
+        #   1. They are incremental
+        #   2. They do some very light aggregation
+        #
+        # We do this because the source views in the SNOWFLAKE meta-database
+        # have a retention time of one year, and don't have very strong
+        # uniqueness constraints for their data grain.  By making the models
+        # incremental we ensure that we retain data that is older than the retention
+        # time. By aggregating to the usage date (and table/warehouse, if applicable),
+        # we ensure that we can correctly merge in the incremental updates
+        # without resulting in duplicated rows.
         +materialized: incremental
+
         # Never do a full refresh so that we avoid overwriting any old data.
         # Otherwise we risk losing data beyond the 1 year retention window
         +full_refresh: false
