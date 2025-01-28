@@ -20,7 +20,6 @@ WITH source AS (
         account_name,
         average_database_bytes,
         account_locator,
-        deleted,
         average_failsafe_bytes
     FROM {{ source('organization_usage', 'database_storage_usage_history') }}
 ),
