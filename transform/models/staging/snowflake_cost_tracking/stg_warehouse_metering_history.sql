@@ -31,7 +31,7 @@ warehouse_metering_history AS (
         organization_name,
         account_name,
         warehouse_name,
-        date_trunc(DAY, start_time) AS usage_date,
+        to_date(start_time) AS usage_date,
         sum(credits_used) AS credits_used,
         sum(credits_used_compute) AS credits_used_compute,
         sum(credits_used_cloud_services) AS credits_used_cloud_services
