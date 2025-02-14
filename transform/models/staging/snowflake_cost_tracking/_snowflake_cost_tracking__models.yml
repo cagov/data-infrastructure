@@ -249,10 +249,16 @@ models:
         description: The date on which the warehouse usage started
       - name: CREDITS_USED
         description: Total credits used
+        data_tests:
+          - not_null
       - name: CREDITS_USED_COMPUTE
         description: Total credits used on compute
+        data_tests:
+          - not_null
       - name: CREDITS_USED_CLOUD_SERVICES
         description: Total credits used on cloud services
+        data_tests:
+          - not_null
 
   - name: stg_stage_storage_usage_history
     description: |
@@ -267,6 +273,8 @@ models:
         description: The date on which the usage occurred
       - name: AVERAGE_STAGE_BYTES
         description: Average storage bytes used in the stages
+        data_tests:
+          - not_null
 
   - name: stg_data_transfer_history
     description: |
@@ -289,6 +297,8 @@ models:
         description: Source region for data transfer
       - name: BYTES_TRANSFERRED
         description: Amount of data transferred
+        data_tests:
+          - not_null
 
   - name: stg_automatic_clustering_history
     description: |
@@ -308,10 +318,16 @@ models:
         description: The date on which the usage occurred
       - name: CREDITS_USED
         description: Credits used during reclustering
+        data_tests:
+          - not_null
       - name: NUM_ROWS_RECLUSTERED
         description: Number of rows reclustered
+        data_tests:
+          - not_null
       - name: NUM_BYTES_RECLUSTERED
         description: Number of bytes reclustered
+        data_tests:
+          - not_null
 
   - name: stg_storage_daily_history
     description: |
@@ -327,8 +343,12 @@ models:
         description: The date on which the usage occurred
       - name: AVERAGE_BYTES
         description: Average bytes used for storage
+        data_tests:
+          - not_null
       - name: CREDITS_USED
         description: Credits consumed for storage
+        data_tests:
+          - not_null
 
   - name: stg_metering_daily_history
     description: Metering information of cloud usage on a daily basis.
@@ -341,14 +361,24 @@ models:
         description: The date on which the usage occurred
       - name: CREDITS_USED_COMPUTE
         description: Credits used for compute services
+        data_tests:
+          - not_null
       - name: CREDITS_USED_CLOUD_SERVICES
         description: Credits used for cloud services
+        data_tests:
+          - not_null
       - name: CREDITS_ADJUSTMENT_CLOUD_SERVICES
         description: Adjustments made to cloud service credits
+        data_tests:
+          - not_null
       - name: CREDITS_USED
         description: Credits used
+        data_tests:
+          - not_null
       - name: CREDITS_BILLED
         description: Credits billed for usage
+        data_tests:
+          - not_null
 
   - name: stg_materialized_view_refresh_history
     description: Materialized view refresh history.
@@ -367,6 +397,8 @@ models:
         description: The date on which the usage occurred
       - name: CREDITS_USED
         description: Credits consumed for refreshes
+        data_tests:
+          - not_null
 
   - name: stg_database_storage_usage_history
     description: |
@@ -383,10 +415,16 @@ models:
         description: The date on which the usage occurred
       - name: AVERAGE_HYBRID_TABLE_STORAGE_BYTES
         description: Number of bytes in hybrid tables
+        data_tests:
+          - not_null
       - name: AVERAGE_DATABASE_BYTES
         description: Average number of database bytes used, including time travel
+        data_tests:
+          - not_null
       - name: AVERAGE_FAILSAFE_BYTES
         description: Number of fail safe bytes used
+        data_tests:
+          - not_null
 
   - name: stg_pipe_usage_history
     description: Usage history of pipes.
@@ -401,7 +439,13 @@ models:
         description: The date on which the usage occurred
       - name: BYTES_INSERTED
         description: Bytes inserted through the pipe
+        data_tests:
+          - not_null
       - name: FILES_INSERTED
         description: Files inserted through the pipe
+        data_tests:
+          - not_null
       - name: CREDITS_USED
         description: Credits used for pipe usage
+        data_tests:
+          - not_null
