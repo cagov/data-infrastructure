@@ -1,3 +1,16 @@
+{{ config(
+  materialized="incremental",
+  unique_key=[
+    "ORGANIZATION_NAME",
+    "ACCOUNT_NAME",
+    "DATABASE_NAME",
+    "SCHEMA_NAME",
+    "TABLE_NAME",
+    "USAGE_DATE",
+    ],
+  )
+}}
+
 WITH source AS (
     SELECT
         num_rows_reclustered,
@@ -18,8 +31,18 @@ WITH source AS (
 ),
 
 automatic_clustering_history AS (
-    SELECT *
+    SELECT
+        organization_name,
+        account_name,
+        database_name,
+        schema_name,
+        table_name,
+        usage_date,
+        sum(credits_used) AS credits_used,
+        sum(num_rows_reclustered) AS num_rows_reclustered,
+        sum(num_bytes_reclustered) AS num_bytes_reclustered
     FROM source
+    GROUP BY ALL
 )
 
 SELECT *
