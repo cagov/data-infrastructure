@@ -34,10 +34,11 @@ You should substitute the appropriate names there.
     ```
 1. In the `dev` directory, create a terraform variables file called `terraform.tfvars`,
     and populate the "elt" module variables. These variables may expand in the future,
-    but at the moment they are just the new Snowflake account locator and the environment
+    but at the moment they are just the new Snowflake organization name, account name and the environment
     (in this case `"DEV"`):
     ```hcl
-    locator     = "<account-locator>"
+    organization_name = "<organization_name>"
+    account_name = "<account_name>"
     environment = "DEV"
     ```
 1. Initialize the configuration:
