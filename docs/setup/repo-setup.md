@@ -34,8 +34,10 @@ Once you have created and set the key pairs, add them to the DSE 1Password share
 Make sure to provide enough information to disambiguate the key pair from others stored in the vault,
 including:
 
-* The account locator
+* The account locator (legacy account identifier)
+* The organization name
 * The account name (distinct from the account locator)
+  * Note : The preferred account identifier is to use name of the account prefixed by its organization (e.g. myorg-account123)
 * The service account name
 * The public key
 * The private key

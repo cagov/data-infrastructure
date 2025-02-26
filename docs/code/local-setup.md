@@ -80,7 +80,11 @@ If you use zsh or bash, open your shell configuration file, and add the followin
 **Default Transformer role**
 
 ```bash
+# Legacy account identifier
 export SNOWFLAKE_ACCOUNT=<account-locator>
+# The preferred account identifier is to use name of the account prefixed by its organization (e.g. myorg-account123)
+# Supporting snowflake documentation - https://docs.snowflake.com/en/user-guide/admin-account-identifier
+export SNOWFLAKE_ACCOUNT=<org_name>-<account_name> # format is organization-account
 export SNOWFLAKE_DATABASE=TRANSFORM_DEV
 export SNOWFLAKE_USER=<your-username> # this should be your OKTA email
 export SNOWFLAKE_PASSWORD=<your-password> # this should be your OKTA password
@@ -95,7 +99,11 @@ Open a new terminal and verify that the environment variables are set.
 **Switch to Loader role**
 
 ```bash
+# Legacy account identifier
 export SNOWFLAKE_ACCOUNT=<account-locator>
+# The preferred account identifier is to use name of the account prefixed by its organization (e.g. myorg-account123)
+# Supporting snowflake documentation - https://docs.snowflake.com/en/user-guide/admin-account-identifier
+export SNOWFLAKE_ACCOUNT=<org_name>-<account_name> # format is organization-account
 export SNOWFLAKE_DATABASE=RAW_DEV
 export SNOWFLAKE_USER=<your-username> # this should be your OKTA email
 export SNOWFLAKE_PASSWORD=<your-password> # this should be your OKTA password
