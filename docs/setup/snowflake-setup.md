@@ -65,7 +65,7 @@ conda install -c conda-forge terraform tflint  # Install terraform and tflint
     1. You will be prompted to create an initial user with `ACCOUNTADMIN` privileges. This should be you.
         You will be prompted to create a password for your user. Create one using your password manager,
         but know that it will ask you to change your password upon first log-in.
-    1. Save the Account Locator and Account URL for your new account.
+    1. Save the Account Locator, Organization name, Account name and Account URL for your new account.
 1. Log into your new account. You should be prompted to change your password. Save the updated password in your password manager.
 
 ### Enable multi-factor authentication for your user

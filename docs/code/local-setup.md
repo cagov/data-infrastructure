@@ -80,7 +80,11 @@ If you use zsh or bash, open your shell configuration file, and add the followin
 **Default Transformer role**
 
 ```bash
+# Legacy version (using account locator)
 export SNOWFLAKE_ACCOUNT=<account-locator>
+# Recommended version (using organization and account names)
+# Supporting snowflake documentation - https://docs.snowflake.com/en/user-guide/admin-account-identifier
+export SNOWFLAKE_ACCOUNT=<org_name>-<account_name> # format is organization-account
 export SNOWFLAKE_DATABASE=TRANSFORM_DEV
 export SNOWFLAKE_USER=<your-username> # this should be your OKTA email
 export SNOWFLAKE_PASSWORD=<your-password> # this should be your OKTA password
