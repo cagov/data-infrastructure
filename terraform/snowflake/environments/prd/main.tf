@@ -50,6 +50,7 @@ provider "snowflake" {
   role    = "ACCOUNTADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
+  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 # Snowflake provider for creating databases, warehouses, etc.
@@ -66,6 +67,7 @@ provider "snowflake" {
   role    = "SECURITYADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
+  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 # Snowflake provider for managing user accounts and roles.
@@ -103,4 +105,37 @@ resource "snowflake_grant_account_role" "logger_to_transformer" {
   provider         = snowflake.useradmin
   role_name        = "LOGGER_${var.environment}"
   parent_role_name = "TRANSFORMER_${var.environment}"
+}
+
+# Default user password policy
+resource "snowflake_password_policy" "user_password_policy" {
+  database             = "POLICIES" # Database name
+  schema               = "PUBLIC"   # Schema name
+  name                 = "user_password_policy"
+  min_length           = 14
+  min_upper_case_chars = 1
+  min_lower_case_chars = 1
+  min_numeric_chars    = 1
+  min_special_chars    = 1
+  max_retries          = 5
+  lockout_time_mins    = 30
+  history              = 5
+  max_age_days         = 60
+  or_replace           = true # Ensures the policy can be updated without errors
+}
+
+# Set the default password policy for the account
+resource "snowflake_account_password_policy_attachment" "attachment" {
+  password_policy = snowflake_password_policy.user_password_policy.fully_qualified_name
+}
+
+# Granting USAGE to security admin on the password policy
+resource "snowflake_grant_privileges_to_account_role" "grant_usage_to_securityadmin" {
+  provider          = snowflake.accountadmin
+  account_role_name = "SECURITYADMIN" #  SECURITYADMIN role name
+  privileges        = ["USAGE"]
+  on_account_object {
+    object_type = "PASSWORD POLICY" # object type is a password policy
+    object_name = snowflake_password_policy.user_password_policy.name
+  }
 }

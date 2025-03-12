@@ -42,7 +42,6 @@ provider "snowflake" {
   account_name      = var.account_name
   organization_name = var.organization_name
   role    = "PUBLIC"
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 # Snowflake provider for account administration (to be used only when necessary).
@@ -51,7 +50,6 @@ provider "snowflake" {
   role    = "ACCOUNTADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 # Snowflake provider for creating databases, warehouses, etc.
@@ -60,7 +58,6 @@ provider "snowflake" {
   role    = "SYSADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 # Snowflake provider for managing grants to roles.
@@ -69,7 +66,6 @@ provider "snowflake" {
   role    = "SECURITYADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 # Snowflake provider for managing user accounts and roles.
@@ -78,7 +74,6 @@ provider "snowflake" {
   role    = "USERADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
 }
 
 ############################
