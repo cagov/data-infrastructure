@@ -112,6 +112,7 @@ resource "snowflake_grant_account_role" "logger_to_transformer" {
 
 # Default user password policy
 resource "snowflake_password_policy" "user_password_policy" {
+  provider = snowflake.securityadmin
   database             = "POLICIES" # Database name
   schema               = "PUBLIC"   # Schema name
   name                 = "user_password_policy"
