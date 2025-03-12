@@ -104,26 +104,3 @@ resource "snowflake_grant_account_role" "logger_to_transformer" {
   role_name        = "LOGGER_${var.environment}"
   parent_role_name = "TRANSFORMER_${var.environment}"
 }
-
-# Default user password policy
-resource "snowflake_password_policy" "user_password_policy" {
-  provider = snowflake.securityadmin
-  database             = "POLICIES" # Database name
-  schema               = "PUBLIC"   # Schema name
-  name                 = "user_password_policy"
-  min_length           = 14
-  min_upper_case_chars = 1
-  min_lower_case_chars = 1
-  min_numeric_chars    = 1
-  min_special_chars    = 1
-  max_retries          = 5
-  lockout_time_mins    = 30
-  history              = 5
-  max_age_days         = 60
-  or_replace           = true # Ensures the policy can be updated without errors
-}
-
-# Set the default password policy for the account
-resource "snowflake_account_password_policy_attachment" "attachment" {
-  password_policy = snowflake_password_policy.user_password_policy.fully_qualified_name
-}
