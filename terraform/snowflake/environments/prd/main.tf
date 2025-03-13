@@ -133,3 +133,63 @@ resource "snowflake_password_policy" "user_password_policy" {
 resource "snowflake_account_password_policy_attachment" "attachment" {
   password_policy = snowflake_password_policy.user_password_policy.fully_qualified_name
 }
+
+// Defines an authentication policy for ODI human users that enforces Okta-only authentication via SAML.
+resource "snowflake_authentication_policy" "odi_okta_only" {
+  provider                   = snowflake.accountadmin
+  database                   = snowflake_database.policies.name # Database name
+  schema                     = "PUBLIC"   # Schema name
+  name                       = "odi_okta_only"
+  authentication_methods     = ["SAML"]
+  security_integrations      = ["OKTAINTEGRATION"] # Okta security integration name
+  comment                    = "Okta-only authentication policy for ODI human users"
+}
+
+// Defines an authentication policy for external human users that enforces password-based authentication with Duo MFA.
+resource "snowflake_authentication_policy" "external_duo_mfa" {
+  provider                   = snowflake.accountadmin
+  database                   = snowflake_database.policies.name # Database name
+  schema                     = "PUBLIC"   # Schema name
+  name                       = "external_duo_mfa"
+  authentication_methods     = ["PASSWORD"]
+  mfa_authentication_methods = ["PASSWORD"]
+  mfa_enrollment             = "REQUIRED"
+  client_types               = ["SNOWFLAKE_UI", "DRIVERS", "SNOWSQL"] # MFA enrollment requires SNOWFLAKE_UI
+  comment                    = "Duo-MFA-only authentication policy for external human users"
+}
+
+// Defines an authentication policy for admin human users that allows both Okta SAML and password-based authentication with Duo MFA.
+resource "snowflake_authentication_policy" "admin_okta_duo" {
+  provider                   = snowflake.accountadmin
+  database                   = snowflake_database.policies.name # Database name
+  schema                     = "PUBLIC"   # Schema name
+  name                       = "admin_okta_duo"
+  authentication_methods     = ["SAML", "PASSWORD"]
+  mfa_authentication_methods = ["PASSWORD"]
+  mfa_enrollment             = "REQUIRED"
+  client_types               = ["SNOWFLAKE_UI", "DRIVERS", "SNOWSQL"]
+  security_integrations      = ["OKTAINTEGRATION"] # Okta security integration name
+  comment                    = "Okta and Duo-MFA authentication policy for admin human users"
+}
+
+// Defines an authentication policy for most service accounts that enforces key-pair authentication.
+resource "snowflake_authentication_policy" "service_account_keypair" {
+  provider                   = snowflake.accountadmin
+  database                   = snowflake_database.policies.name # Database name
+  schema                     = "PUBLIC"   # Schema name
+  name                       = "service_account_keypair"
+  authentication_methods     = ["KEYPAIR"]
+  client_types               = ["DRIVERS", "SNOWSQL"]
+  comment                    = "Key-pair only authentication policy for most service accounts"
+}
+
+// Defines an authentication policy for legacy service accounts that enforces password-based authentication.
+resource "snowflake_authentication_policy" "legacy_service_password" {
+  provider                   = snowflake.accountadmin
+  database                   = snowflake_database.policies.name # Database name
+  schema                     = "PUBLIC"   # Schema name
+  name                       = "legacy_service_password"
+  authentication_methods     = ["PASSWORD"]
+  client_types               = ["DRIVERS", "SNOWSQL"]
+  comment                    = "Password-only authentication policy for legacy service accounts"
+}
