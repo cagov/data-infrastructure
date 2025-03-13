@@ -17,6 +17,12 @@ variable "organization_name" {
   type        = string
 }
 
+variable "okta_integration_name" {
+  description = "The name of the Okta security integration. If null, the odi_okta_only authentication policy will not be created."
+  type        = string
+  default     = null
+}
+
 ############################
 #         Providers        #
 ############################
@@ -125,23 +131,24 @@ resource "snowflake_password_policy" "user_password_policy" {
   max_retries          = 5
   lockout_time_mins    = 30
   history              = 5
-  max_age_days         = 60
   or_replace           = true # Ensures the policy can be updated without errors
 }
 
 # Set the default password policy for the account
 resource "snowflake_account_password_policy_attachment" "attachment" {
+  provider        = snowflake.accountadmin
   password_policy = snowflake_password_policy.user_password_policy.fully_qualified_name
 }
 
 // Defines an authentication policy for ODI human users that enforces Okta-only authentication via SAML.
 resource "snowflake_authentication_policy" "odi_okta_only" {
+  count = var.okta_integration_name == null ? 0 : 1 // meta-argument to conditionally create the resource
   provider                   = snowflake.accountadmin
   database                   = snowflake_database.policies.name # Database name
   schema                     = "PUBLIC"   # Schema name
   name                       = "odi_okta_only"
   authentication_methods     = ["SAML"]
-  security_integrations      = ["OKTAINTEGRATION"] # Okta security integration name
+  security_integrations      = [var.okta_integration_name] # Okta security integration name
   comment                    = "Okta-only authentication policy for ODI human users"
 }
 
@@ -160,6 +167,7 @@ resource "snowflake_authentication_policy" "external_duo_mfa" {
 
 // Defines an authentication policy for admin human users that allows both Okta SAML and password-based authentication with Duo MFA.
 resource "snowflake_authentication_policy" "admin_okta_duo" {
+  count = var.okta_integration_name == null ? 0 : 1 // meta-argument to conditionally create the resource
   provider                   = snowflake.accountadmin
   database                   = snowflake_database.policies.name # Database name
   schema                     = "PUBLIC"   # Schema name
@@ -168,7 +176,7 @@ resource "snowflake_authentication_policy" "admin_okta_duo" {
   mfa_authentication_methods = ["PASSWORD"]
   mfa_enrollment             = "REQUIRED"
   client_types               = ["SNOWFLAKE_UI", "DRIVERS", "SNOWSQL"]
-  security_integrations      = ["OKTAINTEGRATION"] # Okta security integration name
+  security_integrations      = [var.okta_integration_name] # Okta security integration name
   comment                    = "Okta and Duo-MFA authentication policy for admin human users"
 }
 
@@ -192,4 +200,11 @@ resource "snowflake_authentication_policy" "legacy_service_password" {
   authentication_methods     = ["PASSWORD"]
   client_types               = ["DRIVERS", "SNOWSQL"]
   comment                    = "Password-only authentication policy for legacy service accounts"
+}
+
+# Set odi_okta_only as the default authentication policy for the account
+resource "snowflake_account_authentication_policy_attachment" "default_policy" {
+  count = var.okta_integration_name == null ? 0 : 1
+  provider                   = snowflake.accountadmin
+  authentication_policy      = snowflake_authentication_policy.odi_okta_only[0].fully_qualified_name // using the first and only instance that gets created
 }
