@@ -106,10 +106,15 @@ resource "snowflake_grant_account_role" "logger_to_transformer" {
   role_name        = "LOGGER_${var.environment}"
   parent_role_name = "TRANSFORMER_${var.environment}"
 }
+// Create the POLICIES database to store the password policy
+resource "snowflake_database" "policies" {
+  name = "POLICIES"
+}
 
 # Default user password policy
 resource "snowflake_password_policy" "user_password_policy" {
-  database             = "POLICIES" # Database name
+  provider             = snowflake.accountadmin
+  database             = snowflake_database.policies.name # Database name
   schema               = "PUBLIC"   # Schema name
   name                 = "user_password_policy"
   min_length           = 14
@@ -127,15 +132,4 @@ resource "snowflake_password_policy" "user_password_policy" {
 # Set the default password policy for the account
 resource "snowflake_account_password_policy_attachment" "attachment" {
   password_policy = snowflake_password_policy.user_password_policy.fully_qualified_name
-}
-
-# Granting USAGE to security admin on the password policy
-resource "snowflake_grant_privileges_to_account_role" "grant_usage_to_securityadmin" {
-  provider          = snowflake.accountadmin
-  account_role_name = "SECURITYADMIN" #  SECURITYADMIN role name
-  privileges        = ["USAGE"]
-  on_account_object {
-    object_type = "PASSWORD POLICY" # object type is a password policy
-    object_name = snowflake_password_policy.user_password_policy.name
-  }
 }

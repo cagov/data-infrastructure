@@ -162,5 +162,3 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 .DS_Store
-terraform/snowflake/environments/.DS_Store
-terraform/snowflake/environments/dev/.DS_Store
