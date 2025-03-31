@@ -44,7 +44,8 @@ nav:
       - Code Review: code/code-review.md
       - Writing Documentation: code/writing-documentation.md
       - Terraform Setup: code/terraform-local-setup.md
-      - GitHub Project Management: code/project-management.md
+      - GitHub Project Management: code/github-project-management.md
+      - Azure DevOps Project Management: code/azdevops-project-management.md
   - Project infrastructure:
       - Cloud infrastructure: infra/cloud-infrastructure.md
       - Project architecture: infra/architecture.md
