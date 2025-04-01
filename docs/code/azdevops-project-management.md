@@ -88,4 +88,4 @@ Note: Priority in Azure DevOps is a dropdown with options from 1-4. We use the f
 
 1. **To Do**: This is the default status when a work item is created, indicates no work has started yet.
 2. **Doing**: Choose this status once work has started on the issue.
-3. **Done**: Indicates the work item is completed. If the work item is linked to a Pull Request, you will be given an option to close it when merging the PR. Or you can choose this status when viewing the work item. 
+3. **Done**: Indicates the work item is completed. If the work item is linked to a Pull Request, you will be given an option to close it when merging the PR. Or you can choose this status when viewing the work item.
