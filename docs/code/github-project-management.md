@@ -28,7 +28,7 @@ These guidelines are meant to ensure that issues are created in a standardized f
     8. Status: Assign a status on the current state of the issue. See below for status options.
 4. Pull Requests: Add phrase “(Fixes/Closes/Resolves) #xx” to ensure the referenced issue gets closed when PR is merged
     1. We will review “Open PRs” tab during stand up.
-5. Make sure to fully close an issue when completed by scrolling to the bottom and choosing "Close Issue". 
+5. Make sure to fully close an issue when completed by scrolling to the bottom and choosing "Close Issue".
 
 
 ## Size Definitions
