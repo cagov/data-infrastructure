@@ -21,6 +21,7 @@ def main():
             ],
             capture_output=True,
             check=True,
+            shell=True,
             cwd="transform",
         )
     except subprocess.CalledProcessError as e:
