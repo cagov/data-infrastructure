@@ -43,23 +43,10 @@ repos:
     hooks:
       - id: yamllint
         args: []
-  - repo: local
-    hooks:
-      - name: Dbt deps
-        id: dbt-deps
-        language: system
-        entry: poetry run dbt deps --project-dir transform
-        always_run: false
-        pass_filenames: false
-        types: [sql]
-  # Note: for SQLFluff we don't use the default pre-commit hook for a few reasons:
-  #   1. dbt cloud looks for config in the dbt project directory, so we put it in
-  #      transform/, however sqlfluff requires the templater config to be in the
-  #      current working directory. So we have to cd to transform/ to properly set the
-  #      templater config.
-  #   2. The pre-commit managed python environment can be difficult to install,
-  #      especially due to issues with pyarrow being brought in by Snowflake.
-  #      This keep things more predictable by using the poetry.lock environment.
+  # Note: for SQLFluff we don't use the default pre-commit hook because
+  # the pre-commit managed python environment can be difficult to install,
+  # especially due to issues with pyarrow being brought in by Snowflake.
+  # This keep things more predictable by using the poetry.lock environment.
   - repo: local
     hooks:
       - id: sqlfluff

@@ -31,4 +31,6 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
+      - name: Install dbt deps
+        run: poetry run dbt deps --project-dir transform
       - uses: pre-commit/action@v3.0.0
