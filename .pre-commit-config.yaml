@@ -68,5 +68,5 @@ repos:
         description: "Lints sql files with `SQLFluff`"
         types: [sql]
         require_serial: true
-        entry: poetry run python sqlfluff_pre_commit.py
+        entry: poetry run sqlfluff fix --show-lint-violations --processes 0 --nocolor --disable-progress-bar --force
         pass_filenames: true
