@@ -7,7 +7,7 @@ on:
       - main
 
 env:
-  DBT_PROFILES_DIR: ../ci
+  DBT_PROFILES_DIR: ci
   SNOWFLAKE_PRIVATE_KEY: ${{ SECRETS.SNOWFLAKE_PRIVATE_KEY_DEV }}
   SNOWFLAKE_USER: GITHUB_ACTIONS_SVC_USER_DEV
 
@@ -15,15 +15,22 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v3
-      - uses: actions/setup-python@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
       - uses: snok/install-poetry@v1
         with:
-          virtualenvs-create: false
+          virtualenvs-path: .venv
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: |
-          poetry install
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+      - name: Install dbt deps
+        run: poetry run dbt deps --project-dir transform
       - uses: pre-commit/action@v3.0.0
