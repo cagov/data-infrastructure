@@ -44,6 +44,24 @@ resource "snowflake_account_role" "logger" {
   comment  = "Permissions to read the SNOWFLAKE metadatabase for logging purposes"
 }
 
+# New Streamlit Roles - one for each database
+resource "snowflake_account_role" "streamlit_raw" {
+  provider = snowflake.useradmin
+  name     = "${module.raw.name}_${var.environment}_STREAMLIT"
+  comment  = "Permissions to create Streamlit applications and stages in the ${module.raw.name} database for the ${var.environment} environment."
+}
+
+resource "snowflake_account_role" "streamlit_analytics" {
+  provider = snowflake.useradmin
+  name     = "${module.analytics.name}_${var.environment}_STREAMLIT"
+  comment  = "Permissions to create Streamlit applications and stages in the ${module.analytics.name} database for the ${var.environment} environment."
+}
+
+resource "snowflake_account_role" "streamlit_transform" {
+  provider = snowflake.useradmin
+  name     = "${module.transform.name}_${var.environment}_STREAMLIT"
+  comment  = "Permissions to create Streamlit applications and stages in the ${module.transform.name} database for the ${var.environment} environment."
+}
 ######################################
 #            Role Grants             #
 ######################################
@@ -206,3 +224,61 @@ resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
   role_name        = "${module.transform.name}_READ"
   parent_role_name = "${module.analytics.name}_READWRITECONTROL"
 }
+
+# Grant the Streamlit roles to the Reporter role in the current environment
+# The cross-environment grant of the ${module.raw.name}_${var.environment}_STREAMLIT role
+# to the REPORTER_DEV role will handled outside of this Terraform configuration.
+# via manual SQL execution
+
+resource "snowflake_grant_account_role" "streamlit_raw_to_reporter" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_account_role.streamlit_raw.name
+  parent_role_name = snowflake_account_role.reporter.name
+}
+
+resource "snowflake_grant_account_role" "streamlit_analytics_to_reporter" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_account_role.streamlit_analytics.name
+  parent_role_name = snowflake_account_role.reporter.name
+}
+
+resource "snowflake_grant_account_role" "streamlit_transform_to_reporter" {
+  provider         = snowflake.useradmin
+  role_name        = snowflake_account_role.streamlit_transform.name
+  parent_role_name = snowflake_account_role.reporter.name
+}
+
+locals {
+  streamlit_roles = {
+    raw       = snowflake_account_role.streamlit_raw.name
+    analytics = snowflake_account_role.streamlit_analytics.name
+    transform = snowflake_account_role.streamlit_transform.name
+  }
+
+  databases = {
+    raw       = module.raw.name
+    analytics = module.analytics.name
+    transform = module.transform.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_account_role" "streamlit_privileges" {
+  provider          = snowflake.accountadmin
+  for_each          = local.streamlit_roles
+  account_role_name = each.value
+  privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = local.databases[each.key]
+  }
+}
+/*resource "snowflake_grant_privileges_to_account_role" "streamlit_usage_privileges" {
+  provider          = snowflake.accountadmin
+  for_each          = local.streamlit_roles
+  account_role_name = each.value
+  privileges        = ["USAGE"]
+  on_schema {
+    database_name = local.databases[each.key]
+    schema_name   = "PUBLIC"
+  }
+}*/
