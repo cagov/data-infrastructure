@@ -56,7 +56,7 @@ provider "snowflake" {
   role    = "ACCOUNTADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
+  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource", "snowflake_account_password_policy_attachment_resource", "snowflake_account_authentication_policy_attachment_resource"]
 }
 
 # Snowflake provider for creating databases, warehouses, etc.
@@ -73,7 +73,7 @@ provider "snowflake" {
   role    = "SECURITYADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource"]
+  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource", "snowflake_account_password_policy_attachment_resource","snowflake_account_authentication_policy_attachment_resource"]
 }
 
 # Snowflake provider for managing user accounts and roles.
