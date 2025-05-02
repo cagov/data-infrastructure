@@ -44,7 +44,7 @@ resource "snowflake_account_role" "logger" {
   comment  = "Permissions to read the SNOWFLAKE metadatabase for logging purposes"
 }
 
-# New Streamlit Roles - one for each database
+# Streamlit Roles - one for each database
 resource "snowflake_account_role" "streamlit_raw" {
   provider = snowflake.useradmin
   name     = "${module.raw.name}_${var.environment}_STREAMLIT"
@@ -250,15 +250,11 @@ resource "snowflake_grant_account_role" "streamlit_transform_to_reporter" {
 
 locals {
   streamlit_roles = {
-    raw       = snowflake_account_role.streamlit_raw.name
     analytics = snowflake_account_role.streamlit_analytics.name
-    transform = snowflake_account_role.streamlit_transform.name
   }
 
   databases = {
-    raw       = module.raw.name
     analytics = module.analytics.name
-    transform = module.transform.name
   }
 }
 
@@ -272,13 +268,3 @@ resource "snowflake_grant_privileges_to_account_role" "streamlit_privileges" {
     object_name = local.databases[each.key]
   }
 }
-/*resource "snowflake_grant_privileges_to_account_role" "streamlit_usage_privileges" {
-  provider          = snowflake.accountadmin
-  for_each          = local.streamlit_roles
-  account_role_name = each.value
-  privileges        = ["USAGE"]
-  on_schema {
-    database_name = local.databases[each.key]
-    schema_name   = "PUBLIC"
-  }
-}*/
