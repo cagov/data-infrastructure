@@ -44,24 +44,13 @@ resource "snowflake_account_role" "logger" {
   comment  = "Permissions to read the SNOWFLAKE metadatabase for logging purposes"
 }
 
-# Streamlit Roles - one for each database
-resource "snowflake_account_role" "streamlit_raw" {
-  provider = snowflake.useradmin
-  name     = "${module.raw.name}_${var.environment}_STREAMLIT"
-  comment  = "Permissions to create Streamlit applications and stages in the ${module.raw.name} database for the ${var.environment} environment."
-}
-
+# Adding streamlit role - only for analytics database
 resource "snowflake_account_role" "streamlit_analytics" {
   provider = snowflake.useradmin
   name     = "${module.analytics.name}_${var.environment}_STREAMLIT"
   comment  = "Permissions to create Streamlit applications and stages in the ${module.analytics.name} database for the ${var.environment} environment."
 }
 
-resource "snowflake_account_role" "streamlit_transform" {
-  provider = snowflake.useradmin
-  name     = "${module.transform.name}_${var.environment}_STREAMLIT"
-  comment  = "Permissions to create Streamlit applications and stages in the ${module.transform.name} database for the ${var.environment} environment."
-}
 ######################################
 #            Role Grants             #
 ######################################
@@ -229,22 +218,9 @@ resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
 # The cross-environment grant of the ${module.raw.name}_${var.environment}_STREAMLIT role
 # to the REPORTER_DEV role will handled outside of this Terraform configuration.
 # via manual SQL execution
-
-resource "snowflake_grant_account_role" "streamlit_raw_to_reporter" {
-  provider         = snowflake.useradmin
-  role_name        = snowflake_account_role.streamlit_raw.name
-  parent_role_name = snowflake_account_role.reporter.name
-}
-
 resource "snowflake_grant_account_role" "streamlit_analytics_to_reporter" {
   provider         = snowflake.useradmin
   role_name        = snowflake_account_role.streamlit_analytics.name
-  parent_role_name = snowflake_account_role.reporter.name
-}
-
-resource "snowflake_grant_account_role" "streamlit_transform_to_reporter" {
-  provider         = snowflake.useradmin
-  role_name        = snowflake_account_role.streamlit_transform.name
   parent_role_name = snowflake_account_role.reporter.name
 }
 
@@ -252,7 +228,6 @@ locals {
   streamlit_roles = {
     analytics = snowflake_account_role.streamlit_analytics.name
   }
-
   databases = {
     analytics = module.analytics.name
   }
