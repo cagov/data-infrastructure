@@ -228,7 +228,7 @@ resource "snowflake_grant_privileges_to_account_role" "streamlit_database_privil
   account_role_name = "${module.analytics.name}_STREAMLIT"
   privileges        = ["CREATE STAGE"]
   on_account_object {
-    object_name = "${module.analytics.name}"
+    object_name = "ANALYTICS_PRD"
     object_type = "DATABASE"
   }
 }
