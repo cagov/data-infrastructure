@@ -225,7 +225,7 @@ resource "snowflake_grant_account_role" "streamlit_analytics_to_reporter" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "streamlit_database_privileges" {
-  account_role_name = "${module.analytics.name}_STREAMLIT"
+  account_role_name = snowflake_account_role.streamlit_analytics.name
   privileges        = ["CREATE STAGE"]
   on_account_object {
     object_name = module.analytics.name
@@ -234,7 +234,7 @@ resource "snowflake_grant_privileges_to_account_role" "streamlit_database_privil
 }
 
 resource "snowflake_grant_privileges_to_account_role" "streamlit_account_privileges" {
-  account_role_name = "${module.analytics.name}_STREAMLIT"
+  account_role_name = snowflake_account_role.streamlit_analytics.name
   privileges        = ["CREATE STREAMLIT"]
   on_account        = true
 }
