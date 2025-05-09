@@ -45,10 +45,10 @@ resource "snowflake_account_role" "logger" {
 }
 
 # Adding streamlit role - only for analytics database
-resource "snowflake_account_role" "streamlit_analytics" {
+resource "snowflake_account_role" "streamlit_access_role" {
   provider = snowflake.useradmin
-  name     = "${module.analytics.name}_STREAMLIT"
-  comment  = "Permissions to create Streamlit applications and stages in the ${module.analytics.name} database for the ${var.environment} environment."
+  name     = "${module.analytics.name}_STREAMLIT_ACCESS" # Name of the role
+  comment  = "Role to grant Streamlit creation privileges"
 }
 
 ######################################
@@ -207,7 +207,6 @@ resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_lo
 # More backgorund information related to this is found
 # here - https://github.com/cagov/data-infrastructure/issues/274
 ##############################################################
-
 resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
   provider         = snowflake.useradmin
   role_name        = "${module.transform.name}_READ"
@@ -218,23 +217,46 @@ resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
 # The cross-environment grant of the ${module.raw.name}_${var.environment}_STREAMLIT role
 # to the REPORTER_DEV role will handled outside of this Terraform configuration.
 # via manual SQL execution
-resource "snowflake_grant_account_role" "streamlit_analytics_to_reporter" {
-  provider         = snowflake.useradmin
-  role_name        = snowflake_account_role.streamlit_analytics.name
-  parent_role_name = snowflake_account_role.reporter.name
+
+# Grant the Streamlit access role to the REPORTER role
+resource "snowflake_grant_account_role" "streamlit_to_reporter" {
+  provider            = snowflake.useradmin
+  role_name           = snowflake_account_role.streamlit_access_role.name
+  parent_role_name    = snowflake_account_role.reporter.name # reporter role
 }
 
-resource "snowflake_grant_privileges_to_account_role" "streamlit_database_privileges" {
-  account_role_name = snowflake_account_role.streamlit_analytics.name
-  privileges        = ["CREATE STAGE"]
-  on_account_object {
-    object_name = module.analytics.name
-    object_type = "DATABASE"
+# Grant CREATE STREAMLIT privilege on future schemas in the database to the Streamlit access role
+resource "snowflake_grant_privileges_to_account_role" "streamlit_future_streamlit_privileges" {
+  account_role_name = snowflake_account_role.streamlit_access_role.name
+  privileges        = ["CREATE STREAMLIT"]
+  on_schema {
+    future_schemas_in_database = module.analytics.name
   }
 }
 
-resource "snowflake_grant_privileges_to_account_role" "streamlit_account_privileges" {
-  account_role_name = snowflake_account_role.streamlit_analytics.name
+# Grant CREATE STREAMLIT privilege on the PUBLIC schema in the database to the Streamlit access role
+resource "snowflake_grant_privileges_to_account_role" "streamlit_public_streamlit_privileges" {
+  account_role_name = snowflake_account_role.streamlit_access_role.name
   privileges        = ["CREATE STREAMLIT"]
-  on_account        = true
+  on_schema {
+    schema_name = "${module.analytics.name}.PUBLIC"
+  }
+}
+
+# Grant CREATE STAGE privilege on future schemas in the database to the Streamlit access role
+resource "snowflake_grant_privileges_to_account_role" "streamlit_future_stage_privileges" {
+  account_role_name = snowflake_account_role.streamlit_access_role.name
+  privileges        = ["CREATE STAGE"]
+  on_schema {
+    future_schemas_in_database = module.analytics.name
+  }
+}
+
+# Grant CREATE STAGE privilege on the PUBLIC schema in the database to the Streamlit access role
+resource "snowflake_grant_privileges_to_account_role" "streamlit_public_stage_privileges" {
+  account_role_name = snowflake_account_role.streamlit_access_role.name
+  privileges        = ["CREATE STAGE"]
+  on_schema {
+    schema_name = "${module.analytics.name}.PUBLIC"
+  }
 }
