@@ -225,37 +225,19 @@ resource "snowflake_grant_account_role" "streamlit_to_reporter" {
   parent_role_name    = snowflake_account_role.reporter.name # reporter role
 }
 
-# Grant CREATE STREAMLIT privilege on future schemas in the database to the Streamlit access role
+# Grant CREATE STREAMLIT & CREATE STAGE privileges on future schemas in the database to the Streamlit access role
 resource "snowflake_grant_privileges_to_account_role" "streamlit_future_streamlit_privileges" {
   account_role_name = snowflake_account_role.streamlit_access_role.name
-  privileges        = ["CREATE STREAMLIT"]
+  privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
   on_schema {
     future_schemas_in_database = module.analytics.name
   }
 }
 
-# Grant CREATE STREAMLIT privilege on the PUBLIC schema in the database to the Streamlit access role
+# Grant CREATE STREAMLIT & CREATE STAGE privileges on the PUBLIC schema in the database to the Streamlit access role
 resource "snowflake_grant_privileges_to_account_role" "streamlit_public_streamlit_privileges" {
   account_role_name = snowflake_account_role.streamlit_access_role.name
-  privileges        = ["CREATE STREAMLIT"]
-  on_schema {
-    schema_name = "${module.analytics.name}.PUBLIC"
-  }
-}
-
-# Grant CREATE STAGE privilege on future schemas in the database to the Streamlit access role
-resource "snowflake_grant_privileges_to_account_role" "streamlit_future_stage_privileges" {
-  account_role_name = snowflake_account_role.streamlit_access_role.name
-  privileges        = ["CREATE STAGE"]
-  on_schema {
-    future_schemas_in_database = module.analytics.name
-  }
-}
-
-# Grant CREATE STAGE privilege on the PUBLIC schema in the database to the Streamlit access role
-resource "snowflake_grant_privileges_to_account_role" "streamlit_public_stage_privileges" {
-  account_role_name = snowflake_account_role.streamlit_access_role.name
-  privileges        = ["CREATE STAGE"]
+  privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
   on_schema {
     schema_name = "${module.analytics.name}.PUBLIC"
   }
