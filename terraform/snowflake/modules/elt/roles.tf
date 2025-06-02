@@ -227,6 +227,7 @@ resource "snowflake_grant_account_role" "streamlit_to_reporter" {
 
 # Grant CREATE STREAMLIT & CREATE STAGE privileges on future schemas in the database to the Streamlit access role
 resource "snowflake_grant_privileges_to_account_role" "streamlit_future_streamlit_privileges" {
+  provider          = snowflake.useradmin
   account_role_name = snowflake_account_role.streamlit_access_role.name
   privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
   on_schema {
@@ -236,6 +237,7 @@ resource "snowflake_grant_privileges_to_account_role" "streamlit_future_streamli
 
 # Grant CREATE STREAMLIT & CREATE STAGE privileges on the PUBLIC schema in the database to the Streamlit access role
 resource "snowflake_grant_privileges_to_account_role" "streamlit_public_streamlit_privileges" {
+  provider          = snowflake.useradmin
   account_role_name = snowflake_account_role.streamlit_access_role.name
   privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
   on_schema {
