@@ -63,7 +63,10 @@ We recommend ensuring that any object be in version control and fully reproducib
 Specific roles and permission grants are provisional, and it would be nice to clean it up a bit*
 
 1. Create a scoped fine-grained personal access token for repository access.
-1. Create development and production versions of the repository. The following SQL
+    This fine-grained token only needs *Read-only* access to the relevant repository.
+    It's worthwhile to keep the token scope minimal, as everyone with access to the
+    git repository in Snowflake will be using this token.
+1. Create development and production versions of the repository in Snowflake. The following SQL
     script can be used to set up the repos. Depending on the situation, some
     parts of it may not be necessary, or the repository may need to be created in
     a different set of databases/schemas, so read through with some care.
@@ -160,7 +163,7 @@ There are two different scenarios we want to address here:
 1. Add a commit message and push the commit adding the object to GitHub.
     If this is your first commit in Snowflake you will need to add a
     [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-    *In general, this personal access token will not be the same one used in
+    *In general, this personal access token will not be the same one used above in
     the repo set-up process.*
 
 ## Dev/Prod promotion
