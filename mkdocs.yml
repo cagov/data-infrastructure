@@ -46,6 +46,7 @@ nav:
       - Terraform Setup: code/terraform-local-setup.md
       - GitHub Project Management: code/github-project-management.md
       - Azure DevOps Project Management: code/azdevops-project-management.md
+      - Working with Snowflake notebooks and Streamlit: code/working-with-snowflake-objects.md
   - Project infrastructure:
       - Cloud infrastructure: infra/cloud-infrastructure.md
       - Project architecture: infra/architecture.md
