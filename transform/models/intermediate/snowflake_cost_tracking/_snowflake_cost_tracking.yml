@@ -65,3 +65,16 @@ models:
         description: The date on which the usage occurred.
       - name: credits_used
         description: The total credits used by warehouses
+
+  - name: int_cortex_usage_daily_history
+    description: |
+      Credits used by Cortex AI services, aggregated to account and usage date.
+    columns:
+      - name: organization_name
+        description: Organization name
+      - name: account_name
+        description: Account name
+      - name: usage_date
+        description: The date on which the usage occurred.
+      - name: credits_used
+        description: The total credits used by Cortex

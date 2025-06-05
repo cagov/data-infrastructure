@@ -51,6 +51,15 @@ warehouse_metering_history as (
     from {{ ref('int_warehouse_metering_history') }}
 ),
 
+cortex_usage_daily_history as (
+    select
+        account_name,
+        usage_date,
+        'cortex' as usage_type,
+        credits_used
+    from {{ ref('int_cortex_usage_daily_history') }}
+),
+
 -- Combine the data in long form to allow for easy
 -- aggregations and visualizations.
 combined as (
@@ -63,6 +72,8 @@ combined as (
     select * from storage_daily_history
     union all
     select * from warehouse_metering_history
+    union all
+    select * from cortex_usage_daily_history
 )
 
 select * from combined

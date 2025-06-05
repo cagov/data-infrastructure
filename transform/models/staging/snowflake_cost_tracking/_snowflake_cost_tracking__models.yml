@@ -380,6 +380,40 @@ models:
         data_tests:
           - not_null
 
+  - name: stg_cortex_usage_daily_history
+    description: |
+      Cortex usage on a daily basis.
+      This is derived from the `metering_daily_history` table, as the
+      `ORGANIZATION_USAGE` schema doesn't include a dedicated table
+      for Cortex usage.
+    columns:
+      - name: ORGANIZATION_NAME
+        description: Organization name
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: USAGE_DATE
+        description: The date on which the usage occurred
+      - name: CREDITS_USED_COMPUTE
+        description: Credits used for compute services
+        data_tests:
+          - not_null
+      - name: CREDITS_USED_CLOUD_SERVICES
+        description: Credits used for cloud services
+        data_tests:
+          - not_null
+      - name: CREDITS_ADJUSTMENT_CLOUD_SERVICES
+        description: Adjustments made to cloud service credits
+        data_tests:
+          - not_null
+      - name: CREDITS_USED
+        description: Credits used
+        data_tests:
+          - not_null
+      - name: CREDITS_BILLED
+        description: Credits billed for usage
+        data_tests:
+          - not_null
+
   - name: stg_materialized_view_refresh_history
     description: Materialized view refresh history.
     columns:
