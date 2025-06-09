@@ -9,7 +9,7 @@ usage_history as (
         usage_date,
         sum(credits_used) as credits_used
     from source
-    group by all
+    group by organization_name, account_name, usage_date
 )
 
 select * from usage_history

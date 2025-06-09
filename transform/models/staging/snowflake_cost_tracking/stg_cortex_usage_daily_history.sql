@@ -40,7 +40,7 @@ metering_daily_history AS (
         sum(credits_used) AS credits_used,
         sum(credits_billed) AS credits_billed
     FROM source
-    GROUP BY ALL
+    GROUP BY organization_name, account_name, usage_date
 )
 
 SELECT *
