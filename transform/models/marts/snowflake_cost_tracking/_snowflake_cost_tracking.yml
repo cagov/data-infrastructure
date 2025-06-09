@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: snowflake_costs_by_date.sql
+  - name: snowflake_costs_by_date
     description: |
       Snowflake costs by date for the following:
 
@@ -10,6 +10,7 @@ models:
         * Pipe usage
         * Storage
         * Warehouse usage
+        * Cortex (GenAI) usage
 
       Data are in long form, where `usage_type` indicates which
       type of usage is measured in credits.
@@ -27,5 +28,6 @@ models:
           * `'pipe'`
           * `'storage'`
           * `'warehouse'`
+          * `'cortex'`
       - name: credits_used
         description: The credits used for the usage type and date.
