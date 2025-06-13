@@ -57,10 +57,11 @@ We recommend ensuring that any object be in version control and fully reproducib
 1. It is used for any recommendation, publication, or data product
 1. It is used operationally (i.e., someone looks in on it regularly).
 
-### Connecting a repository
+### Connecting an entire repository
 
-*Note: this only needs to be done once per Snowflake environment and GitHub repository.
-Specific roles and permission grants are provisional, and it would be nice to clean it up a bit*
+!!! note
+    This only needs to be done once per Snowflake environment and GitHub repository.
+    Specific roles and permission grants are provisional, and it would be nice to clean it up a bit.
 
 1. Create a scoped fine-grained personal access token for repository access.
     This fine-grained token only needs *Read-only* access to the relevant repository.
@@ -111,7 +112,7 @@ Specific roles and permission grants are provisional, and it would be nice to cl
     grant create streamlit on schema analytics_prd.public to role transformer_prd;
 
 
-    -- Create the Git reepositories in dev and prod
+    -- Create the Git repositories in dev and prod
     use role transformer_dev;
     create or replace git repository analytics_dev.public."<repo-name>"
     origin = 'https://github.com/cagov/<repo-name>'
@@ -126,6 +127,23 @@ Specific roles and permission grants are provisional, and it would be nice to cl
     ```
 
 This repository can now be used with notebooks and Streamlit dashboards.
+
+### Connecting a personal GitHub account
+
+!!! note
+    This setup has been tested on notebooks but not streamlit apps.
+
+After a [repository is connected](working-with-snowflake-objects.md#connecting-an-entire-repository), users will be able to check out files from GitHub. In order to push updated code, however, a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) must be added. *In general, this personal access token will not be the same one used above in the repo set-up process.*
+
+To limit token scope, a fine-grained token would be preferred here. However, during initial experimentation, fine-grained tokens did not work in Snowflake. Below are steps to create a "classic" token:
+
+1. Navigate to a user's `Settings` -> `Developer Settings` -> `Personal access tokens` -> `Tokens (classic)`
+1. Click `Generate new token` -> `Generate new token (classic)`
+1. Give the token a name and expiration date
+1. Select the `repo` scope
+1. Click `Generate token`
+
+This token can now be pasted into Snowflake when pushing to github.
 
 ### Creating a notebook or Streamlit dashboard
 
@@ -153,7 +171,7 @@ There are two different scenarios we want to address here:
 1. Choose the database location for the object (e.g., `ANALYTICS_DEV.PUBLIC`)
 1. Choose the warehouse for the object (e.g., `REPORTING_XS_DEV`).
 
-#### Connecting an existing notebook/dashboard
+#### Checking out an existing notebook/dashboard
 
 1. In the left side panel for the notebook/Streamlit, click the "Connect Git Repository" button
 1. In "File location in the repository", find the Git repository in Snowflake,
@@ -162,9 +180,7 @@ There are two different scenarios we want to address here:
     For instance, we might have a `notebooks` or `streamlit` subdirectory.
 1. Add a commit message and push the commit adding the object to GitHub.
     If this is your first commit in Snowflake you will need to add a
-    [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-    *In general, this personal access token will not be the same one used above in
-    the repo set-up process.*
+    [personal access token](working-with-snowflake-objects.md#connecting-a-personal-github-account)
 
 ## Dev/Prod promotion
 
