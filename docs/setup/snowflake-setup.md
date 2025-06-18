@@ -140,7 +140,7 @@ GRANT ROLE TRANSFORM_PRD_READ TO ROLE TRANSFORMER_DEV;
 GRANT ROLE ANALYTICS_PRD_READ TO ROLE TRANSFORMER_DEV;
 ```
 
-**Note**
+!!! note
 These grants are not managed via Terraform in order to keep the configurations of
 different environments as logically separate as possible. We may revisit this
 decision should the manual grants cause problems.
