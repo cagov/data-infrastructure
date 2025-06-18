@@ -128,7 +128,7 @@ alter account set session policy policies.public.account_session_policy;
 
 ### Developing against production data
 
-Our Snowflake architecture allows for reasonably safe `SELECT`ing from the production `RAW` database while developing models.
+Our Snowflake architecture allows for reasonably safe `SELECT`ing from the production databases while developing models.
 While this could be expensive for large tables, it also allows for faster and more reliable model development.
 
 To develop against production data, first you need someone with the `USERADMIN` role to grant rights to the `TRANSFORMER_DEV` role (this need only be done once, and can be revoked later). These grants enable access to real data for development and facilitate cloning and deferral for large-table projects:
