@@ -128,28 +128,41 @@ alter account set session policy policies.public.account_session_policy;
 
 ### Developing against production data
 
-Our Snowflake architecture allows for reasonably safe `SELECT`ing from the production `RAW` database while developing models.
-While this could be expensive for large tables,
-it also allows for faster and more reliable model development.
+Our Snowflake architecture allows for reasonably safe `SELECT`ing from the production databases while developing models.
+While this could be expensive for large tables, it also allows for faster and more reliable model development.
 
-To develop against production `RAW` data, first you need someone with the `USERADMIN` role to grant rights to the `TRANSFORMER_DEV` role
-(this need only be done once, and can be revoked later):
+To develop against production data, first you need someone with the `USERADMIN` role to grant rights to the `TRANSFORMER_DEV` role (this need only be done once, and can be revoked later). These grants enable access to real data for development and facilitate cloning and deferral for large-table projects:
 
 ```sql
 USE ROLE USERADMIN;
 GRANT ROLE RAW_PRD_READ TO ROLE TRANSFORMER_DEV;
+GRANT ROLE TRANSFORM_PRD_READ TO ROLE TRANSFORMER_DEV;
+GRANT ROLE ANALYTICS_PRD_READ TO ROLE TRANSFORMER_DEV;
 ```
 
 !!! note
-    This grant is not managed via terraform in order to keep the configurations of
+    These grants are not managed via Terraform in order to keep the configurations of
     different environments as logically separate as possible. We may revisit this
-    decision should the manual grant cause problems.
+    decision should the manual grants cause problems.
 
 You can then run dbt locally and specify the `RAW` database manually:
 
 ```bash
 DBT_RAW_DB=RAW_PRD dbt run
 ```
+
+### Streamlit dashboard development
+
+All production Streamlit dashboards and their marts should reside in the `ANALYTICS_{env}_PRD` database.
+If a dashboard needs access to objects from earlier layers, they should be exposed via explicitly created mart tables in this database.
+
+To support Streamlit development, the `REPORTER_DEV` role may need read access to the production marts:
+
+```sql
+USE ROLE USERADMIN;
+GRANT ROLE ANALYTICS_PRD_READ TO ROLE REPORTER_DEV;
+```
+
 
 ### Add IT-Ops representatives
 
