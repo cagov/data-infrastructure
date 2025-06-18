@@ -163,7 +163,6 @@ USE ROLE USERADMIN;
 GRANT ROLE ANALYTICS_PRD_READ TO ROLE REPORTER_DEV;
 ```
 
-Additionally, the cross-environment grant of the `${module.raw.name}_${var.environment}_STREAMLIT` role to the `REPORTER_DEV` role is managed manually via SQL, outside of Terraform.
 
 ### Add IT-Ops representatives
 
