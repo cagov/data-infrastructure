@@ -153,7 +153,7 @@ DBT_RAW_DB=RAW_PRD dbt run
 
 ### Streamlit dashboard development
 
-All production Streamlit dashboards and their marts should reside in the `ANALYTICS_ENGCA_PRD` database.
+All production Streamlit dashboards and their marts should reside in the `ANALYTICS_{env}_PRD` database.
 If a dashboard needs access to objects from earlier layers, they should be exposed via explicitly created mart tables in this database.
 
 To support Streamlit development, the `REPORTER_DEV` role may need read access to the production marts:
