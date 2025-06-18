@@ -141,9 +141,9 @@ GRANT ROLE ANALYTICS_PRD_READ TO ROLE TRANSFORMER_DEV;
 ```
 
 !!! note
-These grants are not managed via Terraform in order to keep the configurations of
-different environments as logically separate as possible. We may revisit this
-decision should the manual grants cause problems.
+    These grants are not managed via Terraform in order to keep the configurations of
+    different environments as logically separate as possible. We may revisit this
+    decision should the manual grants cause problems.
 
 You can then run dbt locally and specify the `RAW` database manually:
 
