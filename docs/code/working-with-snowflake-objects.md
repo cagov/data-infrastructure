@@ -31,19 +31,26 @@ Using the `REPORTER` role means that the dashboard will not be able
 to access data from the `RAW` or `TRANSFORM` layers,
 nor will it be able to edit data in the `ANALYTICS` layer.
 This is a useful security feature, and consistent with our RBAC
-design. In development it may be useful to use the `TRANSFORMER` role,
-but "production" dashboards should endeavor to use `REPORTER_PRD`.
+design.
 
-**Warning: Streamlit dashboards execute using the role of their owner.
-Malicious users with edit permissions on the dashboard may be able to use them for
-[privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation)
-if the dashboard is owned by a powerful role.
-Even for users with good intentions, it may be possible to accidentally cause problems.
-Using the `REPORTER_{env}` role is for Streamlit dashboards is an application of the
-[principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege).
-For more discussion of Streamlit dashboard security, see
-[these docs](https://docs.snowflake.com/en/developer-guide/streamlit/owners-rights#owner-s-rights-and-app-security).
-**
+One consequence of this recommendation is that every table/view used
+by the notebook or dashboard should *also* be in the `ANALYTICS` layer.
+In development it may be useful to use the `TRANSFORMER` role,
+but "production" dashboards should endeavor to use `REPORTER_PRD`.
+Getting the appropriate data in `ANALYTICS` for consumption may take some extra work,
+we recommend using the guidelines [here](#use-version-control) to assess when it is appropriate.
+
+
+!!! warning
+    Streamlit dashboards execute using the role of their owner.
+    Malicious users with edit permissions on the dashboard may be able to use them for
+    [privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation)
+    if the dashboard is owned by a powerful role.
+    Even for users with good intentions, it may be possible to accidentally cause problems.
+    Using the `REPORTER_{env}` role is for Streamlit dashboards is an application of the
+    [principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege).
+    For more discussion of Streamlit dashboard security, see
+    [these docs](https://docs.snowflake.com/en/developer-guide/streamlit/owners-rights#owner-s-rights-and-app-security).
 
 
 ## Use extra-small warehouses
@@ -160,7 +167,7 @@ Snowflake role switcher in the bottom left.
     ```
 1. In the upper left of the notebook/Streamlit page click the "down" caret
     and choose "Create from repository"
-1. Give the notebook/Streamlit a descriptive name. **Warning: notebooks cannot
+1. Give the notebook/Streamlit a descriptive name. **Warning: dashboards and notebooks cannot
     have their name changed after the fact. Be sure to choose wisely, otherwise
     you may need to re-create it in a new branch**
 1. In "File location in the repository", find the Git repository in Snowflake,
@@ -239,6 +246,7 @@ We describe the workflow for a dashboard for brevity, but it should be similar f
 1. Create a new dashboard in `ANALYTICS_PRD`  based on the version in `main`,
     following the "Creating a new..." workflow.
     This version is now your production dashboard!
+1. Delete the old development dashboard in Snowflake to prevent clutter.
 
 #### Propose changes to the dashboard
 
@@ -257,6 +265,7 @@ git-based workflow.
     Instead, navigate to the git repository in Snowflake and click "Fetch",
     which should bring in the new changes. The next time the dashboard
     launches, it should be based on the latest version.
+1. Delete the development dashboard in Snowflake to prevent clutter.
 
 ## Where to manipulate data
 
