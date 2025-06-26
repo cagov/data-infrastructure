@@ -57,6 +57,7 @@ nav:
       - Terraform setup: setup/terraform-project-setup.md
       - Sentinel setup: setup/sentinel-setup.md
       - dbt Cloud setup: setup/dbt-setup.md
+      - Fivetran setup: setup/fivetran-setup.md
       - Adding service accounts: setup/snowflake-service-accounts.md
       - Project teardown: setup/project-teardown.md
   - dbt:

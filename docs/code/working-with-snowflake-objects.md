@@ -8,7 +8,7 @@ Snowflake has a few first-class code objects which are stored in databases:
 * **Streamlit dashboards**: Streamlit dashboards allow for interactive data visualizations
     which can be shared with the organization.
 
-A downside of these objects is that it is more difficult to track, version
+A downside of these objects is that it is more difficult to track, version,
 and maintain high code quality for them.
 This document includes some recommendations and best practices for working with
 notebooks and Streamlit dashboards within Snowflake.
@@ -27,9 +27,6 @@ they are most appropriate for the `ANALYTICS`/marts layer. This means:
 1. Create them using the `REPORTER_{env}` role.
 1. Use the `REPORTING_XS_{env}` warehouse for queries.
 
-**Warning: Streamlit dashboards execute using the role of their owner.
-People with edit permissions on the dashboard may be able to use them for privilege escalation
-if the dashboard is owned by a powerful role.**
 Using the `REPORTER` role means that the dashboard will not be able
 to access data from the `RAW` or `TRANSFORM` layers,
 nor will it be able to edit data in the `ANALYTICS` layer.
@@ -37,14 +34,31 @@ This is a useful security feature, and consistent with our RBAC
 design. In development it may be useful to use the `TRANSFORMER` role,
 but "production" dashboards should endeavor to use `REPORTER_PRD`.
 
+**Warning: Streamlit dashboards execute using the role of their owner.
+Malicious users with edit permissions on the dashboard may be able to use them for
+[privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation)
+if the dashboard is owned by a powerful role.
+Even for users with good intentions, it may be possible to accidentally cause problems.
+Using the `REPORTER_{env}` role is for Streamlit dashboards is an application of the
+[principle of least privilege](https://en.wikipedia.org/wiki/Principle_of_least_privilege).
+For more discussion of Streamlit dashboard security, see
+[these docs](https://docs.snowflake.com/en/developer-guide/streamlit/owners-rights#owner-s-rights-and-app-security).
+**
+
 
 ## Use extra-small warehouses
 
-Notebooks and Streamlit dashboards might be active for significantly longer
-than the actual query times for the data backing them.
-It's not unusual for a notebook to be running for most of the day as an analyst works.
-To save on compute and avoid surprise cost overruns, always use an extra small warehouse.
+Notebooks and Streamlit dashboards involve two separate Snowflake warehouses, the one powering their
+[Python kernel](https://docs.snowflake.com/en/user-guide/warehouses-overview#label-default-warehouse),
+and the one powering their SQL queries.
+The Python kernel is active as long as the notebook/dashboard is active, while the query warehouse may
+auto-suspend when no queries are being executed.
+As such, it's not unusual for the warehouse cost of running and developing the notebook/dashboard
+to be more than  that of the warehouse cost of its queries.
 
+To save on compute and avoid surprise cost overruns,
+always use the default (extra-small) `SYSTEM$STREAMLIT_NOTEBOOK_WH` for the kernel,
+and select an extra small warehouse for queries.
 If more expensive queries are needed, consider pre-building tables in the `ANALYTICS` database
 and making sure appropriate filters are used to cut down on data scans.
 
@@ -53,8 +67,8 @@ and making sure appropriate filters are used to cut down on data scans.
 Use of version control with notebooks and Streamlit dashboards is still important.
 We recommend ensuring that any object be in version control and fully reproducible if any of the following are true:
 
-1. It is shared outside of the immediate DOE team
-1. It is used for any recommendation, publication, or data product
+1. It is shared outside of the immediate DOE team.
+1. It is used for any recommendation, publication, or data product.
 1. It is used operationally (i.e., someone looks in on it regularly).
 
 ### Connecting a repository
@@ -127,14 +141,17 @@ Specific roles and permission grants are provisional, and it would be nice to cl
 
 This repository can now be used with notebooks and Streamlit dashboards.
 
-### Creating a notebook or Streamlit dashboard
+### Getting a Snowflake notebook or dashboard into a git repository
 
 There are two different scenarios we want to address here:
 
-1. Creating a new notebook or dashboard in a Git repository
-1. Connecting an existing notebook or dashboard to a Git repository
+1. Creating a new notebook or dashboard in Snowflake based on an existing file in a Git repository
+1. Adding an existing notebook or dashboard in Snowflake to a Git repository
 
-#### Creating a new notebook/dashboard
+In both cases, you should have a `REPORTER_{env}` role selected in the
+Snowflake role switcher in the bottom left.
+
+#### Creating a new notebook/dashboard in Snowflake based on an existing file in a Git repository
 
 1. Create a new branch for the object in your git repository
     (the Snowflake UI doesn't have a way to create branches):
@@ -153,7 +170,18 @@ There are two different scenarios we want to address here:
 1. Choose the database location for the object (e.g., `ANALYTICS_DEV.PUBLIC`)
 1. Choose the warehouse for the object (e.g., `REPORTING_XS_DEV`).
 
-#### Connecting an existing notebook/dashboard
+#### Adding an existing notebook/dashboard in Snowflake to a Git repository
+
+!!! warning
+    We currently do not recommend doing this for Streamlit dashboards.
+    This is because the dashboard name is a unique identifier that becomes
+    the folder name in the repository. It is impossible to change this name after
+    the fact, which means that it is both non-descriptive and doesn't work
+    with a standard git-based branching workflow.
+
+    For whatever reason, Snowflake notebooks to not have this defect: as long
+    as you give the notebook a descriptive name upon creating it, the folder
+    name in the git repository will match it.
 
 1. In the left side panel for the notebook/Streamlit, click the "Connect Git Repository" button
 1. In "File location in the repository", find the Git repository in Snowflake,
@@ -166,10 +194,87 @@ There are two different scenarios we want to address here:
     *In general, this personal access token will not be the same one used above in
     the repo set-up process.*
 
-## Dev/Prod promotion
+### Dev/Prod promotion
 
-TODO
+A large part of the benefit of getting notebooks and dashboards into version control
+is that you can use a standard git-based branching workflow for proposing changes.
+The following is a recipe for such a workflow.
+We describe the workflow for a dashboard for brevity, but it should be similar for notebooks:
 
-### Where to build data
+#### Propose a new notebook/dashboard
 
-TODO
+1. Create a new branch for the dashboard:
+   `git switch -c feature-new-dashboard`
+1. Enable the `REPORTER_DEV` role in Snowflake.
+1. The next step is a little different for notebooks and dashboards.
+    1. **If creating a dashboard:**
+        Create a folder and file for the dashboard in the repository.
+        *This is important because Snowflake makes it very difficult/impossible to change
+        the name after the fact. Creating one with the right name at the outset gives you
+        the most control, and avoids files with inscrutible timestamps or unique IDs in them!*
+        ```bash
+        mkdir -p streamlit/my_new_dashboard
+        touch streamlit/my_new_dashboard/my_new_dashboard.py
+        git commit streamlit/my_new_dashboard/my_new_dashboard.py -m "Added new file"
+        git push <remote-name> feature-new-dashboard
+        ```
+        Connect to the blank dashboard using the "Creating a new..." workflow above.
+    1. **If creating a notebook**:
+        Create the new notebook in Snowflake, and add it to the git repository using the
+        "Adding an existing..." workflow above.
+        *Be sure to choose a good name for the notebook, as it will become the folder
+        name and cannot be changed after the fact.*
+1. Develop the dashboard, making regular descriptive commits.
+1. When ready, create a pull request in GitHub, proposing the new dashboard
+    be merged to `main`!
+
+#### Merge the new notebook/dashboard to `main`
+
+1. Review the dashboard code with coworkers,
+    making any changes that come out of code review.
+1. When satisfied, merge the pull request to `main`.
+    *Snowflake seemingly cannot change the branch of a dashboard after it is created.
+    Therefore you will need to recreate a production version based on the one in `main`.*
+1. Enable the `REPORTER_PRD` role in Snowflake.
+1. Create a new dashboard in `ANALYTICS_PRD`  based on the version in `main`,
+    following the "Creating a new..." workflow.
+    This version is now your production dashboard!
+
+#### Propose changes to the dashboard
+
+Now that the dashboard is in `main`, you can propose new changes using a standard
+git-based workflow.
+
+1. Check out a new branch from `main`:
+    ```bash
+    git switch -c new-feature
+    ```
+1. Create dashboard using the "Creating a new..." workflow above.
+1. Develop the dashboard, making regular descriptive commits.
+1. Propose your changes in a pull request to `main`.
+1. Once it is merged to main, you don't need to recreate the dashboard anymore,
+    as the production version is already pointed at `main`.
+    Instead, navigate to the git repository in Snowflake and click "Fetch",
+    which should bring in the new changes. The next time the dashboard
+    launches, it should be based on the latest version.
+
+## Where to manipulate data
+
+When developing notebooks or dashboards, the analyst often has to choose
+how much data manipulation should be done in Python,
+and how much should be done in using SQL and dbt.
+In general, we prefer to transform data and build data models using dbt,
+rather than doing it within notebooks or dashboards.
+This is for a few reasons:
+
+1. dbt has a stronger version-control story than Snowflake notebooks or dashboards.
+1. It's easier to test and exercise code for dbt models.
+1. It's easier to reuse the data models developed in dbt for multiple applications.
+1. In general, executing a Snowflake SQL query is higher-performance than bringing data into
+    a Python session and manipulating it there.
+
+That said, if you are doing highly dynamic things in a dashboard,
+such as on-the-fly filtering or aggregation of data based on user interactions,
+then it may make sense to do some of the transformation in the Python session.
+There are no hard-and-fast rules here, and specific applications will have different tradeoffs!
+But when in doubt, we recommend you prefer doing transformations in the dbt layer.
