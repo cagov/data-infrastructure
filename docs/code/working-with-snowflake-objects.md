@@ -158,6 +158,24 @@ There are two different scenarios we want to address here:
 In both cases, you should have a `REPORTER_{env}` role selected in the
 Snowflake role switcher in the bottom left.
 
+!!! warning
+    Somewhat annoyingly, it's difficult-to-impossible to change the name of notebooks and dashboards
+    after they are created in Snowflake, as well as their paths in a Git repository.
+    When choosing file names, we recommend the following:
+
+    * Use simple, descriptive file names describing what the notebook/dashboard does.
+    * Do not use Snowflake unique identifiers for file names: these will not be stable between branches.
+    * Avoid any references to things like "prod" or "final" or "use this one" in the name:
+        these will quickly become incorrect with a branching git-based workflow.
+
+
+As a prerequisite to this, you should create a GitHub
+[personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
+allowing you to make commits within the Snowflake UI under your name.
+We recommend creating a [fine-grained token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token),
+with "Read and Write" access to "Contents" for the relevant repositories.
+Creating this token will likely need approval from a GitHub organization admin.
+
 #### Creating a new notebook/dashboard in Snowflake based on an existing file in a Git repository
 
 1. Create a new branch for the object in your git repository
@@ -180,10 +198,10 @@ Snowflake role switcher in the bottom left.
 #### Adding an existing notebook/dashboard in Snowflake to a Git repository
 
 !!! warning
-    We currently do not recommend doing this for Streamlit dashboards.
+    We currently do not recommend adding an existing Streamlit dashboard to a Git repository.
     This is because the dashboard name is a unique identifier that becomes
-    the folder name in the repository. It is impossible to change this name after
-    the fact, which means that it is both non-descriptive and doesn't work
+    the folder name in the repository. At the time of this writing, it is impossible to change this,
+    which means that the folder name is both non-descriptive and doesn't work
     with a standard git-based branching workflow.
 
     For whatever reason, Snowflake notebooks to not have this defect: as long
@@ -196,10 +214,8 @@ Snowflake role switcher in the bottom left.
     and navigate to the path you want for the notebook/Streamlit in the repository.
     For instance, we might have a `notebooks` or `streamlit` subdirectory.
 1. Add a commit message and push the commit adding the object to GitHub.
-    If this is your first commit in Snowflake you will need to add a
-    [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens).
-    *In general, this personal access token will not be the same one used above in
-    the repo set-up process.*
+    If this is your first commit in Snowflake you will need to input your
+    personal access token.
 
 ### Dev/Prod promotion
 
