@@ -1,4 +1,5 @@
 """Load state entities list from department of finance."""
+
 from __future__ import annotations
 
 import io
