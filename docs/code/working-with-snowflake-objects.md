@@ -287,7 +287,7 @@ git-based workflow.
 
 When developing notebooks or dashboards, the analyst often has to choose
 how much data manipulation should be done in Python,
-and how much should be done in using SQL and dbt.
+and how much should be done using SQL and dbt.
 In general, we prefer to transform data and build data models using dbt,
 rather than doing it within notebooks or dashboards.
 This is for a few reasons:
@@ -303,3 +303,5 @@ such as on-the-fly filtering or aggregation of data based on user interactions,
 then it may make sense to do some of the transformation in the Python session.
 There are no hard-and-fast rules here, and specific applications will have different tradeoffs!
 But when in doubt, we recommend you prefer doing transformations in the dbt layer.
+For more information about our default dbt project architecture,
+see [here](/infra/architecture/).
