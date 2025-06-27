@@ -4,8 +4,8 @@ To set up a new project in Fivetran follow these steps:
 
 1. First, ensure you have met the following pre-requisites:
     - You have set up a Snowflake Account for the project (follow all instructions from [here](./snowflake-setup.md))
-    - Ensure that your Snowflake project has a **LOADER_PRD** role with privileges to write data to the **RAW_PRD** database
-    - You have created a Snowflake User called **FIVETRAN_SVC_USER_PRD** and ensured this user has the **LOADER_PRD** role
+    - Ensure that your Snowflake project has a `LOADER_PRD` role with privileges to write data to the `RAW_PRD` database
+    - You have created a Snowflake User called `FIVETRAN_SVC_USER_PRD` and ensured this user has the `LOADER_PRD` role
     - You have set up an auth key pair for this user and saved it to the ODI OnePass account
 
 2. In Fivetran, navigate to Organization -> Accounts
@@ -14,12 +14,12 @@ To set up a new project in Fivetran follow these steps:
 5. Next, navigate to Destinations
 6. Search for **Snowflake** and click _Select_
 7. To set up the Snowflake connector:
-    1. Name the destination **RAW_PRD**
+    1. Name the destination `RAW_PRD`
     2. Add the Snowflake URL for your project as the _Host_
-    3. Add **FIVETRAN_SVC_USER_PRD** as the _User_
-    4. Add **RAW_PRD** as the _Database_
-    5. For _Auth_ select **KEY_PAIR** and enter the key pair details for the FIVETRAN_SVC_USER_PRD user
-    6. Add **LOADER_PRD** as the _Role_
+    3. Add `FIVETRAN_SVC_USER_PRD` as the _User_
+    4. Add `RAW_PRD` as the _Database_
+    5. For _Auth_ select **KEY_PAIR** and enter the key pair details for the `FIVETRAN_SVC_USER_PRD` user
+    6. Add `LOADER_PRD` as the _Role_
     7. Optional: Most of the time, the cloud provider and region don't matter, but if a client is operating in a particular cloud/region and wants to minimize data transfer, it makes sense to select the client's _Cloud service provider_, _Cloud region_, and _Default Time Zone_
     8. Click the _Save & Test_ button
 
