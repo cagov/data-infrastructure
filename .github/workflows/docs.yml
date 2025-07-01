@@ -17,26 +17,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.10"
-      - uses: snok/install-poetry@v1
+          enable-cache: true
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          virtualenvs-path: .venv
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+          python-version-file: ".python-version"
       - name: Build dbt docs
         run: |
           # Generate snowflake dbt docs
-          poetry run dbt deps --project-dir=transform
-          poetry run dbt docs generate --project-dir=transform
+          uv run dbt deps --project-dir=transform
+          uv run dbt docs generate --project-dir=transform
           cp -r transform/target docs/dbt_docs_snowflake
       - name: Deploy docs to GitHub Pages
         if: github.ref == 'refs/heads/main'
-        run: poetry run mkdocs gh-deploy --force
+        run: uv run mkdocs gh-deploy --force

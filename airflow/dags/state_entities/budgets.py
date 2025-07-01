@@ -1,4 +1,5 @@
 """Load state entity budgets from ebudget site."""
+
 from __future__ import annotations
 
 import re

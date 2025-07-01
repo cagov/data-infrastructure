@@ -7,7 +7,8 @@ budgets as (select * from {{ ref("stg_ebudget__budgets") }}),
 
 active_agencies_and_departments as (
     -- only select at deparment level or higher
-    select * from active_entities where coalesce(l2, l3) is null
+    select * from active_entities
+    where coalesce(l2, l3) is null
 ),
 
 active_entity_budgets as (

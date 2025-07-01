@@ -49,7 +49,7 @@ def write_building_footprints(conn, kind: str):
         gdf.to_file(f"{file_prefix}.shz")
 
         print(
-            f"Loading {file_prefix}. This is number {index+1} out of {len(counties)} counties."
+            f"Loading {file_prefix}. This is number {index + 1} out of {len(counties)} counties."
         )
 
         s3 = s3fs.S3FileSystem(anon=False)
