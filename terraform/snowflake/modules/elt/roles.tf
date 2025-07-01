@@ -229,7 +229,7 @@ resource "snowflake_grant_account_role" "streamlit_to_reporter" {
 resource "snowflake_grant_privileges_to_account_role" "streamlit_future_streamlit_privileges" {
   provider          = snowflake.useradmin
   account_role_name = snowflake_account_role.streamlit_access_role.name
-  privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
+  privileges        = ["CREATE STREAMLIT", "CREATE STAGE", "CREATE NOTEBOOK"]
   on_schema {
     future_schemas_in_database = module.analytics.name
   }
@@ -239,7 +239,7 @@ resource "snowflake_grant_privileges_to_account_role" "streamlit_future_streamli
 resource "snowflake_grant_privileges_to_account_role" "streamlit_public_streamlit_privileges" {
   provider          = snowflake.useradmin
   account_role_name = snowflake_account_role.streamlit_access_role.name
-  privileges        = ["CREATE STREAMLIT", "CREATE STAGE"]
+  privileges        = ["CREATE STREAMLIT", "CREATE STAGE", "CREATE NOTEBOOK"]
   on_schema {
     schema_name = "${module.analytics.name}.PUBLIC"
   }
