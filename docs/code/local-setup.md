@@ -93,7 +93,6 @@ export SNOWFLAKE_WAREHOUSE=TRANSFORMING_XS_DEV
 export SNOWFLAKE_AUTHENTICATOR=ExternalBrowser
 ```
 
-This will enable you to perform transforming activities which are needed for dbt.
 Open a new terminal and verify that the environment variables are set.
 
 **Switch to Loader role**
@@ -112,7 +111,7 @@ export SNOWFLAKE_WAREHOUSE=LOADING_XS_DEV
 export SNOWFLAKE_AUTHENTICATOR=ExternalBrowser
 ```
 
-This will enable you to perform loading activities which are needed for Airflow or Fivetran.
+This will enable you develop scripts for loading raw data into the development environment.
 Again, open a new terminal and verify that the environment variables are set.
 
 ## Configure AWS (optional)
