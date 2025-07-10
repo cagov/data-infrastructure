@@ -24,7 +24,7 @@ subgraph External Data Source
 subgraph AWS
   direction TB
   A[\AWS S3 Bucket/]
-  subgraph Caltrans Snowflake
+  subgraph ODI Snowflake
     subgraph PRD
         direction TB
         RP[(RAW_PRD)]
