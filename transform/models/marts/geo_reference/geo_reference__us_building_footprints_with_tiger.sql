@@ -17,21 +17,21 @@ places_source as (
 
 blocks as ( -- noqa: ST03
     select
-        "COUNTYFP20" as "county_fips",
-        "TRACTCE20" as "tract",
-        "BLOCKCE20" as "block",
-        "GEOID20" as "block_geoid",
+        countyfp20 as "county_fips",
+        tractce20 as "tract",
+        blockce20 as "block",
+        geoid20 as "block_geoid",
         "geometry"
     from blocks_source
 ),
 
 places as ( -- noqa: ST03
     select
-        "PLACEFP" as "place_fips",
-        "PLACENS" as "place_ns",
-        "GEOID" as "place_geoid",
-        "NAME" as "place_name",
-        "CLASSFP" as "class_fips_code",
+        placefp as "place_fips",
+        placens as "place_ns",
+        geoid as "place_geoid",
+        name as "place_name",
+        classfp as "class_fips_code",
         {{ map_class_fips("CLASSFP") }} as "class_fips",
         "geometry"
     from places_source
