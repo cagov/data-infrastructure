@@ -129,7 +129,6 @@
       'table_database': node.database,
       'resource_type': resource_type,
       'validation_status': 'TABLE_NOT_FOUND',
-      'validation_message': resource_type | title ~ ' not found in database',
       'actual_column_count': 0,
       'documented_column_count': 0,
       'documented_but_missing_columns': [],
@@ -176,15 +175,11 @@
         {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
-  {%- endif -%}
-
-  -- Determine validation status and messages
+  {%- endif -%}  -- Determine validation status
   {%- set validation_status = 'SCHEMA_MATCH' -%}
-  {%- set validation_messages = [] -%}
 
   {%- if documented_but_missing_columns | length > 0 -%}
     {%- set validation_status = 'DOCUMENTED_BUT_MISSING_COLUMNS' -%}
-    {%- do validation_messages.append('Documented but missing columns: ' ~ documented_but_missing_columns | join(', ')) -%}
   {%- endif -%}
 
   {%- if undocumented_columns | length > 0 -%}
@@ -193,7 +188,6 @@
     {%- else -%}
       {%- set validation_status = 'MULTIPLE_ISSUES' -%}
     {%- endif -%}
-    {%- do validation_messages.append('Undocumented columns: ' ~ undocumented_columns | join(', ')) -%}
   {%- endif -%}
 
   {%- if data_type_mismatches | length > 0 -%}
@@ -202,13 +196,6 @@
     {%- else -%}
       {%- set validation_status = 'MULTIPLE_ISSUES' -%}
     {%- endif -%}
-    {%- do validation_messages.append('Data type mismatches: ' ~ data_type_mismatches | join(', ')) -%}
-  {%- endif -%}
-
-  {%- if validation_messages | length == 0 -%}
-    {%- set validation_message = 'Schema matches documentation' -%}
-  {%- else -%}
-    {%- set validation_message = validation_messages | join('; ') -%}
   {%- endif -%}
 
   {%- set result = {
@@ -217,7 +204,6 @@
     'table_database': node.database,
     'resource_type': resource_type,
     'validation_status': validation_status,
-    'validation_message': validation_message,
     'actual_column_count': actual_columns | length,
     'documented_column_count': documented_columns | length,
     'documented_but_missing_columns': documented_but_missing_columns,
