@@ -175,7 +175,9 @@
         {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
-  {%- endif -%}  -- Determine validation status
+  {%- endif -%}
+
+  -- Determine validation status
   {%- set validation_status = 'SCHEMA_MATCH' -%}
 
   {%- if documented_but_missing_columns | length > 0 -%}
@@ -248,31 +250,6 @@
     {%- if node.resource_type == 'model' and node.columns -%}
       {%- set result = _validate_single_table_schema(node, table_columns_info, 'model') -%}
       {%- do validation_results.append(result) -%}
-
-      -- Log the result based on errors_only flag
-      {%- if result.validation_status == 'SCHEMA_MATCH' -%}
-        {%- if not errors_only -%}
-          {{ log('✅ Model ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
-        {%- endif -%}
-      {%- elif result.validation_status == 'TABLE_NOT_FOUND' -%}
-        {%- do tables_with_errors.append(result.table_name) -%}
-        {{ log('❌ Model ' ~ result.table_name ~ ': Model not found in database (may not be built yet)', info=True) }}
-      {%- else -%}
-        {%- do tables_with_errors.append(result.table_name) -%}
-        {{ log('❌ Model ' ~ result.table_name ~ ':', info=True) }}
-        {%- if result.documented_but_missing_columns | length > 0 -%}
-          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
-        {%- endif -%}
-        {%- if result.undocumented_columns | length > 0 -%}
-          {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
-        {%- endif -%}
-        {%- if result.data_type_mismatches | length > 0 -%}
-          {{ log('   • Data type mismatches:', info=True) }}
-          {%- for mismatch in result.data_type_mismatches -%}
-            {{ log('     - ' ~ mismatch, info=True) }}
-          {%- endfor -%}
-        {%- endif -%}
-      {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
 
@@ -281,30 +258,39 @@
     {%- if source.columns -%}
       {%- set result = _validate_single_table_schema(source, table_columns_info, 'source') -%}
       {%- do validation_results.append(result) -%}
+    {%- endif -%}
+  {%- endfor -%}
 
-      -- Log the result based on errors_only flag
-      {%- if result.validation_status == 'SCHEMA_MATCH' -%}
-        {%- if not errors_only -%}
-          {{ log('✅ Source ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
-        {%- endif -%}
-      {%- elif result.validation_status == 'TABLE_NOT_FOUND' -%}
-        {%- do tables_with_errors.append(result.table_name) -%}
-        {{ log('❌ Source ' ~ result.table_name ~ ': Source not found in database', info=True) }}
+  -- Process all validation results
+  {%- for result in validation_results -%}
+    {%- set resource_type = result.resource_type -%}
+
+    -- Log the result based on errors_only flag
+    {%- if result.validation_status == 'SCHEMA_MATCH' -%}
+      {%- if not errors_only -%}
+        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
+      {%- endif -%}
+    {%- elif result.validation_status == 'TABLE_NOT_FOUND' -%}
+      {%- do tables_with_errors.append(result.table_name) -%}
+      {%- if resource_type == 'model' -%}
+        {{ log('❌ Model ' ~ result.table_name ~ ': Model not found in database (may not be built yet)', info=True) }}
       {%- else -%}
-        {%- do tables_with_errors.append(result.table_name) -%}
-        {{ log('❌ Source ' ~ result.table_name ~ ':', info=True) }}
-        {%- if result.documented_but_missing_columns | length > 0 -%}
-          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
-        {%- endif -%}
-        {%- if result.undocumented_columns | length > 0 -%}
-          {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
-        {%- endif -%}
-        {%- if result.data_type_mismatches | length > 0 -%}
-          {{ log('   • Data type mismatches:', info=True) }}
-          {%- for mismatch in result.data_type_mismatches -%}
-            {{ log('     - ' ~ mismatch, info=True) }}
-          {%- endfor -%}
-        {%- endif -%}
+        {{ log('❌ Source ' ~ result.table_name ~ ': Source not found in database', info=True) }}
+      {%- endif -%}
+    {%- else -%}
+      {%- do tables_with_errors.append(result.table_name) -%}
+      {{ log('❌ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ':', info=True) }}
+      {%- if result.documented_but_missing_columns | length > 0 -%}
+        {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
+      {%- endif -%}
+      {%- if result.undocumented_columns | length > 0 -%}
+        {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
+      {%- endif -%}
+      {%- if result.data_type_mismatches | length > 0 -%}
+        {{ log('   • Data type mismatches:', info=True) }}
+        {%- for mismatch in result.data_type_mismatches -%}
+          {{ log('     - ' ~ mismatch, info=True) }}
+        {%- endfor -%}
       {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
