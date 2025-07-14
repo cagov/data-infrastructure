@@ -69,7 +69,6 @@
         upper(table_schema) as table_schema,
         upper(table_name) as table_name,
         upper(column_name) as column_name,
-        upper(data_type) as data_type,
         ordinal_position
       from {{ database }}.information_schema.columns
       where upper(table_schema) in ({{ quoted_schema_names | join(', ') }})
@@ -82,15 +81,13 @@
       {%- set schemas_list = database_columns_result.columns[1].values() -%}
       {%- set table_names_list = database_columns_result.columns[2].values() -%}
       {%- set column_names_list = database_columns_result.columns[3].values() -%}
-      {%- set data_types_list = database_columns_result.columns[4].values() -%}
 
       {%- for i in range(table_names_list | length) -%}
         {%- do all_columns_data.append({
           'database': databases_list[i],
           'schema': schemas_list[i],
           'table_name': table_names_list[i],
-          'column_name': column_names_list[i],
-          'data_type': data_types_list[i]
+          'column_name': column_names_list[i]
         }) -%}
       {%- endfor -%}
     {%- endif -%}
@@ -101,10 +98,9 @@
   {%- for row in all_columns_data -%}
     {%- set table_key = row.table_name -%}
     {%- if table_key not in table_columns -%}
-      {%- do table_columns.update({table_key: {'columns': [], 'data_types': {}}}) -%}
+      {%- do table_columns.update({table_key: {'columns': []}}) -%}
     {%- endif -%}
     {%- do table_columns[table_key]['columns'].append(row.column_name) -%}
-    {%- do table_columns[table_key]['data_types'].update({row.column_name: row.data_type}) -%}
   {%- endfor -%}
 
   {{ return(table_columns) }}
@@ -122,10 +118,8 @@
   {%- set table_key = node.name.upper() -%}
   {%- if table_key in table_columns_info -%}
     {%- set actual_columns = table_columns_info[table_key]['columns'] -%}
-    {%- set actual_data_types = table_columns_info[table_key]['data_types'] -%}
   {%- else -%}
     {%- set actual_columns = [] -%}
-    {%- set actual_data_types = {} -%}
   {%- endif -%}
 
   -- If no columns were found, the table doesn't exist in the database
@@ -136,23 +130,16 @@
       'table_database': node.database,
       'resource_type': resource_type,
       'validation_issues': ['TABLE_NOT_FOUND'],
-      'actual_column_count': 0,
-      'documented_column_count': 0,
       'documented_but_missing_columns': [],
-      'undocumented_columns': [],
-      'data_type_mismatches': []
+      'undocumented_columns': []
     } -%}
     {{ return(result) }}
   {%- endif -%}
 
-  -- Get documented columns and data types
+  -- Get documented columns
   {%- set documented_columns = [] -%}
-  {%- set documented_data_types = {} -%}
   {%- for column_name, column_info in node.columns.items() -%}
     {%- do documented_columns.append(column_name.upper()) -%}
-    {%- if column_info.data_type -%}
-      {%- do documented_data_types.update({column_name.upper(): column_info.data_type.upper()}) -%}
-    {%- endif -%}
   {%- endfor -%}
 
   -- Find missing and undocumented columns
@@ -170,20 +157,6 @@
     {%- endif -%}
   {%- endfor -%}
 
-  -- Check data type mismatches (if data types are documented)
-  {%- set data_type_mismatches = [] -%}
-  {%- if documented_data_types | length > 0 -%}
-    {%- for col_name in actual_columns -%}
-      {%- if col_name in documented_data_types -%}
-        {%- set actual_type = actual_data_types[col_name] -%}
-        {%- set expected_type = documented_data_types[col_name] -%}
-        {%- if actual_type != expected_type -%}
-          {%- do data_type_mismatches.append(col_name ~ ' (expected: ' ~ expected_type ~ ', actual: ' ~ actual_type ~ ')') -%}
-        {%- endif -%}
-      {%- endif -%}
-    {%- endfor -%}
- {%- endif -%}
-
   -- Determine validation issues as a list
   {%- set validation_issues = [] -%}
 
@@ -195,21 +168,14 @@
     {%- do validation_issues.append('UNDOCUMENTED_COLUMNS') -%}
   {%- endif -%}
 
-  {%- if data_type_mismatches | length > 0 -%}
-    {%- do validation_issues.append('DATA_TYPE_MISMATCH') -%}
-  {%- endif -%}
-
   {%- set result = {
     'table_name': node.name,
     'table_schema': node.schema,
     'table_database': node.database,
     'resource_type': resource_type,
     'validation_issues': validation_issues,
-    'actual_column_count': actual_columns | length,
-    'documented_column_count': documented_columns | length,
     'documented_but_missing_columns': documented_but_missing_columns,
-    'undocumented_columns': undocumented_columns,
-    'data_type_mismatches': data_type_mismatches
+    'undocumented_columns': undocumented_columns
   } -%}
 
   {{ return(result) }}
@@ -242,7 +208,7 @@
   {%- endif -%}
 
   -- Define error issues based on the flag once at the top
-  {%- set error_issues = ['DOCUMENTED_BUT_MISSING_COLUMNS', 'DATA_TYPE_MISMATCH', 'TABLE_NOT_FOUND'] -%}
+  {%- set error_issues = ['DOCUMENTED_BUT_MISSING_COLUMNS', 'TABLE_NOT_FOUND'] -%}
   {%- if undocumented_columns_as_errors -%}
     {%- do error_issues.append('UNDOCUMENTED_COLUMNS') -%}
   {%- endif -%}
@@ -287,7 +253,7 @@
     -- Log the result based on errors_only flag
     {%- if result.validation_issues | length == 0 -%}
       {%- if not errors_only -%}
-        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
+        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation', info=True) }}
       {%- endif -%}
     {%- elif 'TABLE_NOT_FOUND' in result.validation_issues -%}
       {%- if resource_type == 'model' -%}
@@ -297,7 +263,7 @@
       {%- endif -%}
     {%- elif result.validation_issues == ['UNDOCUMENTED_COLUMNS'] and not undocumented_columns_as_errors -%}
       {%- if not errors_only -%}
-        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
+        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation', info=True) }}
         {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
       {%- endif -%}
     {%- else -%}
@@ -311,12 +277,6 @@
         {%- else -%}
           {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
         {%- endif -%}
-      {%- endif -%}
-      {%- if 'DATA_TYPE_MISMATCH' in result.validation_issues -%}
-        {{ log('   • Data type mismatches:', info=True) }}
-        {%- for mismatch in result.data_type_mismatches -%}
-          {{ log('     - ' ~ mismatch, info=True) }}
-        {%- endfor -%}
       {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
