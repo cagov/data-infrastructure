@@ -135,7 +135,7 @@
       'validation_message': resource_type | title ~ ' not found in database',
       'actual_column_count': 0,
       'documented_column_count': 0,
-      'missing_columns': [],
+      'documented_but_missing_columns': [],
       'undocumented_columns': [],
       'data_type_mismatches': []
     } -%}
@@ -153,10 +153,10 @@
   {%- endfor -%}
 
   -- Find missing and undocumented columns
-  {%- set missing_columns = [] -%}
+  {%- set documented_but_missing_columns = [] -%}
   {%- for col in documented_columns -%}
     {%- if col not in actual_columns -%}
-      {%- do missing_columns.append(col) -%}
+      {%- do documented_but_missing_columns.append(col) -%}
     {%- endif -%}
   {%- endfor -%}
 
@@ -185,9 +185,9 @@
   {%- set validation_status = 'SCHEMA_MATCH' -%}
   {%- set validation_messages = [] -%}
 
-  {%- if missing_columns | length > 0 -%}
-    {%- set validation_status = 'MISSING_COLUMNS' -%}
-    {%- do validation_messages.append('Missing columns: ' ~ missing_columns | join(', ')) -%}
+  {%- if documented_but_missing_columns | length > 0 -%}
+    {%- set validation_status = 'DOCUMENTED_BUT_MISSING_COLUMNS' -%}
+    {%- do validation_messages.append('Documented but missing columns: ' ~ documented_but_missing_columns | join(', ')) -%}
   {%- endif -%}
 
   {%- if undocumented_columns | length > 0 -%}
@@ -223,7 +223,7 @@
     'validation_message': validation_message,
     'actual_column_count': actual_columns | length,
     'documented_column_count': documented_columns | length,
-    'missing_columns': missing_columns,
+    'documented_but_missing_columns': documented_but_missing_columns,
     'undocumented_columns': undocumented_columns,
     'data_type_mismatches': data_type_mismatches
   } -%}
@@ -269,8 +269,8 @@
         {{ log('⚠️  Model ' ~ result.table_name ~ ': Model not found in database (may not be built yet)', info=True) }}
       {%- else -%}
         {{ log('❌ Model ' ~ result.table_name ~ ':', info=True) }}
-        {%- if result.missing_columns | length > 0 -%}
-          {{ log('   • Missing columns: ' ~ result.missing_columns | join(', '), info=True) }}
+        {%- if result.documented_but_missing_columns | length > 0 -%}
+          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
         {%- endif -%}
         {%- if result.undocumented_columns | length > 0 -%}
           {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
@@ -298,8 +298,8 @@
         {{ log('⚠️  Source ' ~ result.table_name ~ ': Source not found in database', info=True) }}
       {%- else -%}
         {{ log('❌ Source ' ~ result.table_name ~ ':', info=True) }}
-        {%- if result.missing_columns | length > 0 -%}
-          {{ log('   • Missing columns: ' ~ result.missing_columns | join(', '), info=True) }}
+        {%- if result.documented_but_missing_columns | length > 0 -%}
+          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
         {%- endif -%}
         {%- if result.undocumented_columns | length > 0 -%}
           {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
@@ -317,7 +317,7 @@
   {%- set total_tables = validation_results | length -%}
   {%- set models_count = validation_results | selectattr('resource_type', '==', 'model') | list | length -%}
   {%- set sources_count = validation_results | selectattr('resource_type', '==', 'source') | list | length -%}
-  {%- set failed_tables = validation_results | selectattr('validation_status', 'in', ['MISSING_COLUMNS', 'UNDOCUMENTED_COLUMNS', 'DATA_TYPE_MISMATCH', 'MULTIPLE_ISSUES']) | list | length -%}
+  {%- set failed_tables = validation_results | selectattr('validation_status', 'in', ['DOCUMENTED_BUT_MISSING_COLUMNS', 'UNDOCUMENTED_COLUMNS', 'DATA_TYPE_MISMATCH', 'MULTIPLE_ISSUES']) | list | length -%}
   {%- set tables_not_found = validation_results | selectattr('validation_status', '==', 'TABLE_NOT_FOUND') | list | length -%}
   {%- set matching_tables = validation_results | selectattr('validation_status', '==', 'SCHEMA_MATCH') | list | length -%}
 
@@ -367,8 +367,8 @@
       {%- if result.validation_status not in ['SCHEMA_MATCH', 'TABLE_NOT_FOUND'] -%}
         {%- do tables_with_errors.append(result.table_name) -%}
         {{ log('❌ Model ' ~ result.table_name ~ ':', info=True) }}
-        {%- if result.missing_columns | length > 0 -%}
-          {{ log('   • Missing columns: ' ~ result.missing_columns | join(', '), info=True) }}
+        {%- if result.documented_but_missing_columns | length > 0 -%}
+          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
         {%- endif -%}
         {%- if result.undocumented_columns | length > 0 -%}
           {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
@@ -393,8 +393,8 @@
       {%- if result.validation_status not in ['SCHEMA_MATCH', 'TABLE_NOT_FOUND'] -%}
         {%- do tables_with_errors.append(result.table_name) -%}
         {{ log('❌ Source ' ~ result.table_name ~ ':', info=True) }}
-        {%- if result.missing_columns | length > 0 -%}
-          {{ log('   • Missing columns: ' ~ result.missing_columns | join(', '), info=True) }}
+        {%- if result.documented_but_missing_columns | length > 0 -%}
+          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
         {%- endif -%}
         {%- if result.undocumented_columns | length > 0 -%}
           {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
