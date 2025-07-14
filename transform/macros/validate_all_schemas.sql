@@ -289,16 +289,16 @@
       {%- if not errors_only -%}
         {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
       {%- endif -%}
-    {%- elif 'UNDOCUMENTED_COLUMNS' in result.validation_issues and not undocumented_columns_as_errors -%}
-      {%- if not errors_only -%}
-        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
-        {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
-      {%- endif -%}
     {%- elif 'TABLE_NOT_FOUND' in result.validation_issues -%}
       {%- if resource_type == 'model' -%}
         {{ log('❌ Model ' ~ result.table_name ~ ': Model not found in database (may not be built yet)', info=True) }}
       {%- else -%}
         {{ log('❌ Source ' ~ result.table_name ~ ': Source not found in database', info=True) }}
+      {%- endif -%}
+    {%- elif result.validation_issues == ['UNDOCUMENTED_COLUMNS'] and not undocumented_columns_as_errors -%}
+      {%- if not errors_only -%}
+        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
+        {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
       {%- endif -%}
     {%- else -%}
       {{ log('❌ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ':', info=True) }}
