@@ -49,11 +49,18 @@
 
   {%- set all_columns_data = [] -%}
 
-  -- Query each database separately
+  -- Query each database separately, filtering only by schemas (much more efficient)
   {%- for database, tables in databases.items() -%}
-    {%- set table_conditions = [] -%}
+    {%- set schema_names = [] -%}
     {%- for table in tables -%}
-      {%- do table_conditions.append("(upper(table_name) = upper('" ~ table.name ~ "') and upper(table_schema) = upper('" ~ table.schema ~ "'))") -%}
+      {%- if table.schema not in schema_names -%}
+        {%- do schema_names.append(table.schema) -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- set quoted_schema_names = [] -%}
+    {%- for schema in schema_names -%}
+      {%- do quoted_schema_names.append("'" ~ schema.upper() ~ "'") -%}
     {%- endfor -%}
 
     {%- set database_columns_query -%}
@@ -65,7 +72,7 @@
         upper(data_type) as data_type,
         ordinal_position
       from {{ database }}.information_schema.columns
-      where ({{ table_conditions | join(' or ') }})
+      where upper(table_schema) in ({{ quoted_schema_names | join(', ') }})
       order by table_catalog, table_schema, table_name, ordinal_position
     {%- endset -%}
 
@@ -128,7 +135,7 @@
       'table_schema': node.schema,
       'table_database': node.database,
       'resource_type': resource_type,
-      'validation_status': 'TABLE_NOT_FOUND',
+      'validation_issues': ['TABLE_NOT_FOUND'],
       'actual_column_count': 0,
       'documented_column_count': 0,
       'documented_but_missing_columns': [],
@@ -175,29 +182,21 @@
         {%- endif -%}
       {%- endif -%}
     {%- endfor -%}
-  {%- endif -%}
+ {%- endif -%}
 
-  -- Determine validation status
-  {%- set validation_status = 'SCHEMA_MATCH' -%}
+  -- Determine validation issues as a list
+  {%- set validation_issues = [] -%}
 
   {%- if documented_but_missing_columns | length > 0 -%}
-    {%- set validation_status = 'DOCUMENTED_BUT_MISSING_COLUMNS' -%}
+    {%- do validation_issues.append('DOCUMENTED_BUT_MISSING_COLUMNS') -%}
   {%- endif -%}
 
   {%- if undocumented_columns | length > 0 -%}
-    {%- if validation_status == 'SCHEMA_MATCH' -%}
-      {%- set validation_status = 'UNDOCUMENTED_COLUMNS' -%}
-    {%- else -%}
-      {%- set validation_status = 'MULTIPLE_ISSUES' -%}
-    {%- endif -%}
+    {%- do validation_issues.append('UNDOCUMENTED_COLUMNS') -%}
   {%- endif -%}
 
   {%- if data_type_mismatches | length > 0 -%}
-    {%- if validation_status == 'SCHEMA_MATCH' -%}
-      {%- set validation_status = 'DATA_TYPE_MISMATCH' -%}
-    {%- else -%}
-      {%- set validation_status = 'MULTIPLE_ISSUES' -%}
-    {%- endif -%}
+    {%- do validation_issues.append('DATA_TYPE_MISMATCH') -%}
   {%- endif -%}
 
   {%- set result = {
@@ -205,7 +204,7 @@
     'table_schema': node.schema,
     'table_database': node.database,
     'resource_type': resource_type,
-    'validation_status': validation_status,
+    'validation_issues': validation_issues,
     'actual_column_count': actual_columns | length,
     'documented_column_count': documented_columns | length,
     'documented_but_missing_columns': documented_but_missing_columns,
@@ -225,25 +224,34 @@
   Usage:
     dbt run-operation validate_all_schemas  # Show all results (successes and failures)
     dbt run-operation validate_all_schemas --args '{"errors_only": true}'  # Show only failures
+    dbt run-operation validate_all_schemas --args '{"undocumented_columns_as_errors": false}'  # Treat undocumented columns as warnings
 
   Args:
     errors_only (bool): If true, only shows tables with validation errors. Default: false
+    undocumented_columns_as_errors (bool): If true, treats undocumented columns as validation errors.
+                                          If false, undocumented columns are reported but don't cause failure. Default: true
 
   Note: This macro uses the dbt graph and should only be used in run-operations,
   not in models or analyses. The macro will always raise an error if validation issues are found.
 */
 
-{%- macro validate_all_schemas(errors_only=false) -%}
+{%- macro validate_all_schemas(errors_only=false, undocumented_columns_as_errors=true) -%}
 
   {%- if not graph or not graph.nodes -%}
     {{ exceptions.raise_compiler_error("Error: This macro requires access to the dbt graph. Use 'dbt run-operation validate_all_schemas' instead of calling it from a model or analysis.") }}
+  {%- endif -%}
+
+  -- Define error issues based on the flag once at the top
+  {%- set error_issues = ['DOCUMENTED_BUT_MISSING_COLUMNS', 'DATA_TYPE_MISMATCH', 'TABLE_NOT_FOUND'] -%}
+  {%- if undocumented_columns_as_errors -%}
+    {%- do error_issues.append('UNDOCUMENTED_COLUMNS') -%}
   {%- endif -%}
 
   -- Get all table column information in a single query
   {%- set table_columns_info = _get_all_table_columns() -%}
 
   {%- set validation_results = [] -%}
-  {%- set tables_with_errors = [] -%}
+  {%- set failed_tables_list = [] -%}
 
   -- Validate models
   {%- for node_id, node in graph.nodes.items() -%}
@@ -265,28 +273,46 @@
   {%- for result in validation_results -%}
     {%- set resource_type = result.resource_type -%}
 
+    -- Check if this table has any error issues
+    {%- set has_errors = false -%}
+    {%- for issue in result.validation_issues -%}
+      {%- if issue in error_issues -%}
+        {%- if not has_errors -%}
+          {%- do failed_tables_list.append(result.table_name) -%}
+          {%- set has_errors = true -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+
     -- Log the result based on errors_only flag
-    {%- if result.validation_status == 'SCHEMA_MATCH' -%}
+    {%- if result.validation_issues | length == 0 -%}
       {%- if not errors_only -%}
         {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
       {%- endif -%}
-    {%- elif result.validation_status == 'TABLE_NOT_FOUND' -%}
-      {%- do tables_with_errors.append(result.table_name) -%}
+    {%- elif 'UNDOCUMENTED_COLUMNS' in result.validation_issues and not undocumented_columns_as_errors -%}
+      {%- if not errors_only -%}
+        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation (' ~ result.actual_column_count ~ ' columns)', info=True) }}
+        {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
+      {%- endif -%}
+    {%- elif 'TABLE_NOT_FOUND' in result.validation_issues -%}
       {%- if resource_type == 'model' -%}
         {{ log('❌ Model ' ~ result.table_name ~ ': Model not found in database (may not be built yet)', info=True) }}
       {%- else -%}
         {{ log('❌ Source ' ~ result.table_name ~ ': Source not found in database', info=True) }}
       {%- endif -%}
     {%- else -%}
-      {%- do tables_with_errors.append(result.table_name) -%}
       {{ log('❌ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ':', info=True) }}
-      {%- if result.documented_but_missing_columns | length > 0 -%}
+      {%- if 'DOCUMENTED_BUT_MISSING_COLUMNS' in result.validation_issues -%}
         {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
       {%- endif -%}
-      {%- if result.undocumented_columns | length > 0 -%}
-        {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
+      {%- if 'UNDOCUMENTED_COLUMNS' in result.validation_issues -%}
+        {%- if undocumented_columns_as_errors -%}
+          {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
+        {%- else -%}
+          {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
+        {%- endif -%}
       {%- endif -%}
-      {%- if result.data_type_mismatches | length > 0 -%}
+      {%- if 'DATA_TYPE_MISMATCH' in result.validation_issues -%}
         {{ log('   • Data type mismatches:', info=True) }}
         {%- for mismatch in result.data_type_mismatches -%}
           {{ log('     - ' ~ mismatch, info=True) }}
@@ -298,25 +324,27 @@
   {%- set total_tables = validation_results | length -%}
   {%- set models_count = validation_results | selectattr('resource_type', '==', 'model') | list | length -%}
   {%- set sources_count = validation_results | selectattr('resource_type', '==', 'source') | list | length -%}
-  {%- set failed_tables = validation_results | selectattr('validation_status', 'in', ['DOCUMENTED_BUT_MISSING_COLUMNS', 'UNDOCUMENTED_COLUMNS', 'DATA_TYPE_MISMATCH', 'MULTIPLE_ISSUES', 'TABLE_NOT_FOUND']) | list | length -%}
-  {%- set matching_tables = validation_results | selectattr('validation_status', '==', 'SCHEMA_MATCH') | list | length -%}
+
+  -- Calculate counts using the failed_tables_list built during the first loop
+  {%- set failed_tables_count = failed_tables_list | length -%}
+  {%- set matching_tables_count = total_tables - failed_tables_count -%}
 
   -- Show summary unless errors_only is true and there are no errors
-  {%- if not errors_only or tables_with_errors | length > 0 -%}
+  {%- if not errors_only or failed_tables_list | length > 0 -%}
     {{ log('', info=True) }}
     {{ log('📊 Schema Validation Summary:', info=True) }}
     {{ log('   Total tables validated: ' ~ total_tables ~ ' (' ~ models_count ~ ' models, ' ~ sources_count ~ ' sources)', info=True) }}
     {%- if not errors_only -%}
-      {{ log('   Tables with matching schemas: ' ~ matching_tables, info=True) }}
-      {{ log('   Tables with schema issues: ' ~ failed_tables, info=True) }}
+      {{ log('   Tables with matching schemas: ' ~ matching_tables_count, info=True) }}
+      {{ log('   Tables with schema issues: ' ~ failed_tables_count, info=True) }}
     {%- else -%}
-      {{ log('   Tables with schema issues: ' ~ failed_tables, info=True) }}
+      {{ log('   Tables with schema issues: ' ~ failed_tables_count, info=True) }}
     {%- endif -%}
   {%- endif -%}
 
   -- Handle validation errors - always fail if errors are found
-  {%- if tables_with_errors | length > 0 -%}
-    {{ exceptions.raise_compiler_error('Schema validation failed! ' ~ tables_with_errors | length ~ ' tables have validation errors.') }}
+  {%- if failed_tables_list | length > 0 -%}
+    {{ exceptions.raise_compiler_error('Schema validation failed! ' ~ failed_tables_list | length ~ ' tables have validation errors.') }}
   {%- elif errors_only -%}
     {{ log('✅ No schema validation errors found!', info=True) }}
   {%- endif -%}
