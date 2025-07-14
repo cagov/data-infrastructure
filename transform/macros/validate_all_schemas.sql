@@ -174,7 +174,7 @@
       {%- if col_name in documented_data_types -%}
         {%- set actual_type = actual_data_types[col_name] -%}
         {%- set expected_type = documented_data_types[col_name] -%}
-        {%- if not (actual_type.startswith(expected_type) or expected_type.startswith(actual_type)) -%}
+        {%- if actual_type != expected_type -%}
           {%- do data_type_mismatches.append(col_name ~ ' (expected: ' ~ expected_type ~ ', actual: ' ~ actual_type ~ ')') -%}
         {%- endif -%}
       {%- endif -%}
