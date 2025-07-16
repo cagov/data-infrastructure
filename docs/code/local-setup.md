@@ -15,6 +15,8 @@ We use `uv` to manage our Python virtual environments.
 If you have not yet installed it on your system,
 you can follow the instructions for it [here](https://docs.astral.sh/uv/getting-started/installation/).
 Most of the ODI team uses [Homebrew](https://brew.sh) to install the package.
+We do not recommend installing `uv` using `pip`: as a tool for managing Python environments,
+it makes sense for it to live outside of a particular Python distribution.
 
 ### 2. Install Python dependencies
 
