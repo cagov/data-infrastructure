@@ -12,7 +12,7 @@
 
   -- Add models to the list
   {%- for node_id, node in graph.nodes.items() -%}
-    {%- if node.resource_type == 'model' and node.columns -%}
+    {%- if node.resource_type == 'model' -%}
       {%- do table_info.append({
         'name': node.name,
         'schema': node.schema,
@@ -24,14 +24,12 @@
 
   -- Add sources to the list
   {%- for source_id, source in graph.sources.items() -%}
-    {%- if source.columns -%}
-      {%- do table_info.append({
-        'name': source.name,
-        'schema': source.schema,
-        'database': source.database,
-        'type': 'source'
-      }) -%}
-    {%- endif -%}
+    {%- do table_info.append({
+      'name': source.name,
+      'schema': source.schema,
+      'database': source.database,
+      'type': 'source'
+    }) -%}
   {%- endfor -%}
 
   {%- if table_info | length == 0 -%}
@@ -138,9 +136,11 @@
 
   -- Get documented columns
   {%- set documented_columns = [] -%}
-  {%- for column_name, column_info in node.columns.items() -%}
-    {%- do documented_columns.append(column_name.upper()) -%}
-  {%- endfor -%}
+  {%- if node.columns -%}
+    {%- for column_name, column_info in node.columns.items() -%}
+      {%- do documented_columns.append(column_name.upper()) -%}
+    {%- endfor -%}
+  {%- endif -%}
 
   -- Find missing and undocumented columns
   {%- set documented_but_missing_columns = [] -%}
@@ -221,7 +221,7 @@
 
   -- Validate models
   {%- for node_id, node in graph.nodes.items() -%}
-    {%- if node.resource_type == 'model' and node.columns -%}
+    {%- if node.resource_type == 'model' -%}
       {%- set result = _validate_single_table_schema(node, table_columns_info, 'model') -%}
       {%- do validation_results.append(result) -%}
     {%- endif -%}
@@ -229,10 +229,8 @@
 
   -- Validate sources
   {%- for source_id, source in graph.sources.items() -%}
-    {%- if source.columns -%}
-      {%- set result = _validate_single_table_schema(source, table_columns_info, 'source') -%}
-      {%- do validation_results.append(result) -%}
-    {%- endif -%}
+    {%- set result = _validate_single_table_schema(source, table_columns_info, 'source') -%}
+    {%- do validation_results.append(result) -%}
   {%- endfor -%}
 
   -- Process all validation results
