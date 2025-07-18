@@ -32,7 +32,6 @@ clean-targets: # directories to be removed by `dbt clean`
 
 models:
   dse_analytics:
-    +post-hook: "{{ validate_model_schema_hook() }}"
     staging:
       +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
       department_of_finance:

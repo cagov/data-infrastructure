@@ -31,7 +31,7 @@ repos:
         args: [--warn-unused-configs]
         additional_dependencies:
           # Type stubs
-          - pandas-stubs
+          - pandas-stubs==v2.2.3.250527
           - types-requests
           - numpy
   - repo: https://github.com/pre-commit/mirrors-prettier
