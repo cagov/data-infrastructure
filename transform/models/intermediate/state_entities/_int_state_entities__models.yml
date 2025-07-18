@@ -108,3 +108,4 @@ models:
         description: Variant of name for easier alphabetization
       - name: budget_year_dollars
         description: Budget for current fiscal year.
+      - name: budget_name

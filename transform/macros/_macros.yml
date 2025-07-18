@@ -43,3 +43,26 @@ macros:
         description: |
           An optional prefix to give to temporary CTEs to improve legibility and
           avoid name collisions.
+
+  - name: validate_all_schemas
+    description: |
+      Macro to validate all model and source schemas in the project against their documentation.
+
+      This macro creates a comprehensive report of schema validation issues across all models
+      and sources in the project. It compares the documented columns in dbt YAML files with
+      the actual columns in the database tables/views.
+
+      The macro will always raise an error if validation issues are found, making it suitable
+      for use in CI/CD pipelines to enforce schema documentation standards.
+    arguments:
+      - name: errors_only
+        type: boolean
+        description: |
+          If true, only shows tables with validation errors. If false, shows all
+          validation results including successful matches. Defaults to false.
+      - name: undocumented_columns_as_errors
+        type: boolean
+        description: |
+          If true, treats undocumented columns as validation errors. If false,
+          undocumented columns are reported as warnings but don't cause failure.
+          Defaults to true.
