@@ -1,4 +1,5 @@
 """Load building footprints to Snowflake."""
+
 from __future__ import annotations
 
 import os

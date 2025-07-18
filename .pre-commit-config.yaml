@@ -11,11 +11,12 @@ repos:
       - id: check-merge-conflict
       - id: detect-aws-credentials
         args: [--allow-missing-credentials]
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.1.6
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.12.1
     hooks:
-      - id: ruff
-        args: [--show-source, --fix]
+      - id: ruff-check
+        args: [--show-files, --fix]
       - id: ruff-format
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.4
@@ -30,7 +31,7 @@ repos:
         args: [--warn-unused-configs]
         additional_dependencies:
           # Type stubs
-          - pandas-stubs==v1.5.3.230321
+          - pandas-stubs==v2.2.3.250527
           - types-requests
           - numpy
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -46,7 +47,7 @@ repos:
   # Note: for SQLFluff we don't use the default pre-commit hook because
   # the pre-commit managed python environment can be difficult to install,
   # especially due to issues with pyarrow being brought in by Snowflake.
-  # This keep things more predictable by using the poetry.lock environment.
+  # This keep things more predictable by using the uv.lock environment.
   - repo: local
     hooks:
       - id: sqlfluff
@@ -55,5 +56,5 @@ repos:
         description: "Lints sql files with `SQLFluff`"
         types: [sql]
         require_serial: true
-        entry: poetry run sqlfluff fix --show-lint-violations --nocolor --disable-progress-bar
+        entry: uv run sqlfluff fix --show-lint-violations --nocolor --disable-progress-bar
         pass_filenames: true

@@ -4,6 +4,7 @@ Python script to run airflow CLI commands in a MWAA environment.
 Adapted from sample code here:
 https://docs.aws.amazon.com/mwaa/latest/userguide/airflow-cli-command-reference.html#airflow-cli-command-examples
 """
+
 import base64
 import json
 import sys

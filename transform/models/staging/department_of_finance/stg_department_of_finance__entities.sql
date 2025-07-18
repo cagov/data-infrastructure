@@ -99,7 +99,7 @@ entities as (
         coalesce(l3, l2, l1, b, a) as primary_code,
         a as agency_code,
         case
-            when b in (select b from invalid_subagencies) then null else b
+            when b in (select invalid_subagencies.b from invalid_subagencies) then null else b
         end as subagency_code,
         l1,
         l2,
