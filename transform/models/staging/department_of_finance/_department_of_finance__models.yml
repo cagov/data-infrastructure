@@ -64,11 +64,11 @@ sources:
             description: TODO
           - name: bond_fund_total
             description: TODO
-          - name: capital_outlay_total
+          - name: cap_outlay_total
             description: TODO
-          - name: spr_include_co_fig
+          - name: spr_include_co_flg
             description: Unknown
-          - name: display_on_web_fig
+          - name: display_on_web_flg
             description: Unused
           - name: state_grand_total
             description: Total budget for the state, not this row (DO NOT USE)
@@ -91,7 +91,7 @@ sources:
           - name: program_code
             description: Four digit business unit code
             quote: true
-            tests:
+            data_tests:
               - not_null
               # Can't do unique because there are some duplicated administrative codes
               # - unique
@@ -109,7 +109,7 @@ sources:
             description: Unknown
           - name: by_pers_yrs
             description: Personnel for the fiscal year, in full-time-person-years
-          - name: spr_include_co_fig
+          - name: spr_include_co_flg
             description: Unknown
 
 models:
@@ -121,7 +121,7 @@ models:
         description: Name of the entity
       - name: primary_code
         description: The most specific non-null entity code
-        tests:
+        data_tests:
           - not_null
       - name: agency_code
         description: Agency code for entity
@@ -160,7 +160,7 @@ models:
     columns:
       - name: primary_code
         description: Four digit business unit code
-        tests:
+        data_tests:
           - not_null
           # There are duplicates!
           # - unique

@@ -203,6 +203,8 @@ sources:
             description: The internal ID of the database
           - name: DATABASE_NAME
             description: The name of the database
+          - name: DELETED
+            description: Date and time when the database was dropped; NULL for active databases.
           - name: AVERAGE_HYBRID_TABLE_STORAGE_BYTES
             description: Number of bytes in hybrid tables
           - name: AVERAGE_DATABASE_BYTES
