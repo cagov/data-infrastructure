@@ -44,6 +44,14 @@ Which approach to take is largely a matter of personal preference:
 - Using the `uv run` prefix is more reliable, as dependencies are *always* resolved before executing.
 - Using `source .venv/bin/activate` involves less typing.
 
+!!! note
+    `uv sync` may not work with certain network configurations. When SSL errors are encountered,
+    uv command line arguments can cautiously be used as a work around.
+    ```bash
+    uv sync --native-tls
+    uv sync --native-tls --allow-insecure-host pypi.org --allow-insecure-host files.pythonhosted.org
+    ```
+
 ### 3. Install go dependencies
 
 We use [Terraform](https://www.terraform.io/) to manage infrastructure.
@@ -134,7 +142,7 @@ mkdir ~/.dbt && touch ~/.dbt/profiles.yml
 ```
 
 !!! note
-    This will only work on posix-y systems. Windows users will have a different command.
+    This will only work on posix-y systems. Windows users will have a different command (except in Powershell).
 
 Instructions for writing a `profiles.yml` are documented
 [here](https://docs.getdbt.com/docs/get-started/connection-profiles),
@@ -198,6 +206,12 @@ dse_snowflake:
 You can include profiles for several databases in the same `profiles.yml`,
 (as well as targets for production), allowing you to develop in several projects
 using the same computer.
+
+### Handling SSL errors
+
+With certain network configurations, running `dbt deps` may result in SSL certificate errors. In
+such cases, installing the `pip-system-certs` package can help Python-based dbt installations work
+around these errors.
 
 ### Example VS Code setup
 
