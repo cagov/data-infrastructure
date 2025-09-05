@@ -69,7 +69,7 @@ and have our own set of [guidelines and best practices](../code/code-review.md) 
 
 ## Clone the project repo locally (with GitHub Desktop)
 
-1. Follow these instructions: [install GitHub Desktop](docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)
+1. Follow these instructions: [install GitHub Desktop](https://docs.github.com/en/desktop/installing-and-authenticating-to-github-desktop/installing-github-desktop)
 2. Be sure to login with the GitHub username you are using for this project
 3. Be sure to select the cagov/[repository_name] repository to clone.
 

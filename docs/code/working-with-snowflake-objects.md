@@ -304,4 +304,4 @@ then it may make sense to do some of the transformation in the Python session.
 There are no hard-and-fast rules here, and specific applications will have different tradeoffs!
 But when in doubt, we recommend you prefer doing transformations in the dbt layer.
 For more information about our default dbt project architecture,
-see [here](/infra/architecture/).
+see [here](../infra/architecture.md).
