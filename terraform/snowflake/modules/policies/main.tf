@@ -1,7 +1,10 @@
 ######################################
 #            Terraform               #
 ######################################
-
+# This module enforces Snowflake security by creating a POLICIES database,
+# defining strong default password/authentication policies for different user types,
+# setting Okta-only auth as the default (when enabled), and provisioning a Sentinel
+# legacy service user with the required role grants.
 ############################
 #         Providers        #
 ############################
@@ -117,4 +120,26 @@ resource "snowflake_account_authentication_policy_attachment" "default_policy" {
   count = var.okta_integration_name == null ? 0 : 1
   provider                   = snowflake.accountadmin
   authentication_policy      = snowflake_authentication_policy.odi_okta_only[0].fully_qualified_name // using the first and only instance that gets created
+}
+
+# Create a sentinel service user with password authentication (legacy service user)
+resource "snowflake_legacy_service_user" "sentinel" {
+  provider = snowflake.useradmin
+  name     = "SENTINEL_SVC_USER"
+  comment  = "Service user for Sentinel"
+  lifecycle {
+    ignore_changes = [rsa_public_key]
+  }
+
+  # Use the input variable here
+  default_warehouse = var.logging_warehouse_name
+  # Use the input variable here
+  default_role      = var.logger_role_name
+}
+
+resource "snowflake_grant_account_role" "logger_to_sentinel" {
+  provider  = snowflake.useradmin
+  # Use the input variable here
+  role_name = var.logger_role_name
+  user_name = snowflake_legacy_service_user.sentinel.name
 }

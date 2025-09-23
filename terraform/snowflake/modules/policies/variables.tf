@@ -9,3 +9,13 @@ variable "policies_database_name" {
   type        = string
   default     = "POLICIES"
 }
+
+variable "logging_warehouse_name" {
+  description = "The name of the warehouse to be used by the Sentinel service user."
+  type        = string
+}
+
+variable "logger_role_name" {
+  description = "The name of the role to be granted to the Sentinel service user."
+  type        = string
+}

@@ -50,18 +50,6 @@ resource "snowflake_service_user" "github_ci" {
   default_role      = snowflake_account_role.reader.name
 }
 
-resource "snowflake_legacy_service_user" "sentinel" {
-  provider = snowflake.useradmin
-  name     = "SENTINEL_SVC_USER_${var.environment}"
-  comment  = "Service user for Sentinel"
-  lifecycle {
-    ignore_changes = [rsa_public_key]
-  }
-
-  default_warehouse = module.logging.name
-  default_role      = snowflake_account_role.logger.name
-}
-
 ######################################
 #            Role Grants             #
 ######################################
@@ -88,10 +76,4 @@ resource "snowflake_grant_account_role" "reader_to_github_ci" {
   provider  = snowflake.useradmin
   role_name = snowflake_account_role.reader.name
   user_name = snowflake_service_user.github_ci.name
-}
-
-resource "snowflake_grant_account_role" "logger_to_sentinel" {
-  provider  = snowflake.useradmin
-  role_name = snowflake_account_role.logger.name
-  user_name = snowflake_legacy_service_user.sentinel.name
 }
