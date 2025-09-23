@@ -27,7 +27,7 @@ terraform {
 
 // Create the POLICIES database to store the password policy
 resource "snowflake_database" "policies" {
-  name = "POLICIES"
+  name = var.policies_database_name // name of the policies database from variable
 }
 
 # Default user password policy
