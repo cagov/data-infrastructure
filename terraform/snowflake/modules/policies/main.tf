@@ -13,7 +13,7 @@ terraform {
   required_providers {
     snowflake = {
       source  = "Snowflake-Labs/snowflake"
-      version = "~> 1.0"
+      version = ">= 1.0.1"
       configuration_aliases = [
         snowflake.accountadmin,
         snowflake.securityadmin,
@@ -22,12 +22,33 @@ terraform {
       ]
     }
   }
-  required_version = ">= 1.0"
 }
 
-// Create the POLICIES database to store the password policy
+# Create the POLICIES database to store password/authentication policies
 resource "snowflake_database" "policies" {
-  name = var.policies_database_name // name of the policies database from variable
+  provider = snowflake.accountadmin
+  name     = var.policies_database_name
+
+  # If POLICIES already exists (e.g., created manually from docs),
+  # import it before first apply:
+  #   terraform import module.policies.snowflake_database.policies POLICIES
+}
+# Account-level logging role
+resource "snowflake_account_role" "logger" {
+  provider = snowflake.securityadmin
+  name     = "LOGGER_${var.environment}"
+  comment  = "Account-level role for logging tasks"
+}
+
+# Account-level logging warehouse
+resource "snowflake_warehouse" "logging" {
+  provider          = snowflake.sysadmin
+  name              = "LOGGING_${var.environment}_WH"
+  warehouse_size    = "XSMALL"
+  auto_suspend      = 60
+  auto_resume       = true
+  initially_suspended = true
+  comment           = "Warehouse used by Sentinel/logging tasks"
 }
 
 # Default user password policy
@@ -118,8 +139,8 @@ resource "snowflake_authentication_policy" "legacy_service_password" {
 # Set odi_okta_only as the default authentication policy for the account
 resource "snowflake_account_authentication_policy_attachment" "default_policy" {
   count = var.okta_integration_name == null ? 0 : 1
-  provider                   = snowflake.accountadmin
-  authentication_policy      = snowflake_authentication_policy.odi_okta_only[0].fully_qualified_name // using the first and only instance that gets created
+  provider              = snowflake.accountadmin
+  authentication_policy = snowflake_authentication_policy.odi_okta_only[0].fully_qualified_name
 }
 
 # Create a sentinel service user with password authentication (legacy service user)
@@ -130,16 +151,14 @@ resource "snowflake_legacy_service_user" "sentinel" {
   lifecycle {
     ignore_changes = [rsa_public_key]
   }
-
-  # Use the input variable here
-  default_warehouse = var.logging_warehouse_name
-  # Use the input variable here
-  default_role      = var.logger_role_name
+# no cross-module references; use resources created here
+  default_warehouse = snowflake_warehouse.logging.name
+  default_role      = snowflake_account_role.logger.name
 }
 
+# Grant LOGGER to Sentinel
 resource "snowflake_grant_account_role" "logger_to_sentinel" {
   provider  = snowflake.useradmin
-  # Use the input variable here
-  role_name = var.logger_role_name
+  role_name = snowflake_account_role.logger.name
   user_name = snowflake_legacy_service_user.sentinel.name
 }

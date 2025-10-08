@@ -112,10 +112,6 @@ module "policies" {
   # inputs
   okta_integration_name  = var.okta_integration_name   # or null to skip Okta/SAML policies
   policies_database_name = "POLICIES"
-
-    # Pass the outputs from the elt module as inputs to the policies module
-  logging_warehouse_name = module.elt.logging_warehouse_name
-  logger_role_name       = module.elt.logger_role_name
 }
 
 ##############################################################
