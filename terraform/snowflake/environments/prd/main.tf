@@ -47,39 +47,39 @@ terraform {
 provider "snowflake" {
   account_name      = var.account_name
   organization_name = var.organization_name
-  role    = "PUBLIC"
+  role              = "PUBLIC"
 }
 
 # Snowflake provider for account administration (to be used only when necessary).
 provider "snowflake" {
-  alias   = "accountadmin"
-  role    = "ACCOUNTADMIN"
-  account_name      = var.account_name
-  organization_name = var.organization_name
+  alias                    = "accountadmin"
+  role                     = "ACCOUNTADMIN"
+  account_name             = var.account_name
+  organization_name        = var.organization_name
   preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource", "snowflake_account_password_policy_attachment_resource", "snowflake_account_authentication_policy_attachment_resource"]
 }
 
 # Snowflake provider for creating databases, warehouses, etc.
 provider "snowflake" {
-  alias   = "sysadmin"
-  role    = "SYSADMIN"
+  alias             = "sysadmin"
+  role              = "SYSADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
 }
 
 # Snowflake provider for managing grants to roles.
 provider "snowflake" {
-  alias   = "securityadmin"
-  role    = "SECURITYADMIN"
-  account_name      = var.account_name
-  organization_name = var.organization_name
-  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource", "snowflake_account_password_policy_attachment_resource","snowflake_account_authentication_policy_attachment_resource"]
+  alias                    = "securityadmin"
+  role                     = "SECURITYADMIN"
+  account_name             = var.account_name
+  organization_name        = var.organization_name
+  preview_features_enabled = ["snowflake_authentication_policy_resource", "snowflake_password_policy_resource", "snowflake_account_password_policy_attachment_resource", "snowflake_account_authentication_policy_attachment_resource"]
 }
 
 # Snowflake provider for managing user accounts and roles.
 provider "snowflake" {
-  alias   = "useradmin"
-  role    = "USERADMIN"
+  alias             = "useradmin"
+  role              = "USERADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
 }
@@ -110,7 +110,7 @@ module "policies" {
     snowflake.useradmin     = snowflake.useradmin,
   }
   # inputs
-  okta_integration_name  = var.okta_integration_name   # or null to skip Okta/SAML policies
+  okta_integration_name  = var.okta_integration_name
   policies_database_name = "POLICIES"
 }
 

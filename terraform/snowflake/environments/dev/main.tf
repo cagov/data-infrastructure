@@ -41,37 +41,37 @@ terraform {
 provider "snowflake" {
   account_name      = var.account_name
   organization_name = var.organization_name
-  role    = "PUBLIC"
+  role              = "PUBLIC"
 }
 
 # Snowflake provider for account administration (to be used only when necessary).
 provider "snowflake" {
-  alias   = "accountadmin"
-  role    = "ACCOUNTADMIN"
+  alias             = "accountadmin"
+  role              = "ACCOUNTADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
 }
 
 # Snowflake provider for creating databases, warehouses, etc.
 provider "snowflake" {
-  alias   = "sysadmin"
-  role    = "SYSADMIN"
+  alias             = "sysadmin"
+  role              = "SYSADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
 }
 
 # Snowflake provider for managing grants to roles.
 provider "snowflake" {
-  alias   = "securityadmin"
-  role    = "SECURITYADMIN"
+  alias             = "securityadmin"
+  role              = "SECURITYADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
 }
 
 # Snowflake provider for managing user accounts and roles.
 provider "snowflake" {
-  alias   = "useradmin"
-  role    = "USERADMIN"
+  alias             = "useradmin"
+  role              = "USERADMIN"
   account_name      = var.account_name
   organization_name = var.organization_name
 }
