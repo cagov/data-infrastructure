@@ -220,9 +220,9 @@ resource "snowflake_grant_account_role" "transform_read_to_analytics_rwc" {
 
 # Grant the Streamlit access role to the REPORTER role
 resource "snowflake_grant_account_role" "streamlit_to_reporter" {
-  provider            = snowflake.useradmin
-  role_name           = snowflake_account_role.streamlit_access_role.name
-  parent_role_name    = snowflake_account_role.reporter.name # reporter role
+  provider         = snowflake.useradmin
+  role_name        = snowflake_account_role.streamlit_access_role.name
+  parent_role_name = snowflake_account_role.reporter.name # reporter role
 }
 
 # Grant CREATE STREAMLIT & CREATE STAGE privileges on future schemas in the database to the Streamlit access role
