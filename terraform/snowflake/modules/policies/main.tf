@@ -37,37 +37,36 @@ resource "snowflake_database" "policies" {
 # account-level role & warehouse (no env vars)
 resource "snowflake_account_role" "logger" {
   provider = snowflake.securityadmin
-  name     = "LOGGER_PRD"
+  name     = "LOGGER"
   comment  = "Account-level role for logging tasks"
 }
 
 resource "snowflake_warehouse" "logging" {
   provider            = snowflake.sysadmin
-  name                = "LOGGING_PRD_WH"
+  name                = "LOGGING_WH"
   warehouse_size      = "XSMALL"
   auto_suspend        = 60
   auto_resume         = true
   initially_suspended = true
-  comment             = "Warehouse used by Sentinel/logging tasks (PRD)"
+  comment             = "Warehouse used by Sentinel/logging tasks"
 }
 
-# ßSentinel service user
-resource "snowflake_legacy_service_user" "sentinel" {
-  provider = snowflake.useradmin
-  name     = "SENTINEL_SVC_USER"
-  comment  = "Service user for Sentinel"
-
-  lifecycle { ignore_changes = [rsa_public_key] }
-
+# Sentinel service user
+resource "snowflake_service_user" "sentinel" {
+  provider          = snowflake.useradmin
+  name              = "SENTINEL_SVC_USR"
+  login_name        = "SENTINEL_SVC_USR"
   default_warehouse = snowflake_warehouse.logging.name
   default_role      = snowflake_account_role.logger.name
+  disabled          = false
+  comment           = "Sentinel service user"
 }
 
-# Grant LOGGER_PRD to Sentinel
+# Grant LOGGER to Sentinel
 resource "snowflake_grant_account_role" "logger_to_sentinel" {
   provider  = snowflake.useradmin
   role_name = snowflake_account_role.logger.name
-  user_name = snowflake_legacy_service_user.sentinel.name
+  user_name = snowflake_service_user.sentinel.name
 }
 
 # Default user password policy
@@ -128,7 +127,7 @@ resource "snowflake_authentication_policy" "external_duo_mfa" {
   mfa_authentication_methods = ["PASSWORD"]
   mfa_enrollment             = "REQUIRED"
   client_types               = ["SNOWFLAKE_UI", "DRIVERS", "SNOWSQL"]
-  comment                    = "Duo-MFA-only authentication policy for external human users (PRD)"
+  comment                    = "Duo-MFA-only authentication policy for external human users"
 }
 
 resource "snowflake_authentication_policy" "service_account_keypair" {
@@ -138,7 +137,7 @@ resource "snowflake_authentication_policy" "service_account_keypair" {
   name                   = "service_account_keypair"
   authentication_methods = ["KEYPAIR"]
   client_types           = ["DRIVERS", "SNOWSQL"]
-  comment                = "Key-pair only authentication policy for most service accounts (PRD)"
+  comment                = "Key-pair only authentication policy for most service accounts"
 }
 
 resource "snowflake_authentication_policy" "legacy_service_password" {
@@ -148,7 +147,7 @@ resource "snowflake_authentication_policy" "legacy_service_password" {
   name                   = "legacy_service_password"
   authentication_methods = ["PASSWORD"]
   client_types           = ["DRIVERS", "SNOWSQL"]
-  comment                = "Password-only authentication policy for legacy service accounts (PRD)"
+  comment                = "Password-only authentication policy for legacy service accounts"
 }
 
 # Set odi_okta_only as the default account auth policy (fmt-clean)
