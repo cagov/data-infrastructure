@@ -15,9 +15,9 @@ It is described in some detail in our
 flowchart TB
 subgraph External Data Source
     direction TB
-    DS1[(\nData Source 1)]
-    DS2[(\nData Source 2)]
-    DS3[(\nData Source 3)]
+    DS1[(Data Source 1)]
+    DS2[(Data Source 2)]
+    DS3[(Data Source 3)]
   end
   PY>Python scripts]
   F>Fivetran]
