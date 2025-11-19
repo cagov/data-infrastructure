@@ -41,16 +41,6 @@ resource "snowflake_account_role" "logger" {
   comment  = "Account-level role for logging tasks"
 }
 
-resource "snowflake_warehouse" "logging" {
-  provider            = snowflake.sysadmin
-  name                = "LOGGING_WH"
-  warehouse_size      = "X-SMALL"
-  auto_suspend        = 60
-  auto_resume         = true
-  initially_suspended = true
-  comment             = "Warehouse used by Sentinel/logging tasks"
-}
-
 # Sentinel service user
 resource "snowflake_service_user" "sentinel" {
   provider          = snowflake.useradmin
@@ -166,9 +156,6 @@ resource "snowflake_account_authentication_policy_attachment" "default_policy" {
   authentication_policy = snowflake_authentication_policy.odi_okta_only[0].fully_qualified_name
 }
 
-#################################
-#   Apply Grants via Module     #
-#################################
 
 # Reuse the existing warehouse module to apply all its grants logic
 module "logging_wh" {
@@ -193,7 +180,7 @@ module "logging_wh" {
 #   Extend Access to Logger     #
 #################################
 
-# Allow the LOGGER role to use the LOGGING_WH access role
+# Allow the LOGGER role to use the LOGGING access role
 resource "snowflake_grant_account_role" "logging_to_logger" {
   provider         = snowflake.useradmin
   role_name        = module.logging_wh.access_role_name
@@ -201,13 +188,12 @@ resource "snowflake_grant_account_role" "logging_to_logger" {
 }
 
 ######################################
-#   Imported Privileges for Logging  #
+#   Imported Privileges for Logger   #
 ######################################
 
-# Grant imported privileges on SNOWFLAKE DB to the LOGGING_WH_MOU role
-resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_logging" {
+resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_logger" {
   provider          = snowflake.accountadmin
-  account_role_name = module.logging_wh.access_role_name
+  account_role_name = snowflake_account_role.logger.name
   privileges        = ["IMPORTED PRIVILEGES"]
 
   on_account_object {
