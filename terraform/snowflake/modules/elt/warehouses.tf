@@ -69,18 +69,3 @@ module "reporting" {
   comment = "Primary warehouse for reporting. End-users and BI tools should use this warehouse"
   size    = each.value
 }
-
-# Primary warehouse for logging. Logging tools like Sentinel should use this warehouse.
-module "logging" {
-  source = "../warehouse"
-  providers = {
-    snowflake.securityadmin = snowflake.securityadmin,
-    snowflake.sysadmin      = snowflake.sysadmin,
-    snowflake.useradmin     = snowflake.useradmin,
-  }
-
-  name         = "LOGGING_XS_${var.environment}"
-  comment      = "Primary warehouse for logging. Logging tools like Sentinel should use this warehouse."
-  size         = "X-SMALL"
-  auto_suspend = 1
-}
