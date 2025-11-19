@@ -46,7 +46,7 @@ resource "snowflake_service_user" "sentinel" {
   provider          = snowflake.useradmin
   name              = "SENTINEL_SVC_USR"
   login_name        = "SENTINEL_SVC_USR"
-  default_warehouse = "LOGGING_WH"
+  default_warehouse = "LOGGING"
   default_role      = snowflake_account_role.logger.name
   disabled          = false
   comment           = "Sentinel service user"
