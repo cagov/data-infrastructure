@@ -41,25 +41,23 @@ resource "snowflake_account_role" "logger" {
   comment  = "Account-level role for logging tasks"
 }
 
-resource "snowflake_warehouse" "logging" {
-  provider            = snowflake.sysadmin
-  name                = "LOGGING_WH"
-  warehouse_size      = "XSMALL"
-  auto_suspend        = 60
-  auto_resume         = true
-  initially_suspended = true
-  comment             = "Warehouse used by Sentinel/logging tasks"
-}
-
 # Sentinel service user
 resource "snowflake_service_user" "sentinel" {
   provider          = snowflake.useradmin
   name              = "SENTINEL_SVC_USR"
   login_name        = "SENTINEL_SVC_USR"
-  default_warehouse = snowflake_warehouse.logging.name
+  default_warehouse = module.logging_wh.name
   default_role      = snowflake_account_role.logger.name
   disabled          = false
   comment           = "Sentinel service user"
+}
+
+# NOTE: logger has elevated privileges, so it is assigned
+# directly to accountadmin
+resource "snowflake_grant_account_role" "logger_to_accountadmin" {
+  provider         = snowflake.accountadmin
+  role_name        = snowflake_account_role.logger.name
+  parent_role_name = "ACCOUNTADMIN"
 }
 
 # Grant LOGGER to Sentinel
@@ -156,4 +154,50 @@ resource "snowflake_account_authentication_policy_attachment" "default_policy" {
 
   provider              = snowflake.accountadmin
   authentication_policy = snowflake_authentication_policy.odi_okta_only[0].fully_qualified_name
+}
+
+
+# Reuse the existing warehouse module to apply all its grants logic
+module "logging_wh" {
+  source = "../warehouse"
+
+  # The module uses var.name to derive:
+  # - Role name: ${var.name}_WH_MOU
+  # - Warehouse name: ${var.name}_WH
+  # - Privileges: local.warehouse.MOU (MONITOR, OPERATE, USAGE)
+  name = "LOGGING"
+
+  # Pass required provider aliases to match module expectations
+  providers = {
+    snowflake.sysadmin      = snowflake.sysadmin
+    snowflake.useradmin     = snowflake.useradmin
+    snowflake.securityadmin = snowflake.securityadmin
+  }
+
+}
+
+#################################
+#   Extend Access to Logger     #
+#################################
+
+# Allow the LOGGER role to use the LOGGING access role
+resource "snowflake_grant_account_role" "logging_to_logger" {
+  provider         = snowflake.useradmin
+  role_name        = module.logging_wh.access_role_name
+  parent_role_name = snowflake_account_role.logger.name
+}
+
+######################################
+#   Imported Privileges for Logger   #
+######################################
+
+resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_logger" {
+  provider          = snowflake.accountadmin
+  account_role_name = snowflake_account_role.logger.name
+  privileges        = ["IMPORTED PRIVILEGES"]
+
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = "SNOWFLAKE"
+  }
 }

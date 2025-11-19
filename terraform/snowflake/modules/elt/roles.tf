@@ -36,14 +36,6 @@ resource "snowflake_account_role" "reader" {
   comment  = "Permissions to read ${module.analytics.name}, ${module.transform.name}, and ${module.raw.name} for CI purposes"
 }
 
-# The logger role is for logging solutions like Sentinel to introspect
-# things like usage and access.
-resource "snowflake_account_role" "logger" {
-  provider = snowflake.useradmin
-  name     = "LOGGER_${var.environment}"
-  comment  = "Permissions to read the SNOWFLAKE metadatabase for logging purposes"
-}
-
 # Adding streamlit role - only for analytics database
 resource "snowflake_account_role" "streamlit_access_role" {
   provider = snowflake.useradmin
@@ -81,14 +73,6 @@ resource "snowflake_grant_account_role" "reader_to_sysadmin" {
   provider         = snowflake.useradmin
   role_name        = snowflake_account_role.reader.name
   parent_role_name = "SYSADMIN"
-}
-
-# NOTE: logger has elevated privileges, so it is assigned
-# directly to accountadmin
-resource "snowflake_grant_account_role" "logger_to_accountadmin" {
-  provider         = snowflake.accountadmin
-  role_name        = snowflake_account_role.logger.name
-  parent_role_name = "ACCOUNTADMIN"
 }
 
 # Loader has RWC privileges in RAW
@@ -179,27 +163,9 @@ resource "snowflake_grant_account_role" "reporting_to_reader" {
   parent_role_name = snowflake_account_role.reader.name
 }
 
-# Logger can use the LOGGING warehouse
-resource "snowflake_grant_account_role" "logging_to_logger" {
-  provider         = snowflake.useradmin
-  role_name        = module.logging.access_role_name
-  parent_role_name = snowflake_account_role.logger.name
-}
-
 ######################################
 #          Privilege Grants          #
 ######################################
-
-# Imported privileges for logging
-resource "snowflake_grant_privileges_to_account_role" "imported_privileges_to_logger" {
-  provider          = snowflake.accountadmin
-  account_role_name = snowflake_account_role.logger.name
-  privileges        = ["IMPORTED PRIVILEGES"]
-  on_account_object {
-    object_type = "DATABASE"
-    object_name = "SNOWFLAKE"
-  }
-}
 
 ##############################################################
 # Grant TRANSFORM_READ role to ANALYTICS_READWRITECONTROL role
