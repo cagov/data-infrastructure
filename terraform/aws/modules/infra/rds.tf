@@ -2,13 +2,13 @@
 #        RDS SQL Server          #
 ##################################
 
-resource "aws_db_subnet_group" "rds" {
+resource "aws_db_subnet_group" "rds_sqlserver" {
   count      = var.enable_rds ? 1 : 0
-  name       = "${local.prefix}-rds-subnet-group"
+  name       = "${local.prefix}-rds-sqlserver-subnet-group"
   subnet_ids = aws_subnet.private[*].id
 }
 
-resource "aws_cloudwatch_log_group" "rds_error_logs" {
+resource "aws_cloudwatch_log_group" "rds_sqlserver_error_logs" {
   count             = var.enable_rds ? 1 : 0
   name              = "/aws/rds/instance/${local.prefix}-sqlserver/error"
   retention_in_days = 7
@@ -30,8 +30,8 @@ resource "aws_db_instance" "sqlserver" {
   username                    = "admin"
   manage_master_user_password = true
 
-  db_subnet_group_name   = aws_db_subnet_group.rds[0].name
-  vpc_security_group_ids = [aws_security_group.rds[0].id]
+  db_subnet_group_name   = aws_db_subnet_group.rds_sqlserver[0].name
+  vpc_security_group_ids = [aws_security_group.rds_sqlserver[0].id]
 
   # Backup configuration
   backup_retention_period = 7
@@ -46,5 +46,5 @@ resource "aws_db_instance" "sqlserver" {
     Name = "${local.prefix}-sqlserver"
   }
 
-  depends_on = [aws_cloudwatch_log_group.rds_error_logs]
+  depends_on = [aws_cloudwatch_log_group.rds_sqlserver_error_logs]
 }

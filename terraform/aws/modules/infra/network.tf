@@ -55,9 +55,9 @@ resource "aws_security_group" "mwaa" {
   }
 }
 
-resource "aws_security_group" "rds" {
+resource "aws_security_group" "rds_sqlserver" {
   count       = var.enable_rds ? 1 : 0
-  name        = "${local.prefix}-rds-sg"
+  name        = "${local.prefix}-rds-sqlserver-sg"
   description = "Allow access to RDS SQL Server from MWAA"
   vpc_id      = aws_vpc.this.id
 
@@ -70,7 +70,7 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "${local.prefix}-rds-sg"
+    Name = "${local.prefix}-rds-sqlserver-sg"
   }
 }
 
