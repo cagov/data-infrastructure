@@ -55,6 +55,25 @@ resource "aws_security_group" "mwaa" {
   }
 }
 
+resource "aws_security_group" "rds" {
+  count       = var.enable_rds ? 1 : 0
+  name        = "${local.prefix}-rds-sg"
+  description = "Allow access to RDS SQL Server from MWAA"
+  vpc_id      = aws_vpc.this.id
+
+  ingress {
+    description     = "SQL Server access from MWAA"
+    from_port       = 1433
+    to_port         = 1433
+    protocol        = "tcp"
+    security_groups = [aws_security_group.mwaa.id]
+  }
+
+  tags = {
+    Name = "${local.prefix}-rds-sg"
+  }
+}
+
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.this.id
 
@@ -86,10 +105,10 @@ resource "random_id" "private_subnet" {
 }
 
 resource "aws_eip" "this" {
-  count = 2
-  vpc   = true
+  count  = 2
+  domain = "vpc"
 
-  tags = {
+  tags   = {
     Name = "${local.prefix}-${data.aws_availability_zones.available.names[count.index]}-nat-${random_id.private_subnet[count.index].hex}"
   }
 }
