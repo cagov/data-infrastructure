@@ -57,3 +57,7 @@ module "infra" {
   # RDS SQL Server configuration
   enable_rds = true
 }
+
+output "infra" {
+  value = module.infra.state
+}
