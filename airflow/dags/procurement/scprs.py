@@ -446,10 +446,12 @@ def transform_scprs_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @task
-def scrape_scprs(
-    start_date: pendulum.DateTime, end_date: pendulum.DateTime
-) -> pd.DataFrame:
+def scrape_scprs() -> pd.DataFrame:
     """Scrape SCPRS data for date range."""
+    # Get date range from context
+    context = get_current_context()
+    start_date, end_date = get_date_range(context)
+
     scraper = SCPRSScraper(debug=True)
 
     # Format dates for scraper API (MM/DD/YYYY)
@@ -482,10 +484,12 @@ def scrape_scprs(
 
 
 @task
-def load_to_snowflake(
-    df: pd.DataFrame, start_date: pendulum.DateTime, end_date: pendulum.DateTime
-) -> None:
+def load_to_snowflake(df: pd.DataFrame) -> None:
     """Load to Snowflake with DELETE + INSERT strategy."""
+    # Get date range from context
+    context = get_current_context()
+    start_date, end_date = get_date_range(context)
+
     # Transform data types (dates, currency)
     df = transform_scprs_data(df)
 
@@ -541,10 +545,8 @@ def scprs_procurement_data():
     Monthly: Runs on 1st of month, fetches previous 365 days
     Backfill: Manual trigger with custom logical_date
     """
-    context = get_current_context()
-    start, end = get_date_range(context)
-    df = scrape_scprs(start, end)  # Scrapes both IT Goods and IT Services
-    load_to_snowflake(df, start, end)  # DELETE + INSERT for date range
+    df = scrape_scprs()  # Scrapes both IT Goods and IT Services
+    load_to_snowflake(df)  # DELETE + INSERT for date range
 
 
 run = scprs_procurement_data()
