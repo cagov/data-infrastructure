@@ -23,6 +23,8 @@ from bs4 import XMLParsedAsHTMLWarning
 # Suppress XMLParsedAsHTMLWarning from BeautifulSoup
 warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
 
+MAX_PAGES = 300
+
 
 class SCPRSScraper:
     """HTTP-based scraper for SCPRS using the direct PeopleSoft endpoint."""
@@ -79,36 +81,11 @@ class SCPRSScraper:
         This triggers validation and increments ICStateNum.
         """
         url = f"{self.BASE_URL}{self.SEARCH_PAGE}"
-
-        form_data = {
-            "ICAJAX": "1",
-            "ICNAVTYPEDROPDOWN": "0",
-            "ICType": "Panel",
-            "ICElementNum": "0",
-            "ICStateNum": self.icstate_num or "1",
-            "ICAction": field_name,  # Use the field name as the action
-            "ICModelCancel": "0",
-            "ICXPos": "0",
-            "ICYPos": "0",
-            "ResponsetoDiffFrame": "-1",
-            "TargetFrameName": "None",
-            "FacetPath": "None",
-            "ICFocus": "",
-            "ICSaveWarningFilter": "0",
-            "ICChanged": "-1",
-            "ICSkipPending": "0",
-            "ICAutoSave": "0",
-            "ICResubmit": "0",
-            "ICSID": self.icsid or "",
-            "ICActionPrompt": "false",
-            "ICBcDomData": "",
-            "ICPanelName": "",
-            "ICFind": "",
-            "ICAddCount": "",
-            "ICAppClsData": "",
-            "DUMMY_FIELD$hnewpers$0": "0|0|0|0|0|95|0#1|0|0|0|0|42|0#4|0|0|0|0|174|0#",
-            field_name: value,
-        }
+        form_data = self._base_form_data(field_name)
+        # Override specific fields for field-fill action
+        form_data["ICActionPrompt"] = "false"
+        form_data["ICBcDomData"] = ""
+        form_data[field_name] = value
 
         try:
             response = self.session.post(url, data=form_data, timeout=30)
@@ -167,13 +144,14 @@ class SCPRSScraper:
         acquisition_type: Optional[str] = None,
         start_date_from: Optional[str] = None,
         start_date_to: Optional[str] = None,
-    ) -> Dict:
+    ) -> pd.DataFrame:
         """Perform a search on SCPRS using working server-side filters.
 
         Request sequence:
         1. GET: Initialize session (done in __init__)
         2. POST: Fill acquisition type field (if provided)
         3. POST: Execute search with other parameters
+        4. POST: Automatically fetch all pages if pagination exists
 
         Args:
             department: Department code (e.g., '3540' for CAL FIRE)
@@ -182,7 +160,7 @@ class SCPRSScraper:
             start_date_to: Start date to (MM/DD/YYYY)
 
         Returns:
-            Dict with 'status' and 'html' keys
+            DataFrame with procurement records
         """
         # Acquisition type requires field-fill step for server-side filtering
         if acquisition_type:
@@ -215,34 +193,57 @@ class SCPRSScraper:
             self._log(f"Response status: {response.status_code}")
             self._log(f"Response length: {len(response.text)} bytes")
 
-            # PeopleSoft returns HTML, not JSON
-            return {
-                "status": "success",
-                "html": response.text,
-                "cookies": {k: v for k, v in self.session.cookies.items()},
-            }
+            # Extract updated ICStateNum from response
+            self._extract_tokens_from_html(response.text)
+
+            # Always follow pagination if available
+            pages = [response.text]
+            current_html = response.text
+            page_num = 1
+
+            while self._has_next_page(current_html):
+                self._log(f"Fetching page {page_num + 1}...")
+                next_response = self._fetch_next_page()
+
+                if next_response.get("status") != "success":
+                    self._log(
+                        f"Error fetching page {page_num + 1}: {next_response.get('error')}"
+                    )
+                    break
+
+                current_html = next_response["html"]
+                pages.append(current_html)
+                page_num += 1
+
+                if page_num >= MAX_PAGES:  # Safety limit
+                    self._log(f"Reached pagination safety limit ({MAX_PAGES} pages)")
+                    break
+
+            self._log(f"Fetched {len(pages)} total pages")
+
+            # Parse all pages and return DataFrame
+            return self._parse_results(pages)
 
         except requests.exceptions.RequestException as e:
-            return {"status": "error", "error": str(e)}
+            print(f"Error: {e}")
+            return pd.DataFrame()
 
-    def _build_form_data(
-        self,
-        department: Optional[str] = None,
-        start_date_from: Optional[str] = None,
-        start_date_to: Optional[str] = None,
-    ) -> Dict[str, str]:
-        """Build the form data for the search request.
+    def _base_form_data(self, action: str) -> Dict[str, str]:
+        """Build base form data for PeopleSoft requests.
 
-        Note: acquisition_type is NOT included here - it's set via _fill_field()
-        before this method is called, and the server remembers it in the session.
+        Args:
+            action: The ICAction value (e.g., 'ZZ_SCPRS_SP_WRK_BUTTON' for search)
+
+        Returns:
+            Base form data dict
         """
-        form_data = {
+        return {
             "ICAJAX": "1",
             "ICNAVTYPEDROPDOWN": "0",
             "ICType": "Panel",
             "ICElementNum": "0",
             "ICStateNum": self.icstate_num or "1",
-            "ICAction": "ZZ_SCPRS_SP_WRK_BUTTON",  # Search button
+            "ICAction": action,
             "ICModelCancel": "0",
             "ICXPos": "0",
             "ICYPos": "0",
@@ -265,6 +266,45 @@ class SCPRSScraper:
             "DUMMY_FIELD$hnewpers$0": "0|0|0|0|0|95|0#1|0|0|0|0|42|0#4|0|0|0|0|174|0#",
         }
 
+    def _has_next_page(self, html: str) -> bool:
+        """Check if there's a next page button available in the HTML."""
+        soup = BeautifulSoup(html, "lxml")
+        next_button = soup.find("a", id=re.compile(r"ZZ_SCPRS_SP_WRK_NEXT_BUTTON"))
+        return next_button is not None
+
+    def _fetch_next_page(self) -> Dict:
+        """Fetch the next page of results."""
+        url = f"{self.BASE_URL}{self.SEARCH_PAGE}"
+        form_data = self._base_form_data("ZZ_SCPRS_SP_WRK_NEXT_BUTTON")
+
+        try:
+            response = self.session.post(url, data=form_data, timeout=60)
+            response.raise_for_status()
+
+            # Extract updated ICStateNum
+            self._extract_tokens_from_html(response.text)
+
+            return {
+                "status": "success",
+                "html": response.text,
+            }
+
+        except requests.exceptions.RequestException as e:
+            return {"status": "error", "error": str(e)}
+
+    def _build_form_data(
+        self,
+        department: Optional[str] = None,
+        start_date_from: Optional[str] = None,
+        start_date_to: Optional[str] = None,
+    ) -> Dict[str, str]:
+        """Build the form data for the search request.
+
+        Note: acquisition_type is NOT included here - it's set via _fill_field()
+        before this method is called, and the server remembers it in the session.
+        """
+        form_data = self._base_form_data("ZZ_SCPRS_SP_WRK_BUTTON")
+
         # Add search parameters (these work server-side)
         if department:
             form_data["ZZ_SCPRS_SP_WRK_BUSINESS_UNIT"] = department
@@ -277,24 +317,33 @@ class SCPRSScraper:
 
         return form_data
 
-    def parse_results(self, response: Dict) -> pd.DataFrame:
-        """Parse the HTML response to extract procurement records.
+    def _parse_results(self, pages: List[str]) -> pd.DataFrame:
+        """Parse HTML pages to extract procurement records.
 
         Args:
-            response: Response dict from search()
+            pages: List of HTML page strings
 
         Returns:
             DataFrame with procurement records
         """
-        if response.get("status") != "success":
-            print(f"Error: {response.get('error', 'Unknown error')}")
-            return pd.DataFrame()
+        all_records = []
+        for page_num, html in enumerate(pages, 1):
+            self._log(f"Parsing page {page_num}...")
+            records = self._parse_html_page(html)
+            all_records.extend(records)
 
-        html = response.get("html", "")
-        if not html:
-            print("No HTML in response")
-            return pd.DataFrame()
+        self._log(f"Total records across {len(pages)} page(s): {len(all_records)}")
+        return pd.DataFrame(all_records)
 
+    def _parse_html_page(self, html: str) -> List[Dict]:
+        """Parse a single HTML page to extract records.
+
+        Args:
+            html: HTML content of the page
+
+        Returns:
+            List of record dictionaries
+        """
         soup = BeautifulSoup(html, "lxml")
 
         # Look for the results table (ID: ZZ_SCPR_RSLT_VW$scroll$0)
@@ -302,7 +351,7 @@ class SCPRSScraper:
 
         if not table:
             self._log("No results table found")
-            return pd.DataFrame()
+            return []
 
         # Find all result rows (pattern: trZZ_SCPR_RSLT_VW$0_row0, trZZ_SCPR_RSLT_VW$0_row1, etc.)
         rows = table.find_all("tr", id=re.compile(r"trZZ_SCPR_RSLT_VW\$0_row\d+"))
@@ -319,18 +368,7 @@ class SCPRSScraper:
                 self._log(f"Error parsing row: {e}")
                 continue
 
-        # Warning if pagination limit reached
-        if len(records) == 200:
-            print(
-                "WARNING: Returned exactly 200 records (pagination limit).",
-                file=sys.stderr,
-            )
-            print(
-                "         Additional records may exist. Consider narrowing your search filters.",
-                file=sys.stderr,
-            )
-
-        return pd.DataFrame(records)
+        return records
 
     # Field mapping: field_name -> (tag_type, id_pattern)
     FIELD_PATTERNS = {
@@ -374,7 +412,7 @@ Examples:
   python scprs_scraper.py --department 3540 --acquisition-type "IT Goods" \\
                           --start-date-from 10/01/2025 --start-date-to 11/01/2025
 
-  # Export to CSV
+  # Export to CSV (automatically fetches all pages)
   python scprs_scraper.py --department 3540 --output results.csv
 
   # Show detailed output
@@ -416,15 +454,14 @@ Examples:
     print("SCPRS Scraper")
     print("=" * 70)
 
-    # Search and parse results
+    # Search and get results
     scraper = SCPRSScraper(debug=args.debug)
-    response = scraper.search(
+    df = scraper.search(
         department=args.department,
         acquisition_type=args.acquisition_type,
         start_date_from=args.start_date_from,
         start_date_to=args.start_date_to,
     )
-    df = scraper.parse_results(response)
 
     print(f"\n✓ Found {len(df)} records")
 
