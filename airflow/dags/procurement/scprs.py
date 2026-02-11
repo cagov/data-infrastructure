@@ -476,10 +476,6 @@ def scrape_scprs() -> pd.DataFrame:
     combined_df = pd.concat(dfs, ignore_index=True)
     print(f"Total records (before dedup): {len(combined_df)}")
 
-    # Remove duplicates (if any) based on purchase_doc
-    combined_df = combined_df.drop_duplicates(subset=["purchase_doc"])
-    print(f"Total records (after dedup): {len(combined_df)}")
-
     return combined_df
 
 
@@ -533,7 +529,7 @@ def load_to_snowflake(df: pd.DataFrame) -> None:
 @dag(
     description="Load IT procurement data from SCPRS",
     schedule_interval="@monthly",
-    start_date=datetime(2026, 2, 1),
+    start_date=datetime(2004, 1, 1),
     catchup=False,
     max_active_runs=2,  # Limit concurrency to avoid stressing PeopleSoft server
     default_args=DEFAULT_ARGS,
