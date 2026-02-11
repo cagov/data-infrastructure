@@ -3,15 +3,29 @@ LPA Scraper for California eProcure
 
 Scrapes LPA (Leveraged Procurement Agreement) data from caleprocure.ca.gov
 Downloads data as Excel file rather than paginating through results.
+
+Usage:
+    from lpa_scraper import LPAScraper
+
+    # Initialize scraper
+    scraper = LPAScraper()
+
+    # Search for all expired contracts - returns DataFrame
+    df = scraper.search(show_expired=True)
+
+    # Search for active contracts
+    df = scraper.search(show_expired=False)
 """
 
-import requests
 import json
+import os
 import re
+import tempfile
 import time
-from typing import Dict, Optional
 from urllib.parse import urljoin
+
 import pandas as pd
+import requests
 
 
 class LPAScraper:
@@ -86,13 +100,55 @@ class LPAScraper:
         if self.debug:
             print(f"[DEBUG] {message}")
 
+    def _get_base_form_data(self) -> dict:
+        """Get base form data template shared across requests."""
+        return {
+            "IF-TargetVerb": "POST",
+            "IF-TargetContent": json.dumps(self.TARGET_CONTENT),
+            "IF-Template": "/pages/LPASearch/lpa-search.aspx",
+            "IF-IgnoreContent": "",
+            "ICDoModal": "1",
+            "sortAction": "",
+            "ICType": "Panel",
+            "ICElementNum": "0",
+            "ICStateNum": self.icstate_num or "1",
+            "ICAction": "",
+            "ICModelCancel": "0",
+            "ICXPos": "0",
+            "ICYPos": "0",
+            "ResponsetoDiffFrame": "-1",
+            "TargetFrameName": "None",
+            "FacetPath": "None",
+            "ICFocus": "",
+            "ICSaveWarningFilter": "0",
+            "ICChanged": "-1",
+            "ICSkipPending": "0",
+            "ICAutoSave": "0",
+            "ICResubmit": "0",
+            "ICSID": self.icsid or "",
+            "ICActionPrompt": "false",
+            "ICBcDomData": "",
+            "ICPanelName": "",
+            "ICFind": "",
+            "ICAddCount": "",
+            "ICAppClsData": "",
+            "ZZ_CTR_SRC_VW$hnewpers$0": "0|0|1|0|0|0|0#1|0|1|0|0|0|0#3|0|1|0|0|0|0#4|0|1|0|0|156|1#5|0|0|0|0|0|0#6|0|0|0|0|0|0#7|0|0|0|0|0|0#8|0|0|0|0|0|0#9|0|0|0|0|85|1#10|0|0|0|0|0|0#11|0|0|0|0|0|0#12|0|0|2|1|151|1#13|0|0|0|0|0|0#14|0|0|0|0|0|0#15|0|0|0|0|0|0#16|0|0|0|0|0|0#18|0|0|0|0|96|1#19|0|0|0|0|0|0#20|0|0|0|0|0|0#21|0|0|0|0|0|0#22|0|0|0|0|0|0#23|0|0|0|0|0|0#24|0|0|0|0|0|0#25|0|0|0|0|0|0#26|0|0|0|0|0|0#28|0|0|0|0|0|0#29|0|0|0|0|0|0#30|0|0|0|0|0|0#31|0|0|0|0|0|0#",
+            "ZZ_CTR_SRC2_WRK_CNTRCT_ID": "",
+            "DESCR_1": "",
+            "ZZ_CTR_SRC2_WRK_ZZ_CNTRCT_TYPE": "",
+            "ZZ_CTR_SRC2_WRK_BUYER_ID": "",
+            "ZZ_CTR_SRC2_WRK_VENDOR_ID": "",
+            "ZZ_CTR_SRC2_WRK_NAME1": "",
+            "ZZ_CTR_SRC2_WRK_ZZ_ACQ_TYPE": "",
+        }
+
     def _initialize_session(self):
         """Initialize session by loading the search page."""
         try:
             url = f"{self.BASE_URL}{self.SEARCH_ENDPOINT}"
             self._log(f"Initializing session: {url}")
 
-            # First request - page load
+            # First request - page load (GET-style initialization)
             form_data = {
                 "IF-TargetVerb": "GET",
                 "IF-TargetContent": json.dumps(self.TARGET_CONTENT),
@@ -171,88 +227,28 @@ class LPAScraper:
         except Exception as e:
             self._log(f"Error extracting tokens: {e}")
 
-    def search(
-        self,
-        contract_id: Optional[str] = None,
-        description: Optional[str] = None,
-        contract_type: Optional[str] = None,
-        buyer_id: Optional[str] = None,
-        supplier_id: Optional[str] = None,
-        supplier_name: Optional[str] = None,
-        show_expired: bool = False,
-        begin_date: Optional[str] = None,  # Format: MM/DD/YYYY
-        end_date: Optional[str] = None,  # Format: MM/DD/YYYY
-    ) -> Dict:
-        """Perform a search on the LPA system.
+    def search(self, show_expired: bool = False) -> pd.DataFrame:
+        """Perform a search on the LPA system and return results as a DataFrame.
 
         Args:
-            contract_id: Contract ID to search for
-            description: Description keyword search
-            contract_type: Contract type filter
-            buyer_id: Buyer ID
-            supplier_id: Supplier ID
-            supplier_name: Supplier name
-            show_expired: Include expired contracts
-            begin_date: Contract begin date from (MM/DD/YYYY)
-            end_date: Contract end date to (MM/DD/YYYY)
+            show_expired: If True, returns expired contracts. If False, returns active contracts.
 
         Returns:
-            Dict with response data
+            DataFrame with LPA data
         """
         url = f"{self.BASE_URL}{self.SEARCH_ENDPOINT}"
 
-        form_data = {
-            "IF-TargetVerb": "POST",
-            "IF-TargetContent": json.dumps(self.TARGET_CONTENT),
-            "IF-Template": "/pages/LPASearch/lpa-search.aspx",
-            "IF-IgnoreContent": "",
-            "ICDoModal": "1",
-            "sortAction": "",
-            "ICType": "Panel",
-            "ICElementNum": "0",
-            "ICStateNum": self.icstate_num or "1",
-            "ICAction": "ZZ_CTR_SRC2_WRK_SEARCH_BTN",
-            "ICModelCancel": "0",
-            "ICXPos": "0",
-            "ICYPos": "0",
-            "ResponsetoDiffFrame": "-1",
-            "TargetFrameName": "None",
-            "FacetPath": "None",
-            "ICFocus": "",
-            "ICSaveWarningFilter": "0",
-            "ICChanged": "-1",
-            "ICSkipPending": "0",
-            "ICAutoSave": "0",
-            "ICResubmit": "0",
-            "ICSID": self.icsid or "",
-            "ICActionPrompt": "false",
-            "ICBcDomData": "",
-            "ICPanelName": "",
-            "ICFind": "",
-            "ICAddCount": "",
-            "ICAppClsData": "",
-            "ZZ_CTR_SRC_VW$hnewpers$0": "0|0|1|0|0|0|0#1|0|1|0|0|0|0#3|0|1|0|0|0|0#4|0|1|0|0|156|1#5|0|0|0|0|0|0#6|0|0|0|0|0|0#7|0|0|0|0|0|0#8|0|0|0|0|0|0#9|0|0|0|0|85|1#10|0|0|0|0|0|0#11|0|0|0|0|0|0#12|0|0|2|1|151|1#13|0|0|0|0|0|0#14|0|0|0|0|0|0#15|0|0|0|0|0|0#16|0|0|0|0|0|0#18|0|0|0|0|96|1#19|0|0|0|0|0|0#20|0|0|0|0|0|0#21|0|0|0|0|0|0#22|0|0|0|0|0|0#23|0|0|0|0|0|0#24|0|0|0|0|0|0#25|0|0|0|0|0|0#26|0|0|0|0|0|0#28|0|0|0|0|0|0#29|0|0|0|0|0|0#30|0|0|0|0|0|0#31|0|0|0|0|0|0#",
-            "ZZ_CTR_SRC2_WRK_CNTRCT_ID": contract_id or "",
-            "DESCR_1": description or "",
-            "ZZ_CTR_SRC2_WRK_ZZ_CNTRCT_TYPE": contract_type or "",
-            "ZZ_CTR_SRC2_WRK_BUYER_ID": buyer_id or "",
-            "ZZ_CTR_SRC2_WRK_VENDOR_ID": supplier_id or "",
-            "ZZ_CTR_SRC2_WRK_NAME1": supplier_name or "",
-            "ZZ_CTR_SRC2_WRK_ZZ_ACQ_TYPE": "",
-        }
+        # Start with base form data and customize for search
+        form_data = self._get_base_form_data()
+        form_data["ICAction"] = "ZZ_CTR_SRC2_WRK_SEARCH_BTN"
 
         # Add expired contracts checkbox
         if show_expired:
             form_data["ZZ_CTR_SRC2_WRK_CHECKED"] = "Y"
             form_data["ZZ_CTR_SRC2_WRK_CHECKED$chk"] = "Y"
 
-        # Add date filters if provided
-        if begin_date:
-            form_data["ZZ_CTR_SRC2_WRK_FROM_DT"] = begin_date
-        if end_date:
-            form_data["ZZ_CTR_SRC2_WRK_TO_DT"] = end_date
-
         try:
+            # Step 1: Perform search request
             self._log(f"Performing search: expired={show_expired}")
             response = self.session.post(
                 url, data=form_data, timeout=180
@@ -267,7 +263,6 @@ class LPAScraper:
             self._extract_tokens(response)
 
             # Check if we have results
-            result_count = 0
             if "CaptureResults" in data:
                 capture = data["CaptureResults"]
                 # Look for result indicators
@@ -292,232 +287,131 @@ class LPAScraper:
                         if message:
                             self._log(f"No results message: {message}")
 
-            return {"status": "success", "data": data}
+            # Step 2: Download the Excel file
+            tmp_path = self._download()
 
-        except requests.exceptions.RequestException as e:
-            return {"status": "error", "error": str(e)}
+            # Step 3: Parse the HTML table (file is actually HTML, not true Excel)
+            self._log(f"Parsing Excel file: {tmp_path}")
+            df_list = pd.read_html(tmp_path)
+            if not df_list:
+                raise Exception("No tables found in downloaded file")
+            df = df_list[0]  # Get first table
+            self._log(f"Parsed {len(df)} rows, {len(df.columns)} columns")
 
-    def download(self, state_num: Optional[int] = None) -> Dict:
-        """Request Excel download of search results.
+            # Clean up temp file
+            os.unlink(tmp_path)
+
+            return df
+
+        except Exception as e:
+            print(f"Error during search: {e}")
+            return pd.DataFrame()
+
+    def _download(self) -> str:
+        """Download search results as Excel file (internal method).
 
         Returns:
-            Dict with download URL or error
+            Path to downloaded temporary file
+
+        Raises:
+            Exception: If download request fails or URL not found
         """
         url = f"{self.BASE_URL}{self.SEARCH_ENDPOINT}"
 
-        # Use provided state_num or fallback to self.icstate_num or default to '3'
-        state = str(state_num) if state_num is not None else (self.icstate_num or "3")
-        self._log(f"Using ICStateNum: {state}")
+        self._log(f"Using ICStateNum: {self.icstate_num}")
 
-        form_data = {
-            "IF-TargetVerb": "POST",
-            "IF-TargetContent": json.dumps(self.TARGET_CONTENT),
-            "IF-Template": "/pages/LPASearch/lpa-search.aspx",
-            "IF-IgnoreContent": "",
-            "ICDoModal": "1",
-            "sortAction": "",
-            "ICType": "Panel",
-            "ICElementNum": "0",
-            "ICStateNum": state,
-            "ICAction": "ZZ_CTR_SRC_VW$hexcel$0",  # Excel download action
-            "ICModelCancel": "0",
-            "ICXPos": "0",
-            "ICYPos": "0",
-            "ResponsetoDiffFrame": "-1",
-            "TargetFrameName": "None",
-            "FacetPath": "None",
-            "ICFocus": "",
-            "ICSaveWarningFilter": "0",
-            "ICChanged": "-1",
-            "ICSkipPending": "0",
-            "ICAutoSave": "0",
-            "ICResubmit": "0",
-            "ICSID": self.icsid or "",
-            "ICActionPrompt": "false",
-            "ICBcDomData": "",
-            "ICPanelName": "",
-            "ICFind": "",
-            "ICAddCount": "",
-            "ICAppClsData": "",
-            "ZZ_CTR_SRC_VW$hnewpers$0": "0|0|1|0|0|0|0#1|0|1|0|0|0|0#3|0|1|0|0|0|0#4|0|1|0|0|156|1#5|0|0|0|0|0|0#6|0|0|0|0|0|0#7|0|0|0|0|0|0#8|0|0|0|0|103|0#9|0|0|0|0|85|1#10|0|0|0|0|99|0#11|0|0|0|0|0|0#12|0|0|2|1|151|1#13|0|0|0|0|71|0#14|0|0|0|0|113|0#15|0|0|0|0|67|0#16|0|0|0|0|67|0#18|0|0|0|0|96|1#19|0|0|0|0|51|0#20|0|0|0|0|0|0#21|0|0|0|0|0|0#22|0|0|0|0|0|0#23|0|0|0|0|0|0#24|0|0|0|0|0|0#25|0|0|0|0|0|0#26|0|0|0|0|0|0#28|0|0|0|0|0|0#29|0|0|0|0|0|0#30|0|0|0|0|0|0#31|0|0|0|0|0|0#",
-            "ZZ_CTR_SRC2_WRK_CNTRCT_ID": "",
-            "DESCR_1": "",
-            "ZZ_CTR_SRC2_WRK_ZZ_CNTRCT_TYPE": "",
-            "ZZ_CTR_SRC2_WRK_BUYER_ID": "",
-            "ZZ_CTR_SRC2_WRK_VENDOR_ID": "",
-            "ZZ_CTR_SRC2_WRK_NAME1": "",
-            "ZZ_CTR_SRC2_WRK_ZZ_ACQ_TYPE": "",
-            "ZZ_CTR_SRC2_WRK_CHECKED": "Y",
-            "ZZ_CTR_SRC2_WRK_CHECKED$chk": "Y",
-        }
+        # Step 1: Request download URL
+        form_data = self._get_base_form_data()
+        form_data["ICAction"] = "ZZ_CTR_SRC_VW$hexcel$0"  # Excel download action
+        form_data["ZZ_CTR_SRC_VW$hnewpers$0"] = (
+            "0|0|1|0|0|0|0#1|0|1|0|0|0|0#3|0|1|0|0|0|0#4|0|1|0|0|156|1#5|0|0|0|0|0|0#6|0|0|0|0|0|0#7|0|0|0|0|0|0#8|0|0|0|0|103|0#9|0|0|0|0|85|1#10|0|0|0|0|99|0#11|0|0|0|0|0|0#12|0|0|2|1|151|1#13|0|0|0|0|71|0#14|0|0|0|0|113|0#15|0|0|0|0|67|0#16|0|0|0|0|67|0#18|0|0|0|0|96|1#19|0|0|0|0|51|0#20|0|0|0|0|0|0#21|0|0|0|0|0|0#22|0|0|0|0|0|0#23|0|0|0|0|0|0#24|0|0|0|0|0|0#25|0|0|0|0|0|0#26|0|0|0|0|0|0#28|0|0|0|0|0|0#29|0|0|0|0|0|0#30|0|0|0|0|0|0#31|0|0|0|0|0|0#"
+        )
+        form_data["ZZ_CTR_SRC2_WRK_CHECKED"] = "Y"
+        form_data["ZZ_CTR_SRC2_WRK_CHECKED$chk"] = "Y"
 
-        try:
-            self._log("Requesting Excel download...")
-            response = self.session.post(url, data=form_data, timeout=60)
-            response.raise_for_status()
+        self._log("Requesting Excel download...")
+        response = self.session.post(url, data=form_data, timeout=60)
+        response.raise_for_status()
 
-            self._log(f"Download response: {len(response.text)} bytes")
+        self._log(f"Download response: {len(response.text)} bytes")
 
-            data = response.json()
+        data = response.json()
 
-            # Extract download URL from attachmentLink in CaptureResults
-            download_url = None
+        # Extract download URL from attachmentLink in CaptureResults
+        download_url = None
+        if "CaptureResults" in data and "attachmentWrapper" in data["CaptureResults"]:
+            attachment_wrappers = data["CaptureResults"]["attachmentWrapper"]
+            if len(attachment_wrappers) > 0:
+                wrapper = attachment_wrappers[0]
+                children = wrapper.get("Children", {})
+                if "attachmentLink" in children:
+                    attachment_links = children["attachmentLink"]
+                    self._log(f"Found {len(attachment_links)} attachment links")
+                    if len(attachment_links) > 0:
+                        link_data = attachment_links[0]
+                        props = link_data.get("Properties", {})
+                        if "href" in props:
+                            download_url = props["href"]
+                            self._log(f"Download URL: {download_url}")
 
-            # Check CaptureResults -> attachmentWrapper -> Children -> attachmentLink
-            if (
-                "CaptureResults" in data
-                and "attachmentWrapper" in data["CaptureResults"]
-            ):
-                attachment_wrappers = data["CaptureResults"]["attachmentWrapper"]
-                if len(attachment_wrappers) > 0:
-                    wrapper = attachment_wrappers[0]
-                    children = wrapper.get("Children", {})
-                    if "attachmentLink" in children:
-                        attachment_links = children["attachmentLink"]
-                        self._log(f"Found {len(attachment_links)} attachment links")
-                        if len(attachment_links) > 0:
-                            link_data = attachment_links[0]
-                            props = link_data.get("Properties", {})
-                            if "href" in props:
-                                download_url = props["href"]
-                                # Already absolute URL
-                                self._log(f"Download URL: {download_url}")
+        if not download_url:
+            raise Exception("No download URL found in response")
 
-            if download_url:
-                return {"status": "success", "download_url": download_url}
-            else:
-                return {
-                    "status": "error",
-                    "error": "No download URL found in response",
-                    "data": data,
-                }
+        # Step 2: Download the file
+        self._log("Downloading file...")
+        response = self.session.get(download_url, timeout=60)
+        response.raise_for_status()
 
-        except requests.exceptions.RequestException as e:
-            return {"status": "error", "error": str(e)}
+        # Step 3: Save to temporary file
+        with tempfile.NamedTemporaryFile(
+            mode="wb", suffix=".xls", delete=False
+        ) as tmp_file:
+            tmp_file.write(response.content)
+            tmp_path = tmp_file.name
 
-    def download_file(self, download_url: str, output_path: str) -> bool:
-        """Download the Excel file from the provided URL.
-
-        Args:
-            download_url: URL to download from
-            output_path: Path to save the file
-
-        Returns:
-            True if successful, False otherwise
-        """
-        try:
-            self._log(f"Downloading file to {output_path}")
-            response = self.session.get(download_url, timeout=60)
-            response.raise_for_status()
-
-            with open(output_path, "wb") as f:
-                f.write(response.content)
-
-            self._log(f"Downloaded {len(response.content)} bytes")
-            return True
-
-        except Exception as e:
-            print(f"Error downloading file: {e}")
-            return False
-
-    def parse_excel(self, file_path: str) -> pd.DataFrame:
-        """Parse the downloaded Excel file into a DataFrame.
-
-        The file is actually HTML formatted as Excel, so we parse it as HTML.
-
-        Args:
-            file_path: Path to the Excel file
-
-        Returns:
-            DataFrame with LPA data
-        """
-        try:
-            self._log(f"Parsing Excel file: {file_path}")
-            # File is actually HTML, read as HTML table
-            df_list = pd.read_html(file_path)
-            if len(df_list) > 0:
-                df = df_list[0]  # Get first table
-                self._log(f"Parsed {len(df)} rows, {len(df.columns)} columns")
-                return df
-            else:
-                print("No tables found in HTML file")
-                return pd.DataFrame()
-
-        except Exception as e:
-            print(f"Error parsing file: {e}")
-            return pd.DataFrame()
+        self._log(f"Downloaded {len(response.content)} bytes to {tmp_path}")
+        return tmp_path
 
 
 def main():
-    """Test the LPA scraper."""
-    print("=" * 60)
-    print("LPA Scraper Test")
-    print("=" * 60)
+    """Download all LPA contracts (both expired and active)."""
+    print("=" * 70)
+    print("Downloading All LPA Contracts")
+    print("=" * 70)
 
-    # Initialize scraper
-    scraper = LPAScraper(debug=True)
+    # Get expired contracts
+    print("\nFetching expired contracts...")
+    scraper_expired = LPAScraper(debug=False)
+    df_expired = scraper_expired.search(show_expired=True)
+    df_expired["status"] = "expired"
+    print(f"✓ Retrieved {len(df_expired)} expired contracts")
 
-    print("\n" + "=" * 60)
-    print("Step 1: Search for expired contracts (like user demo)")
-    print("=" * 60)
+    # Get active contracts
+    print("\nFetching active contracts...")
+    scraper_active = LPAScraper(debug=False)
+    df_active = scraper_active.search(show_expired=False)
+    df_active["status"] = "active"
+    print(f"✓ Retrieved {len(df_active)} active contracts")
 
-    # Search for expired contracts with no other filters (like user's demo)
-    search_result = scraper.search(show_expired=True)
+    # Combine
+    df_all = pd.concat([df_expired, df_active], ignore_index=True)
+    print(f"\n{'=' * 70}")
+    print(f"Total: {len(df_all)} contracts")
+    print(f"  - Expired: {len(df_expired)}")
+    print(f"  - Active:  {len(df_active)}")
 
-    if search_result["status"] == "success":
-        print("\n✓ Search successful")
+    # Save to CSV
+    output_file = "lpa_all_contracts.csv"
+    df_all.to_csv(output_file, index=False)
+    print(f"\n✓ Saved to {output_file}")
 
-        # Save search response for debugging
-        with open("lpa_search_response.json", "w") as f:
-            json.dump(search_result["data"], f, indent=2)
-        print("  Saved search response to lpa_search_response.json")
-    else:
-        print(f"\n✗ Search failed: {search_result.get('error')}")
-        return
+    # Show sample
+    print("\nSample records:")
+    print(df_all.head())
 
-    print("\n" + "=" * 60)
-    print("Step 2: Request download")
-    print("=" * 60)
-
-    # Request download
-    download_result = scraper.download()
-
-    if download_result["status"] == "success":
-        download_url = download_result["download_url"]
-        print(f"\n✓ Download URL obtained: {download_url}")
-    else:
-        print(f"\n✗ Download failed: {download_result.get('error')}")
-        return
-
-    print("\n" + "=" * 60)
-    print("Step 3: Download Excel file")
-    print("=" * 60)
-
-    # Download the file
-    output_file = "lpa_expired_contracts.xls"
-    if scraper.download_file(download_url, output_file):
-        print(f"\n✓ File downloaded: {output_file}")
-    else:
-        print(f"\n✗ File download failed")
-        return
-
-    print("\n" + "=" * 60)
-    print("Step 4: Parse Excel file")
-    print("=" * 60)
-
-    # Parse the Excel file
-    df = scraper.parse_excel(output_file)
-
-    if not df.empty:
-        print(f"\n✓ Parsed {len(df)} LPA records")
-        print("\nColumn names:")
-        for col in df.columns:
-            print(f"  - {col}")
-
-        print("\nFirst few records:")
-        print(df.head())
-    else:
-        print("\n✗ Failed to parse Excel file")
+    # Show breakdown by status
+    print("\nBreakdown by status:")
+    print(df_all["status"].value_counts())
 
 
 if __name__ == "__main__":
