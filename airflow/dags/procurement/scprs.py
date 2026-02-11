@@ -415,7 +415,7 @@ def get_date_range(context) -> tuple[pendulum.DateTime, pendulum.DateTime]:
     """
     end = context["data_interval_end"]
     # Subtract exactly 1 year
-    start = end.subtract(months=1)
+    start = end.subtract(years=1)
 
     return start, end
 
