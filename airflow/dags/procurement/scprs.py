@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import warnings
 from datetime import datetime, timedelta
@@ -449,13 +450,13 @@ def transform_scprs_data(df: pd.DataFrame) -> pd.DataFrame:
 
 
 @task
-def scrape_scprs() -> pd.DataFrame:
-    """Scrape SCPRS data for date range."""
+def scrape_scprs() -> str:
+    """Scrape SCPRS data for date range and write to /tmp."""
     # Get date range from context
     context = get_current_context()
     start_date, end_date = get_date_range(context)
 
-    scraper = SCPRSScraper(debug=True)
+    scraper = SCPRSScraper(debug=False)
 
     # Format dates for scraper API (MM/DD/YYYY)
     start_str = start_date.strftime("%m/%d/%Y")
@@ -472,6 +473,8 @@ def scrape_scprs() -> pd.DataFrame:
             start_date_from=start_str,
             start_date_to=end_str,
         )
+        # Explicitly set acquisition_type column
+        df["acquisition_type"] = acq_type
         print(f"  Found {len(df)} records for {acq_type}")
         dfs.append(df)
 
@@ -479,15 +482,31 @@ def scrape_scprs() -> pd.DataFrame:
     combined_df = pd.concat(dfs, ignore_index=True)
     print(f"Total records (before dedup): {len(combined_df)}")
 
-    return combined_df
+    # Deduplicate on composite key (keep last occurrence)
+    # Note: purchase_doc is reused across departments, so (purchase_doc, department) is the true primary key
+    combined_df = combined_df.drop_duplicates(
+        subset=["purchase_doc", "department"], keep="last"
+    )
+    print(f"Total records (after dedup): {len(combined_df)}")
+
+    # Write to /tmp and return file path
+    file_path = f"/tmp/scprs_{context['dag_run'].run_id}.parquet"
+    combined_df.to_parquet(file_path, index=False)
+    print(f"Wrote {len(combined_df)} records to {file_path}")
+
+    return file_path
 
 
 @task
-def load_to_snowflake(df: pd.DataFrame) -> None:
+def load_to_snowflake(file_path: str) -> None:
     """Load to Snowflake with DELETE + INSERT strategy."""
     # Get date range from context
     context = get_current_context()
     start_date, end_date = get_date_range(context)
+
+    # Read dataframe from /tmp
+    df = pd.read_parquet(file_path)
+    print(f"Read {len(df)} records from {file_path}")
 
     # Transform data types (dates, currency)
     df = transform_scprs_data(df)
@@ -528,6 +547,11 @@ def load_to_snowflake(df: pd.DataFrame) -> None:
     )
     print(f"Inserted {len(df)} new records")
 
+    # Clean up temp file
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print(f"Cleaned up {file_path}")
+
 
 @dag(
     description="Load IT procurement data from SCPRS",
@@ -544,8 +568,8 @@ def scprs_procurement_data():
     Monthly: Runs on 1st of month, fetches previous 365 days
     Backfill: Manual trigger with custom logical_date
     """
-    df = scrape_scprs()  # Scrapes both IT Goods and IT Services
-    load_to_snowflake(df)  # DELETE + INSERT for date range
+    file_path = scrape_scprs()  # Scrapes both IT Goods and IT Services, writes to /tmp
+    load_to_snowflake(file_path)  # Reads from /tmp, DELETE + INSERT for date range
 
 
 run = scprs_procurement_data()
