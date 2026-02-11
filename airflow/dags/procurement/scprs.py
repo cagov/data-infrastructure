@@ -414,7 +414,7 @@ def get_date_range(context) -> tuple[pendulum.DateTime, pendulum.DateTime]:
     """
     end = context["data_interval_end"]
     # Subtract exactly 1 year
-    start = end.subtract(years=1)
+    start = end.subtract(months=1)
 
     return start, end
 
@@ -423,11 +423,13 @@ def transform_scprs_data(df: pd.DataFrame) -> pd.DataFrame:
     """Transform scraped data for Snowflake."""
     df = df.copy()
 
-    # Parse dates: MM/DD/YYYY strings -> datetime
+    # Parse dates: MM/DD/YYYY strings -> datetime, then convert to Python date objects
     df["start_date"] = pd.to_datetime(
         df["start_date"], format="%m/%d/%Y", errors="coerce"
-    )
-    df["end_date"] = pd.to_datetime(df["end_date"], format="%m/%d/%Y", errors="coerce")
+    ).dt.date
+    df["end_date"] = pd.to_datetime(
+        df["end_date"], format="%m/%d/%Y", errors="coerce"
+    ).dt.date
 
     # Parse grand_total: "$1,234.56" -> 1234.56
     df["grand_total"] = (
