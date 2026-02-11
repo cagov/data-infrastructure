@@ -402,18 +402,19 @@ class SCPRSScraper:
 
 def get_date_range(context) -> tuple[pendulum.DateTime, pendulum.DateTime]:
     """
-    Calculate 365-day lookback from data_interval_end.
+    Calculate 1-year lookback from data_interval_end.
 
     For a monthly DAG running on Feb 1:
     - data_interval_end = 2025-02-01 (end of January interval)
-    - Returns: 2024-02-02 to 2025-02-01
+    - Returns: 2024-02-01 to 2025-02-01 (inclusive)
 
     For backfill triggered with logical_date=2005-12-01:
     - data_interval_end = 2006-01-01 (one month after logical_date)
-    - Returns: 2005-01-02 to 2006-01-01
+    - Returns: 2005-01-01 to 2006-01-01
     """
     end = context["data_interval_end"]
-    start = end - timedelta(days=365)
+    # Subtract exactly 1 year
+    start = end.subtract(years=1)
 
     return start, end
 
