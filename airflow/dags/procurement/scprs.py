@@ -294,8 +294,6 @@ class SCPRSScraper:
 
         # Step 1: Click download button (ICStateNum=3)
         form_data = self._base_form_data("ZZ_SCPRS_SP_WRK_BUTTONS_GB")
-        form_data["ICXPos"] = "0"
-        form_data["ICYPos"] = "307"
 
         self._log("Clicking download button...")
         response = self.session.post(url, data=form_data, timeout=60)
@@ -308,8 +306,6 @@ class SCPRSScraper:
 
         # Step 2: Confirm download (#ICOK) (ICStateNum=4)
         form_data = self._base_form_data("#ICOK")
-        form_data["ICXPos"] = "0"
-        form_data["ICYPos"] = "307"
 
         self._log("Confirming download...")
         response = self.session.post(url, data=form_data, timeout=60)
