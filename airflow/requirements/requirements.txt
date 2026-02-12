@@ -4,7 +4,6 @@ apache-airflow-providers-microsoft-mssql
 apache-airflow-providers-slack
 apache-airflow-providers-snowflake
 backoff
-beautifulsoup4
 fsspec
 pandas
 pdfplumber
