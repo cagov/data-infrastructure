@@ -748,18 +748,19 @@ def scrape_scprs() -> str:
     context = get_current_context()
     start_date, end_date = get_date_range(context)
 
-    scraper = SCPRSScraper(debug=False)
-
     # Format dates for scraper API (MM/DD/YYYY)
     start_str = start_date.strftime("%m/%d/%Y")
     end_str = end_date.strftime("%m/%d/%Y")
 
     # Scrape for both IT acquisition types
+    # Use separate scraper instances to avoid session state pollution
     acquisition_types = ["IT Goods", "IT Services"]
     dfs = []
 
     for acq_type in acquisition_types:
         print(f"Scraping {acq_type} from {start_str} to {end_str}")
+        # Create new scraper instance for each acquisition type
+        scraper = SCPRSScraper(debug=False)
         df = scraper.search(
             acquisition_type=acq_type,
             start_date_from=start_str,
