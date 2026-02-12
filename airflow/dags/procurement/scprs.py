@@ -14,8 +14,6 @@ from typing import Dict, List, Optional
 import pandas as pd
 import pendulum
 import requests
-from bs4 import BeautifulSoup
-from bs4 import XMLParsedAsHTMLWarning
 from common.defaults import DEFAULT_ARGS
 from snowflake.connector.pandas_tools import write_pandas
 
@@ -23,14 +21,11 @@ from airflow.decorators import dag, task
 from airflow.operators.python import get_current_context
 from airflow.providers.snowflake.hooks.snowflake import SnowflakeHook
 
-# Suppress XMLParsedAsHTMLWarning from BeautifulSoup
-warnings.filterwarnings("ignore", category=XMLParsedAsHTMLWarning)
-
 MAX_PAGES = 300
 
 
 class SCPRSScraper:
-    """HTTP-based scraper for SCPRS using the direct PeopleSoft endpoint."""
+    """HTTP-based scraper for SCPRS using Excel download."""
 
     BASE_URL = "https://suppliers.fiscal.ca.gov"
     SEARCH_PAGE = "/psc/psfpd1/SUPPLIER/ERP/c/ZZ_PO.ZZ_SCPRS1_CMP.GBL"
@@ -87,7 +82,7 @@ class SCPRSScraper:
         form_data = self._base_form_data(field_name)
         # Override specific fields for field-fill action
         form_data["ICActionPrompt"] = "false"
-        form_data["ICBcDomData"] = ""
+        form_data["ICBcDomData"] = "UnknownValue"
         form_data[field_name] = value
 
         try:
@@ -148,13 +143,15 @@ class SCPRSScraper:
         start_date_from: Optional[str] = None,
         start_date_to: Optional[str] = None,
     ) -> pd.DataFrame:
-        """Perform a search on SCPRS using working server-side filters.
+        """Perform a search on SCPRS and download results as Excel.
 
         Request sequence:
         1. GET: Initialize session (done in __init__)
         2. POST: Fill acquisition type field (if provided)
         3. POST: Execute search with other parameters
-        4. POST: Automatically fetch all pages if pagination exists
+        4. POST: Click download button
+        5. POST: Confirm download and extract Excel URL
+        6. GET: Download Excel file
 
         Args:
             department: Department code (e.g., '3540' for CAL FIRE)
@@ -181,57 +178,45 @@ class SCPRSScraper:
         url = f"{self.BASE_URL}{self.SEARCH_PAGE}"
         self._log(f"Posting search to {url}")
         self._log(
-            f"Search parameters: dept={department}, dates={start_date_from} to {start_date_to}"
+            f"Search parameters: dept={department}, acq_type={acquisition_type}, dates={start_date_from} to {start_date_to}"
         )
-        if self.debug:
-            # Show the actual form fields being sent
-            search_fields = {k: v for k, v in form_data.items() if k.startswith("ZZ_")}
-            if search_fields:
-                self._log(f"Form search fields: {search_fields}")
 
         try:
-            response = self.session.post(url, data=form_data, timeout=60)
+            # Step 1: Execute search
+            response = self.session.post(url, data=form_data, timeout=180)
             response.raise_for_status()
 
-            self._log(f"Response status: {response.status_code}")
-            self._log(f"Response length: {len(response.text)} bytes")
+            self._log(
+                f"Search response: {response.status_code}, {len(response.text)} bytes"
+            )
 
             # Extract updated ICStateNum from response
             self._extract_tokens_from_html(response.text)
 
-            # Always follow pagination if available
-            pages = [response.text]
-            current_html = response.text
-            page_num = 1
+            # Step 2: Download the Excel file
+            tmp_path = self._download()
 
-            while self._has_next_page(current_html):
-                self._log(f"Fetching page {page_num + 1}...")
-                next_response = self._fetch_next_page()
+            # Step 3: Parse the HTML table (file is HTML formatted as Excel)
+            self._log(f"Parsing Excel file: {tmp_path}")
+            df_list = pd.read_html(tmp_path)
+            if not df_list:
+                raise Exception("No tables found in downloaded file")
+            df = df_list[0]  # Get first table
+            self._log(f"Parsed {len(df)} rows, {len(df.columns)} columns")
 
-                if next_response.get("status") != "success":
-                    self._log(
-                        f"Error fetching page {page_num + 1}: {next_response.get('error')}"
-                    )
-                    break
+            # Clean up temp file
+            os.unlink(tmp_path)
 
-                current_html = next_response["html"]
-                pages.append(current_html)
-                page_num += 1
+            return df
 
-                if page_num >= MAX_PAGES:  # Safety limit
-                    self._log(f"Reached pagination safety limit ({MAX_PAGES} pages)")
-                    break
+        except Exception as e:
+            print(f"Error during search: {e}")
+            import traceback
 
-            self._log(f"Fetched {len(pages)} total pages")
-
-            # Parse all pages and return DataFrame
-            return self._parse_results(pages)
-
-        except requests.exceptions.RequestException as e:
-            print(f"Error: {e}")
+            traceback.print_exc()
             return pd.DataFrame()
 
-    def _base_form_data(self, action: str) -> Dict[str, str]:
+    def _base_form_data(self, action: str) -> dict:
         """Build base form data for PeopleSoft requests.
 
         Args:
@@ -269,38 +254,12 @@ class SCPRSScraper:
             "DUMMY_FIELD$hnewpers$0": "0|0|0|0|0|95|0#1|0|0|0|0|42|0#4|0|0|0|0|174|0#",
         }
 
-    def _has_next_page(self, html: str) -> bool:
-        """Check if there's a next page button available in the HTML."""
-        soup = BeautifulSoup(html, "lxml")
-        next_button = soup.find("a", id=re.compile(r"ZZ_SCPRS_SP_WRK_NEXT_BUTTON"))
-        return next_button is not None
-
-    def _fetch_next_page(self) -> Dict:
-        """Fetch the next page of results."""
-        url = f"{self.BASE_URL}{self.SEARCH_PAGE}"
-        form_data = self._base_form_data("ZZ_SCPRS_SP_WRK_NEXT_BUTTON")
-
-        try:
-            response = self.session.post(url, data=form_data, timeout=60)
-            response.raise_for_status()
-
-            # Extract updated ICStateNum
-            self._extract_tokens_from_html(response.text)
-
-            return {
-                "status": "success",
-                "html": response.text,
-            }
-
-        except requests.exceptions.RequestException as e:
-            return {"status": "error", "error": str(e)}
-
     def _build_form_data(
         self,
         department: Optional[str] = None,
         start_date_from: Optional[str] = None,
         start_date_to: Optional[str] = None,
-    ) -> Dict[str, str]:
+    ) -> dict:
         """Build the form data for the search request.
 
         Note: acquisition_type is NOT included here - it's set via _fill_field()
@@ -320,88 +279,71 @@ class SCPRSScraper:
 
         return form_data
 
-    def _parse_results(self, pages: List[str]) -> pd.DataFrame:
-        """Parse HTML pages to extract procurement records.
-
-        Args:
-            pages: List of HTML page strings
+    def _download(self) -> str:
+        """Download search results as Excel file (internal method).
 
         Returns:
-            DataFrame with procurement records
+            Path to downloaded temporary file
+
+        Raises:
+            Exception: If download request fails
         """
-        all_records = []
-        for page_num, html in enumerate(pages, 1):
-            self._log(f"Parsing page {page_num}...")
-            records = self._parse_html_page(html)
-            all_records.extend(records)
+        url = f"{self.BASE_URL}{self.SEARCH_PAGE}"
 
-        self._log(f"Total records across {len(pages)} page(s): {len(all_records)}")
-        return pd.DataFrame(all_records)
+        self._log(f"Using ICStateNum: {self.icstate_num}")
 
-    def _parse_html_page(self, html: str) -> List[Dict]:
-        """Parse a single HTML page to extract records.
+        # Step 1: Click download button (ICStateNum=3)
+        form_data = self._base_form_data("ZZ_SCPRS_SP_WRK_BUTTONS_GB")
+        form_data["ICXPos"] = "0"
+        form_data["ICYPos"] = "307"
 
-        Args:
-            html: HTML content of the page
+        self._log("Clicking download button...")
+        response = self.session.post(url, data=form_data, timeout=60)
+        response.raise_for_status()
 
-        Returns:
-            List of record dictionaries
-        """
-        soup = BeautifulSoup(html, "lxml")
+        self._log(f"Download button response: {len(response.text)} bytes")
 
-        # Look for the results table (ID: ZZ_SCPR_RSLT_VW$scroll$0)
-        table = soup.find("table", {"id": "ZZ_SCPR_RSLT_VW$scroll$0"})
+        # Extract updated ICStateNum
+        self._extract_tokens_from_html(response.text)
 
-        if not table:
-            self._log("No results table found")
-            return []
+        # Step 2: Confirm download (#ICOK) (ICStateNum=4)
+        form_data = self._base_form_data("#ICOK")
+        form_data["ICXPos"] = "0"
+        form_data["ICYPos"] = "307"
 
-        # Find all result rows (pattern: trZZ_SCPR_RSLT_VW$0_row0, trZZ_SCPR_RSLT_VW$0_row1, etc.)
-        rows = table.find_all("tr", id=re.compile(r"trZZ_SCPR_RSLT_VW\$0_row\d+"))
+        self._log("Confirming download...")
+        response = self.session.post(url, data=form_data, timeout=60)
+        response.raise_for_status()
 
-        self._log(f"Found {len(rows)} result rows")
+        self._log(f"Confirm response: {len(response.text)} bytes")
 
-        records = []
-        for row in rows:
-            try:
-                record = self._parse_row(row)
-                if record:
-                    records.append(record)
-            except Exception as e:
-                self._log(f"Error parsing row: {e}")
-                continue
+        # Step 3: Extract download URL from response
+        # Look for .xls URL in the XML response
+        download_url = None
+        xls_pattern = r'(https?://[^\s<>"\']+\.xls[^\s<>"\']*)'
+        match = re.search(xls_pattern, response.text)
+        if match:
+            download_url = match.group(1)
+            self._log(f"Found download URL: {download_url}")
+        else:
+            raise Exception("No .xls download URL found in response")
 
-        return records
+        # Step 4: Download the actual Excel file
+        self._log("Downloading Excel file from URL...")
+        file_response = self.session.get(download_url, timeout=60)
+        file_response.raise_for_status()
 
-    # Field mapping: field_name -> (tag_type, id_pattern)
-    FIELD_PATTERNS = {
-        "purchase_doc": ("a", r"PURCHASE_DOC\$"),
-        "description": ("span", r"ZZ_SCPR_RSLT_VW_DESCR254_MIXED\$"),
-        "department": ("span", r"ZZ_SCPR_RSLT_VW_DESCR\$"),
-        "supplier_id": ("span", r"ZZ_SCPR_RSLT_VW_SUPPLIER_ID\$"),
-        "supplier_name": ("span", r"ZZ_SCPR_RSLT_VW_NAME1\$"),
-        "start_date": ("span", r"ZZ_SCPR_RSLT_VW_START_DATE\$"),
-        "end_date": ("span", r"ZZ_SCPRS_SP_WRK_END_DATE\$"),
-        "grand_total": ("span", r"ZZ_SCPR_RSLT_VW_AWARDED_AMT\$"),
-        "lpa_contract_id": ("span", r"ZZ_SCPR_RSLT_VW_ZZ_LPACONTRACTNBR\$"),
-        "certification_type": ("span", r"ZZ_SCPR_RSLT_VW_ZZ_CERT_TYPE\$"),
-        "acquisition_method": ("span", r"ZZ_SCPR_RSLT_VW_ZZ_ACQ_MTHD\$"),
-        "buyer_name": ("span", r"BUYER_DESCR\$"),
-        "buyer_email": ("span", r"ZZ_SCPR_RSLT_VW_EMAILID\$"),
-        "acquisition_type": ("span", r"ZZ_SCPR_RSLT_VW_ZZ_COMMENT1\$"),
-        "status": ("span", r"ZZ_SCPR_RSLT_VW_STATUS2\$"),
-    }
+        self._log(f"Downloaded {len(file_response.content)} bytes")
 
-    def _parse_row(self, row) -> Optional[Dict]:
-        """Parse a single result row."""
-        record = {}
+        # Step 5: Save to temporary file
+        with tempfile.NamedTemporaryFile(
+            mode="wb", suffix=".xls", delete=False
+        ) as tmp_file:
+            tmp_file.write(file_response.content)
+            tmp_path = tmp_file.name
 
-        for field_name, (tag_type, pattern) in self.FIELD_PATTERNS.items():
-            element = row.find(tag_type, id=re.compile(pattern))
-            if element:
-                record[field_name] = element.get_text(strip=True)
-
-        return record if record else None
+        self._log(f"Saved to {tmp_path}")
+        return tmp_path
 
 
 class LPAScraper:
@@ -773,23 +715,29 @@ def transform_scprs_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
     # Parse dates: MM/DD/YYYY strings -> datetime, then convert to Python date objects
-    df["start_date"] = pd.to_datetime(
-        df["start_date"], format="%m/%d/%Y", errors="coerce"
-    ).dt.date
-    df["end_date"] = pd.to_datetime(
-        df["end_date"], format="%m/%d/%Y", errors="coerce"
-    ).dt.date
+    if "Start Date" in df.columns:
+        df["Start Date"] = pd.to_datetime(
+            df["Start Date"], format="%m/%d/%Y", errors="coerce"
+        ).dt.date
+    if "End Date" in df.columns:
+        df["End Date"] = pd.to_datetime(
+            df["End Date"], format="%m/%d/%Y", errors="coerce"
+        ).dt.date
 
     # Parse grand_total: "$1,234.56" -> 1234.56
-    df["grand_total"] = (
-        df["grand_total"]
-        .str.replace("$", "", regex=False)
-        .str.replace(",", "", regex=False)
-        .astype(float)
-    )
+    if "Grand Total" in df.columns:
+        df["Grand Total"] = (
+            df["Grand Total"]
+            .str.replace("$", "", regex=False)
+            .str.replace(",", "", regex=False)
+            .astype(float)
+        )
 
-    # Uppercase columns for Snowflake convention
-    df.columns = df.columns.str.upper()
+    # Uppercase columns and replace whitespace with underscores for Snowflake convention
+    df.columns = df.columns.str.upper().str.replace(r"\s+", "_", regex=True)
+
+    # Remove special characters like # from column names and clean up trailing underscores
+    df.columns = df.columns.str.replace("#", "", regex=False).str.rstrip("_")
 
     # Add load timestamp
     df["LOADED_AT"] = datetime.now()
@@ -831,9 +779,9 @@ def scrape_scprs() -> str:
     print(f"Total records (before dedup): {len(combined_df)}")
 
     # Deduplicate on composite key (keep last occurrence)
-    # Note: purchase_doc is reused across departments, so (purchase_doc, department) is the true primary key
+    # Note: Purchase Document # is reused across departments, so (Purchase Document #, Department) is the true primary key
     combined_df = combined_df.drop_duplicates(
-        subset=["purchase_doc", "department"], keep="last"
+        subset=["Purchase Document #", "Department"], keep="last"
     )
     print(f"Total records (after dedup): {len(combined_df)}")
 
