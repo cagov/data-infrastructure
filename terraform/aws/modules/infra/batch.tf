@@ -114,8 +114,6 @@ resource "aws_batch_job_definition" "default" {
       { type = "VCPU", value = "0.25" },
       { type = "MEMORY", value = "512" }
     ]
-    # TODO: Figure out how to properly pass in a private key rather than a password.
-    # Ran into some issues with properly encoding it as an environment variable.
     secrets = [
       for s in local.snowflake_data : {
         name      = "SNOWFLAKE_${upper(s)}",
