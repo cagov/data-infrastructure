@@ -948,7 +948,7 @@ def load_lpa_to_snowflake(file_path: str) -> None:
 
 @dag(
     description="Load IT procurement data from SCPRS and LPA contracts",
-    schedule_interval="@monthly",
+    schedule_interval="@daily",
     start_date=datetime(2004, 1, 1),
     catchup=False,
     max_active_runs=2,  # Limit concurrency to avoid stressing PeopleSoft server
