@@ -1,0 +1,152 @@
+version: 2
+
+sources:
+  - name: procurement
+    database: "{{ env_var('DBT_RAW_DB', 'RAW_DEV') }}"
+    schema: procurement
+    description: California state procurement data from SCPRS and LPA systems
+    tables:
+      - name: scprs_purchases
+        description: |
+          IT procurement purchases from the SCPRS (State Contracts Purchasing and Reporting System).
+          Includes both IT Goods and IT Services acquisitions.
+        columns:
+          - name: purchase_document
+            description: Purchase document number
+            data_tests:
+              - not_null
+          - name: department
+            description: Department code
+            data_tests:
+              - not_null
+          - name: department_name
+            description: Department name
+          - name: first_item_title
+            description: Title of the first item in the purchase
+          - name: supplier_id
+            description: Supplier identifier
+          - name: supplier_name
+            description: Name of the supplier
+          - name: start_date
+            description: Contract start date
+          - name: end_date
+            description: Contract end date
+          - name: grand_total
+            description: Total purchase amount in dollars
+          - name: associated_pos
+            description: Associated purchase orders
+          - name: lpa_contract_id
+            description: Associated LPA contract ID
+          - name: acquisition_type
+            description: Type of acquisition
+          - name: view
+            description: System field (not used)
+          - name: loaded_at
+            description: Timestamp when data was loaded
+        data_tests:
+          - dbt_utils.unique_combination_of_columns:
+              combination_of_columns: [purchase_document, department]
+
+      - name: lpa_contracts
+        description: |
+          Leveraged Procurement Agreement (LPA) contracts from California eProcure.
+          Includes both active and expired contracts.
+        columns:
+          - name: contract_id
+            description: Unique contract identifier
+            data_tests:
+              - not_null
+              - unique
+          - name: contract_description
+            description: Contract description
+          - name: supplier_id
+            description: Supplier identifier
+          - name: supplier_name
+            description: Name of the supplier
+          - name: buyer
+            description: Buyer name
+          - name: begin_date
+            description: Contract begin date
+          - name: expire_date
+            description: Contract expiration date
+          - name: contract_type
+            description: Type of contract
+          - name: certification_type
+            description: Certification type for the contract
+          - name: acquisition_type
+            description: Type of acquisition
+          - name: status
+            description: Contract status
+          - name: view
+            description: System field (not used)
+          - name: loaded_at
+            description: Timestamp when data was loaded
+
+models:
+  - name: stg_scprs__purchases
+    description: |
+      Staging model for SCPRS IT procurement purchases.
+      Cleans leading apostrophes from key identifier fields.
+    columns:
+      - name: purchase_document
+        description: Purchase document number
+        data_tests:
+          - not_null
+      - name: department
+        description: Department code
+        data_tests:
+          - not_null
+      - name: department_name
+        description: Department name
+      - name: description
+        description: Description of the purchase
+      - name: supplier_id
+        description: Supplier identifier
+      - name: supplier_name
+        description: Name of the supplier
+      - name: start_date
+        description: Contract start date
+      - name: end_date
+        description: Contract end date
+      - name: grand_total
+        description: Total purchase amount in dollars
+      - name: associated_pos
+        description: Associated purchase orders
+      - name: lpa_contract_id
+        description: Associated LPA contract ID
+      - name: acquisition_type
+        description: Type of acquisition
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns: [purchase_document, department]
+
+  - name: stg_scprs__lpa_contracts
+    description: |
+      Staging model for LPA contracts.
+      Cleans 'nan' string values in certification_type and buyer fields.
+    columns:
+      - name: contract_id
+        description: Unique contract identifier
+        data_tests:
+          - not_null
+          - unique
+      - name: contract_description
+        description: Contract description
+      - name: supplier_id
+        description: Supplier identifier
+      - name: supplier_name
+        description: Name of the supplier
+      - name: buyer
+        description: Buyer name
+      - name: begin_date
+        description: Contract begin date
+      - name: expire_date
+        description: Contract expiration date
+      - name: contract_type
+        description: Type of contract
+      - name: certification_type
+        description: Certification type for the contract
+      - name: acquisition_type
+        description: Type of acquisition
+      - name: status
+        description: Contract status

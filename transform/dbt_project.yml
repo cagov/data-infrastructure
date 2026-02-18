@@ -38,6 +38,8 @@ models:
         +schema: department_of_finance
       snowflake_cost_tracking:
         +schema: snowflake_cost_tracking
+      procurement:
+        +schema: procurement
 
         # These staging models are a little unusual for two reasons:
         #
@@ -75,3 +77,5 @@ models:
       snowflake_cost_tracking:
         +schema: snowflake_cost_tracking
         +materialized: table
+      procurement:
+        +schema: procurement
