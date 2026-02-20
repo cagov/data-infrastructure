@@ -22,6 +22,12 @@ variable "admin_user_email" {
   type        = string
 }
 
+variable "allowed_ip_addresses" {
+  description = "List of IP addresses allowed to access SQL Database"
+  type        = list(string)
+  default     = []
+}
+
 locals {
   owner       = "doe"
   environment = "dev"
@@ -68,8 +74,14 @@ module "sqldb" {
 
   admin_user_principal_name = var.admin_user_email
 
-  # Only Azure services initially
-  allowed_ip_addresses = []
+  # Convert simple IP list to module's expected format
+  allowed_ip_addresses = [
+    for idx, ip in var.allowed_ip_addresses : {
+      name     = "allowed-ip-${idx}"
+      start_ip = ip
+      end_ip   = ip
+    }
+  ]
   allow_azure_services = true
 
   tags = {
