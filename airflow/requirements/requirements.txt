@@ -6,8 +6,8 @@ apache-airflow-providers-snowflake
 backoff
 faker
 fsspec
+mssql-python
 pandas
 pdfplumber
 pyarrow
-pyodbc
 snowflake-connector-python

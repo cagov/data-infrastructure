@@ -10,9 +10,8 @@ Tasks are dynamically generated to avoid code duplication between instances.
 
 from datetime import datetime
 from typing import Dict, Any
+import mssql_python
 from airflow.decorators import dag, task
-from airflow.providers.microsoft.mssql.hooks.mssql import MsSqlHook
-from airflow.providers.microsoft.mssql.operators.mssql import MsSqlOperator
 from common.defaults import DEFAULT_ARGS
 from common.test_data_generator import (
     create_schema,
@@ -48,14 +47,53 @@ END
 """
 
 
+def get_connection_string(conn_id: str) -> str:
+    """Build mssql-python connection string from Airflow connection."""
+    from airflow.hooks.base import BaseHook
+
+    conn = BaseHook.get_connection(conn_id)
+    extra = conn.extra_dejson
+
+    # Build connection string for mssql-python (semicolon-delimited format)
+    conn_str = (
+        f"SERVER=tcp:{conn.host},{conn.port or 1433};"
+        f"DATABASE={conn.schema};"
+        f"UID={conn.login};"
+        f"PWD={conn.password};"
+        f"Authentication={extra.get('Authentication', 'ActiveDirectoryServicePrincipal')};"
+        f"Encrypt={extra.get('Encrypt', 'yes')};"
+    )
+    return conn_str
+
+
+def make_create_database_task(instance_key: str, instance_config: Dict[str, Any]):
+    """Factory function to create a database creation task (RDS only)."""
+
+    @task(task_id=f"create_database_{instance_key}")
+    def create_database_task():
+        """Create database if it doesn't exist."""
+        conn_str = get_connection_string(instance_config["conn_id"])
+        conn = mssql_python.connect(conn_str)
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute(CREATE_DATABASE_SQL)
+            conn.commit()
+        finally:
+            cursor.close()
+            conn.close()
+
+    return create_database_task
+
+
 def make_create_schema_task(instance_key: str, instance_config: Dict[str, Any]):
     """Factory function to create a schema creation task for a specific instance."""
 
     @task(task_id=f"create_schema_{instance_key}")
     def create_schema_task():
         """Create test data schema (users and transactions tables)."""
-        hook = MsSqlHook(mssql_conn_id=instance_config["conn_id"])
-        conn = hook.get_conn()
+        conn_str = get_connection_string(instance_config["conn_id"])
+        conn = mssql_python.connect(conn_str)
         cursor = conn.cursor()
 
         try:
@@ -76,8 +114,8 @@ def make_load_users_task(instance_key: str, instance_config: Dict[str, Any]):
     @task(task_id=f"load_users_{instance_key}")
     def load_users(num_users: int = 1000):
         """Load users to SQL Server instance."""
-        hook = MsSqlHook(mssql_conn_id=instance_config["conn_id"])
-        conn = hook.get_conn()
+        conn_str = get_connection_string(instance_config["conn_id"])
+        conn = mssql_python.connect(conn_str)
         cursor = conn.cursor()
 
         try:
@@ -100,8 +138,8 @@ def make_load_transactions_task(instance_key: str, instance_config: Dict[str, An
     @task(task_id=f"load_transactions_{instance_key}")
     def load_transactions(transactions_per_user: int = 5):
         """Load transactions to SQL Server instance."""
-        hook = MsSqlHook(mssql_conn_id=instance_config["conn_id"])
-        conn = hook.get_conn()
+        conn_str = get_connection_string(instance_config["conn_id"])
+        conn = mssql_python.connect(conn_str)
         cursor = conn.cursor()
 
         try:
@@ -130,8 +168,8 @@ def make_verify_task(instance_key: str, instance_config: Dict[str, Any]):
     @task(task_id=f"verify_data_{instance_key}")
     def verify_data():
         """Verify SQL Server data integrity and compute statistics."""
-        hook = MsSqlHook(mssql_conn_id=instance_config["conn_id"])
-        conn = hook.get_conn()
+        conn_str = get_connection_string(instance_config["conn_id"])
+        conn = mssql_python.connect(conn_str)
         cursor = conn.cursor()
 
         try:
@@ -162,12 +200,7 @@ def load_sqlserver_test_data():
     for instance_key, instance_config in INSTANCES.items():
         # Create database if needed (RDS only)
         if instance_config["create_database"]:
-            create_db = MsSqlOperator(
-                task_id=f"create_database_{instance_key}",
-                mssql_conn_id=instance_config["conn_id"],
-                sql=CREATE_DATABASE_SQL,
-                autocommit=True,
-            )
+            create_db = make_create_database_task(instance_key, instance_config)()
         else:
             create_db = None
 
