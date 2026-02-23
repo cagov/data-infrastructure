@@ -27,7 +27,7 @@ def create_schema(cursor):
         BEGIN
             CREATE TABLE dbo.users (
                 id INT IDENTITY(1,1) PRIMARY KEY,
-                email NVARCHAR(255) NOT NULL UNIQUE,
+                email NVARCHAR(255) NOT NULL,
                 first_name NVARCHAR(100) NOT NULL,
                 last_name NVARCHAR(100) NOT NULL,
                 phone_number NVARCHAR(50),
@@ -71,13 +71,7 @@ def generate_users(num_users: int) -> List[Tuple]:
         List of tuples ready for bulk insert:
         (email, first_name, last_name, phone_number, date_of_birth)
     """
-    import time
-
-    seed = int(time.time())
-
     fake = Faker()
-    Faker.seed(seed)
-    random.seed(seed)
 
     users: List[Tuple] = []
     for _ in range(num_users):
@@ -108,14 +102,9 @@ def generate_transactions(
         List of tuples ready for bulk insert:
         (user_id, amount, description, transaction_type, status, transaction_date)
     """
-    import time
-
-    seed = int(time.time())
     num_transactions = len(user_ids) * transactions_per_user
 
     fake = Faker()
-    Faker.seed(seed)
-    random.seed(seed)
 
     transaction_types = ["purchase", "refund", "transfer"]
     statuses = ["pending", "completed", "failed"]
