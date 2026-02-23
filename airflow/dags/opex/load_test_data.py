@@ -1,7 +1,8 @@
 """DAG to load synthetic test data into SQL Server instances (RDS and Azure SQL).
 
-This DAG creates a simple schema with users and transactions tables, then loads
-semi-realistic test data using the Faker library. It runs in two parallel branches:
+This DAG creates a simple schema with users and transactions tables (if they don't
+exist), then appends semi-realistic test data using the Faker library. Each run
+generates fresh data with unique values. It runs in two parallel branches:
 one for AWS RDS SQL Server and one for Azure SQL Database.
 
 The data generation logic is in common/test_data_generator.py for reusability.
@@ -186,7 +187,7 @@ def make_verify_task(instance_key: str, instance_config: Dict[str, Any]):
 
 
 @dag(
-    description="Load synthetic test data into SQL Server instances (RDS and Azure SQL)",
+    description="Append synthetic test data to SQL Server instances (RDS and Azure SQL)",
     start_date=datetime(2026, 2, 1),
     schedule_interval=None,  # Manual trigger only
     default_args=DEFAULT_ARGS,

@@ -11,65 +11,70 @@ import random
 
 
 def create_schema(cursor):
-    """Create test data schema (users and transactions tables).
+    """Create test data schema (users and transactions tables) if they don't exist.
 
-    Drops existing tables if present and recreates them.
+    Tables are only created if they don't already exist. This allows for appending
+    data to existing tables.
 
     Args:
         cursor: Database cursor
     """
-    print("Creating test data schema...")
+    print("Creating test data schema if needed...")
 
-    # Drop in FK dependency order
-    cursor.execute("DROP TABLE IF EXISTS dbo.transactions;")
-    cursor.execute("DROP TABLE IF EXISTS dbo.users;")
-    cursor.connection.commit()
-
-    # Create users table
+    # Create users table if it doesn't exist
     cursor.execute("""
-        CREATE TABLE dbo.users (
-            id INT IDENTITY(1,1) PRIMARY KEY,
-            email NVARCHAR(255) NOT NULL UNIQUE,
-            first_name NVARCHAR(100) NOT NULL,
-            last_name NVARCHAR(100) NOT NULL,
-            phone_number NVARCHAR(50),
-            date_of_birth DATE,
-            created_at DATETIME2 DEFAULT GETDATE()
-        );
+        IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.users') AND type = N'U')
+        BEGIN
+            CREATE TABLE dbo.users (
+                id INT IDENTITY(1,1) PRIMARY KEY,
+                email NVARCHAR(255) NOT NULL UNIQUE,
+                first_name NVARCHAR(100) NOT NULL,
+                last_name NVARCHAR(100) NOT NULL,
+                phone_number NVARCHAR(50),
+                date_of_birth DATE,
+                created_at DATETIME2 DEFAULT GETDATE()
+            );
+        END
     """)
     cursor.connection.commit()
 
-    # Create transactions table
+    # Create transactions table if it doesn't exist
     cursor.execute("""
-        CREATE TABLE dbo.transactions (
-            id INT IDENTITY(1,1) PRIMARY KEY,
-            user_id INT NOT NULL,
-            amount DECIMAL(12, 2) NOT NULL,
-            description NVARCHAR(500),
-            transaction_type NVARCHAR(50) NOT NULL,
-            status NVARCHAR(50) DEFAULT 'completed',
-            transaction_date DATETIME2 DEFAULT GETDATE(),
-            CONSTRAINT FK_transactions_user_id
-                FOREIGN KEY (user_id) REFERENCES dbo.users(id)
-                ON DELETE CASCADE
-        );
+        IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'dbo.transactions') AND type = N'U')
+        BEGIN
+            CREATE TABLE dbo.transactions (
+                id INT IDENTITY(1,1) PRIMARY KEY,
+                user_id INT NOT NULL,
+                amount DECIMAL(12, 2) NOT NULL,
+                description NVARCHAR(500),
+                transaction_type NVARCHAR(50) NOT NULL,
+                status NVARCHAR(50) DEFAULT 'completed',
+                transaction_date DATETIME2 DEFAULT GETDATE(),
+                CONSTRAINT FK_transactions_user_id
+                    FOREIGN KEY (user_id) REFERENCES dbo.users(id)
+                    ON DELETE CASCADE
+            );
+        END
     """)
     cursor.connection.commit()
 
-    print("✓ Schema created")
+    print("✓ Schema ready")
 
 
-def generate_users(num_users: int, seed: int = 42) -> List[Tuple]:
+def generate_users(num_users: int) -> List[Tuple]:
     """Generate synthetic user data using Faker.
 
     Args:
         num_users: Number of users to generate
-        seed: Random seed for reproducibility
 
     Returns:
         List of tuples ready for bulk insert:
         (email, first_name, last_name, phone_number, date_of_birth)
     """
+    import time
+
+    seed = int(time.time())
+
     fake = Faker()
     Faker.seed(seed)
     random.seed(seed)
@@ -91,19 +96,21 @@ def generate_users(num_users: int, seed: int = 42) -> List[Tuple]:
 
 
 def generate_transactions(
-    user_ids: List[int], transactions_per_user: int, seed: int = 42
+    user_ids: List[int], transactions_per_user: int
 ) -> List[Tuple]:
     """Generate synthetic transaction data using Faker.
 
     Args:
         user_ids: List of user IDs to create transactions for
         transactions_per_user: Average number of transactions per user
-        seed: Random seed for reproducibility
 
     Returns:
         List of tuples ready for bulk insert:
         (user_id, amount, description, transaction_type, status, transaction_date)
     """
+    import time
+
+    seed = int(time.time())
     num_transactions = len(user_ids) * transactions_per_user
 
     fake = Faker()
