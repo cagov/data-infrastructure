@@ -4,8 +4,10 @@ apache-airflow-providers-microsoft-mssql
 apache-airflow-providers-slack
 apache-airflow-providers-snowflake
 backoff
+faker
 fsspec
 pandas
 pdfplumber
 pyarrow
+pyodbc
 snowflake-connector-python
