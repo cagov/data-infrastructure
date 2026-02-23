@@ -10,6 +10,7 @@ output "state" {
       test   = aws_batch_job_definition.default["test"].name
       latest = aws_batch_job_definition.default["latest"].name
     }
+    mwaa_nat_gateway_ips = aws_eip.this[*].public_ip
     rds_sqlserver = var.enable_rds ? {
       endpoint      = aws_db_instance.sqlserver[0].endpoint
       address       = aws_db_instance.sqlserver[0].address
