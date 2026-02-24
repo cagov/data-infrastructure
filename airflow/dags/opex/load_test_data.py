@@ -29,12 +29,12 @@ INSTANCES = {
     "rds": {
         "conn_id": "rds_sqlserver",
         "use_database": "synthetic_data",  # RDS needs explicit USE statement
-        "create_database": True,  # RDS: create synthetic_data database (connects to master first)
+        "create_database": True,  # RDS: create synthetic_data database
     },
     "azure": {
         "conn_id": "azure_sql_dev",
         "use_database": None,  # Azure connection includes database in connection string
-        "create_database": False,  # Azure: database already exists, can't CREATE from user connection
+        "create_database": False,  # Azure: database already exists
     },
 }
 
@@ -55,7 +55,7 @@ def get_connection_string(conn_id: str) -> str:
     conn = BaseHook.get_connection(conn_id)
     extra = conn.extra_dejson
 
-    # Build connection string for mssql-python (semicolon-delimited format)
+    # Build connection string for mssql-python
     conn_str = (
         f"SERVER=tcp:{conn.host},{conn.port or 1433};"
         f"DATABASE={conn.schema};"
