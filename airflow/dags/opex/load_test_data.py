@@ -190,7 +190,7 @@ def make_verify_task(instance_key: str, instance_config: Dict[str, Any]):
 @dag(
     description="Append synthetic test data to SQL Server instances (RDS and Azure SQL)",
     start_date=datetime(2026, 2, 1),
-    schedule_interval=None,  # Manual trigger only
+    schedule_interval="@daily",
     default_args=DEFAULT_ARGS,
     catchup=False,
     tags=["sqlserver", "test-data", "opex"],
