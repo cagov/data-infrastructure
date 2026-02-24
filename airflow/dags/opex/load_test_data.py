@@ -63,6 +63,7 @@ def get_connection_string(conn_id: str) -> str:
         f"PWD={conn.password};"
         f"Authentication={extra.get('Authentication', 'ActiveDirectoryServicePrincipal')};"
         f"Encrypt={extra.get('Encrypt', 'yes')};"
+        f"TrustServerCertificate={extra.get('TrustServerCertificate', 'yes')};"
     )
     return conn_str
 
