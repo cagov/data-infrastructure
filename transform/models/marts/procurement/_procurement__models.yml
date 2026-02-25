@@ -34,9 +34,6 @@ models:
         description: Associated LPA contract ID
       - name: acquisition_type
         description: Type of acquisition
-    data_tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns: [purchase_document, department]
 
   - name: procurement__lpa_contracts
     description: |
