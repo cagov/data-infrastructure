@@ -3,7 +3,7 @@
 ##################################
 
 locals {
-  snowflake_data = ["account", "user", "database", "warehouse", "role", "password"]
+  snowflake_data = ["account", "user", "database", "warehouse", "role", "private_key"]
 
   jobs = ["test", "latest"]
 }
