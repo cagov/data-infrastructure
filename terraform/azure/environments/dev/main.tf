@@ -23,7 +23,7 @@ variable "admin_user_email" {
 }
 
 variable "allowed_ip_addresses" {
-  description = "List of IP addresses allowed to access SQL Database"
+  description = "List of CIDR blocks allowed to access SQL Database (e.g. '1.2.3.4/32' or '35.234.176.144/29')"
   type        = list(string)
   default     = []
 }
@@ -74,12 +74,12 @@ module "sqldb" {
 
   admin_user_principal_name = var.admin_user_email
 
-  # Convert simple IP list to module's expected format
+  # Convert CIDR list to module's expected format (individual IPs should use /32)
   allowed_ip_addresses = [
-    for idx, ip in var.allowed_ip_addresses : {
+    for idx, cidr in var.allowed_ip_addresses : {
       name     = "allowed-ip-${idx}"
-      start_ip = ip
-      end_ip   = ip
+      start_ip = cidrhost(cidr, 0)
+      end_ip   = cidrhost(cidr, -1)
     }
   ]
   allow_azure_services = true
