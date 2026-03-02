@@ -1,9 +1,12 @@
 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.7.2/constraints-3.10.txt
 apache-airflow-providers-dbt-cloud
+apache-airflow-providers-microsoft-mssql
 apache-airflow-providers-slack
 apache-airflow-providers-snowflake
 backoff
+faker
 fsspec
+mssql-python
 pandas
 pdfplumber
 pyarrow

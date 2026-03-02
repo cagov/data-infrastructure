@@ -8,7 +8,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.56.0"
+      version = "~> 5.10"
     }
     random = {
       source  = "hashicorp/random"
@@ -53,4 +53,11 @@ module "infra" {
     test   = "dse-snowflake-dev-us-west-2-loader"
     latest = "dse-snowflake-prd-us-west-2-loader"
   }
+
+  # RDS SQL Server configuration
+  enable_rds = true
+}
+
+output "infra" {
+  value = module.infra.state
 }

@@ -28,6 +28,12 @@ variable "snowflake_loader_secret" {
   default     = null
 }
 
+variable "enable_rds" {
+  description = "Whether to enable RDS SQL Server instance"
+  type        = bool
+  default     = false
+}
+
 locals {
   prefix = "${var.owner}-${var.project}-${var.environment}"
 }
