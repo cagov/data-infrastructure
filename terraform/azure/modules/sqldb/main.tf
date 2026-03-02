@@ -69,9 +69,11 @@ resource "azurerm_mssql_database" "main" {
   name      = "${local.prefix}-db"
   server_id = azurerm_mssql_server.main.id
 
-  sku_name       = "Basic" # DTU-based, ~$5/month
-  max_size_gb    = 2
-  zone_redundant = false
+  sku_name                    = "GP_S_Gen5_1" # General Purpose Serverless, supports CDC
+  min_capacity                = 0.5
+  auto_pause_delay_in_minutes = 60
+  max_size_gb                 = 2
+  zone_redundant              = false
 
   short_term_retention_policy {
     retention_days = 7
