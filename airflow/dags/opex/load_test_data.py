@@ -76,11 +76,11 @@ def make_create_database_task(instance_key: str, instance_config: Dict[str, Any]
         """Create database if it doesn't exist."""
         conn_str = get_connection_string(instance_config["conn_id"])
         conn = mssql_python.connect(conn_str)
+        conn.autocommit = True  # CREATE DATABASE cannot run inside a transaction
         cursor = conn.cursor()
 
         try:
             cursor.execute(CREATE_DATABASE_SQL)
-            conn.commit()
         finally:
             cursor.close()
             conn.close()
