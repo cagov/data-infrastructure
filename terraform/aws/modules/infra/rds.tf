@@ -18,11 +18,12 @@ resource "aws_db_instance" "sqlserver" {
   count = var.enable_rds ? 1 : 0
 
   identifier = "${local.prefix}-sqlserver"
-  engine     = "sqlserver-ex"
-  # SQL Server 2019 Express Edition
+  engine     = "sqlserver-se"
+  # SQL Server 2019 Standard Edition (required for CDC)
   engine_version = "15.00.4385.2.v1"
 
-  instance_class    = "db.t3.micro"
+  instance_class    = "db.m5.large"
+  license_model     = "license-included"
   allocated_storage = 20
   storage_type      = "gp3"
   storage_encrypted = true
