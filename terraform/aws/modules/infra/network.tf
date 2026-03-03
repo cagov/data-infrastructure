@@ -69,6 +69,14 @@ resource "aws_security_group" "rds_sqlserver" {
     security_groups = [aws_security_group.mwaa.id]
   }
 
+  ingress {
+    description     = "SQL Server access from bastion"
+    from_port       = 1433
+    to_port         = 1433
+    protocol        = "tcp"
+    security_groups = [aws_security_group.bastion[0].id]
+  }
+
   tags = {
     Name = "${local.prefix}-rds-sqlserver-sg"
   }
