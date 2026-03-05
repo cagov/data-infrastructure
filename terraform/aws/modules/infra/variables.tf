@@ -46,6 +46,12 @@ variable "bastion_authorized_keys" {
   default     = []
 }
 
+variable "privatelink_allowed_principals" {
+  description = "AWS principal ARNs allowed to connect via PrivateLink (e.g. Fivetran, Snowflake account ARNs in the form arn:aws:iam::<account-id>:root)"
+  type        = list(string)
+  default     = []
+}
+
 locals {
   prefix = "${var.owner}-${var.project}-${var.environment}"
 }

@@ -14,6 +14,10 @@ terraform {
       source  = "hashicorp/random"
       version = "3.4.3"
     }
+    dns = {
+      source  = "hashicorp/dns"
+      version = "~> 3.0"
+    }
   }
 
   backend "s3" {
@@ -62,6 +66,9 @@ module "infra" {
   bastion_allowed_ssh_cidrs = [
     # Fivetran GCP us-east-4 (default processing region)
     "35.234.176.144/29",
+  ]
+  privatelink_allowed_principals = [
+    "arn:aws:iam::834469178297:root",  # Fivetran
   ]
 
 }
