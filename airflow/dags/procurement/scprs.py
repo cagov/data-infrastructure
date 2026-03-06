@@ -956,12 +956,12 @@ def scprs_procurement_data():
     Scrapes IT procurement data and LPA contracts.
 
     SCPRS (IT Goods and IT Services):
-    - Monthly: Runs on 1st of month, fetches previous 365 days
+    - Daily: fetches previous 365 days
     - Backfill: Manual trigger with custom logical_date
     - Strategy: DELETE + INSERT for date range
 
     LPA Contracts (Active and Expired):
-    - Monthly: Full snapshot of all contracts
+    - Daily: Full snapshot of all contracts
     - Strategy: overwrite=True (full replace)
 
     Tasks are independent and run in parallel.
