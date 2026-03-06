@@ -7,9 +7,8 @@ import os
 import re
 import tempfile
 import time
-import warnings
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional
+from datetime import datetime
+from typing import Optional
 
 import pandas as pd
 import pendulum
@@ -20,8 +19,6 @@ from snowflake.connector.pandas_tools import write_pandas
 from airflow.decorators import dag, task
 from airflow.operators.python import get_current_context
 from airflow.providers.snowflake.hooks.snowflake import SnowflakeHook
-
-MAX_PAGES = 300
 
 
 class SCPRSScraper:
