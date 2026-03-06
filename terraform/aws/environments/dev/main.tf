@@ -68,6 +68,7 @@ module "infra" {
     "35.234.176.144/29",
   ]
   privatelink_allowed_principals = [
+    "arn:aws:iam::024848475617:root",  # Snowflake
     "arn:aws:iam::834469178297:root",  # Fivetran
   ]
 
