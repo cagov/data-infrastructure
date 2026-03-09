@@ -36,9 +36,10 @@ models:
       +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
       department_of_finance:
         +schema: department_of_finance
+      procurement:
+        +schema: procurement
       snowflake_cost_tracking:
         +schema: snowflake_cost_tracking
-
         # These staging models are a little unusual for two reasons:
         #
         #   1. They are incremental
@@ -75,3 +76,5 @@ models:
       snowflake_cost_tracking:
         +schema: snowflake_cost_tracking
         +materialized: table
+      procurement:
+        +schema: procurement

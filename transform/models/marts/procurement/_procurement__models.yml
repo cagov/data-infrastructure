@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: procurement__scprs_purchases
+    description: |
+      IT procurement purchases from the SCPRS system.
+      Includes both IT Goods and IT Services acquisitions.
+    columns:
+      - name: purchase_document
+        description: Purchase document number
+        data_tests:
+          - not_null
+      - name: department
+        description: Department code
+        data_tests:
+          - not_null
+      - name: department_name
+        description: Department name
+      - name: description
+        description: Description of the purchase
+      - name: supplier_id
+        description: Supplier identifier
+      - name: supplier_name
+        description: Name of the supplier
+      - name: start_date
+        description: Contract start date
+      - name: end_date
+        description: Contract end date
+      - name: grand_total
+        description: Total purchase amount in dollars
+      - name: associated_pos
+        description: Associated purchase orders
+      - name: lpa_contract_id
+        description: Associated LPA contract ID
+      - name: acquisition_type
+        description: Type of acquisition
+
+  - name: procurement__lpa_contracts
+    description: |
+      Leveraged Procurement Agreement contracts from California eProcure.
+      Includes both active and expired contracts.
+    columns:
+      - name: contract_id
+        description: Unique contract identifier
+        data_tests:
+          - not_null
+          - unique
+      - name: contract_description
+        description: Contract description
+      - name: supplier_id
+        description: Supplier identifier
+      - name: supplier_name
+        description: Name of the supplier
+      - name: buyer
+        description: Buyer name
+      - name: begin_date
+        description: Contract begin date
+      - name: expire_date
+        description: Contract expiration date
+      - name: contract_type
+        description: Type of contract
+      - name: certification_type
+        description: Certification type for the contract
+      - name: acquisition_type
+        description: Type of acquisition
+      - name: status
+        description: Contract status
