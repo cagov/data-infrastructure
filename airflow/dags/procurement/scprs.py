@@ -878,6 +878,10 @@ def scrape_lpa() -> str:
     df_expired = scraper_expired.search(show_expired=True)
     df_expired["status"] = "expired"
     print(f"✓ Retrieved {len(df_expired)} expired contracts")
+    if df_expired.empty:
+        raise RuntimeError(
+            "No expired contracts found - aborting to avoid overwriting data with empty results"
+        )
 
     # Get active contracts
     print("Fetching active contracts...")
@@ -885,6 +889,10 @@ def scrape_lpa() -> str:
     df_active = scraper_active.search(show_expired=False)
     df_active["status"] = "active"
     print(f"✓ Retrieved {len(df_active)} active contracts")
+    if df_active.empty:
+        raise RuntimeError(
+            "No active contracts found - aborting to avoid overwriting data with empty results"
+        )
 
     # Combine
     df_all = pd.concat([df_expired, df_active], ignore_index=True)
