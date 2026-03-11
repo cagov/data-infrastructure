@@ -19,5 +19,9 @@ output "state" {
       secret_arn    = aws_db_instance.sqlserver[0].master_user_secret[0].secret_arn
       secret_status = aws_db_instance.sqlserver[0].master_user_secret[0].secret_status
     } : null
+    bastion_public_ip   = var.enable_rds ? aws_eip.bastion[0].public_ip : null
+    bastion_instance_id = var.enable_rds ? aws_instance.bastion[0].id : null
+    privatelink_endpoint_service_name = var.enable_rds ? aws_vpc_endpoint_service.rds[0].service_name : null
+    privatelink_nlb_dns_name          = var.enable_rds ? aws_lb.privatelink[0].dns_name : null
   }
 }
