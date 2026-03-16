@@ -56,7 +56,9 @@ resource "azurerm_mssql_server" "main" {
   azuread_administrator {
     login_username              = data.azuread_user.admin.user_principal_name
     object_id                   = data.azuread_user.admin.object_id
-    azuread_authentication_only = true # Azure AD authentication only (no SQL passwords)
+    # Allow SQL authentication in addition to Azure AD: some data loaders
+    # (including OpenFlow) don't support AD authentication, only SQL.
+    azuread_authentication_only = false
   }
 
   minimum_tls_version           = "1.2"
