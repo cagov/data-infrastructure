@@ -17,5 +17,8 @@ allowed_ip_addresses = [
   # as they expire, but for the purposes of a POC this
   # seems okay.
   "153.45.59.0/24",
-  "153.45.69.0/24"
+  "153.45.69.0/24",
+  # Estuary IP ranges
+  "34.213.10.188/32",
+  "52.34.175.198/32"
 ]
