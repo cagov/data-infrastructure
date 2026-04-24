@@ -2497,7 +2497,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2551,7 +2551,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2605,7 +2605,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2658,8 +2658,8 @@
                 },
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
-                  "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "httpMethod": "",
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2713,7 +2713,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2767,7 +2767,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2821,7 +2821,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2875,7 +2875,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
@@ -2929,7 +2929,7 @@
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
                   "httpMethod": "POST",
-                  "queryWindowInMin": 10,
+                  "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
                   "retryCount": 5,
