@@ -20,5 +20,7 @@ allowed_ip_addresses = [
   "153.45.69.0/24",
   # Estuary IP ranges
   "34.213.10.188/32",
-  "52.34.175.198/32"
+  "52.34.175.198/32",
+  # Databricks NAT Gateway IP
+  "48.221.48.2/32"
 ]
