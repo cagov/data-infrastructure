@@ -1,0 +1,1872 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../dbt/">
+      
+      
+        <link rel="next" href="../../dbt_docs_snowflake/">
+      
+      
+      <link rel="icon" href="../../images/odi-circle_logomark-blue.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>dbt performance - CalData Data Services and Engineering Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dbt-performance-evaluation-and-tuning" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CalData Data Services and Engineering Infrastructure" class="md-header__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CalData Data Services and Engineering Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              dbt performance
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CalData Data Services and Engineering Infrastructure" class="md-nav__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    CalData Data Services and Engineering Infrastructure
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Code development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/local-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local environment setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/codespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Codespaces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/code-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Review
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/writing-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Writing Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/terraform-local-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/github-project-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Project Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/azdevops-project-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Azure DevOps Project Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../code/working-with-snowflake-objects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Working with Snowflake notebooks and Streamlit
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Project infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infra/cloud-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud infrastructure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infra/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infra/snowflake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Snowflake overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Project setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/snowflake-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Snowflake setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/repo-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    git/Github setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/terraform-project-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/sentinel-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sentinel setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/dbt-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt Cloud setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/fivetran-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fivetran setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/snowflake-service-accounts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Adding service accounts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/project-teardown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project teardown
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    dbt
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            dbt
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dbt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    dbt performance
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt performance
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#considerations-when-does-performance-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considerations: When does performance matter?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Considerations: When does performance matter?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Costs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling conflicts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-tradeoffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      The tradeoffs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analyzing-performance-in-dbt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analyzing performance in dbt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analyzing performance in dbt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#getting-model-timing-local-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting model timing: Local development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-model-timing-dbt-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting model timing: dbt Cloud
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-model-timing-snowflake" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting model timing: Snowflake
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting model timing: Snowflake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query history
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#account-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Account usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions-how-to-tackle-dbt-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solutions: How to tackle dbt performance issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solutions: How to tackle dbt performance issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-job-level-adjust-frequency-and-break-up-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Job Level: Adjust frequency and break up runs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-model-level-materialization-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Model-level: Materialization matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-query-level-optimizing-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Query-level: Optimizing queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Query-level: Optimizing queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-or-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write or read?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snowflake-query-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snowflake query profile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bigquery-query-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      BigQuery query plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caching notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Local development tips
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt_docs_snowflake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt Cloud Snowflake project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Data
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Data
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data/footprints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Building footprints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MDSA glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/naming-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Naming conventions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    git
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/dbt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/cloud-data-warehouses/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud data warehouses
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#considerations-when-does-performance-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considerations: When does performance matter?
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Considerations: When does performance matter?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#costs" class="md-nav__link">
+    <span class="md-ellipsis">
+      Costs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scheduling-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      Scheduling conflicts
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-tradeoffs" class="md-nav__link">
+    <span class="md-ellipsis">
+      The tradeoffs
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#analyzing-performance-in-dbt" class="md-nav__link">
+    <span class="md-ellipsis">
+      Analyzing performance in dbt
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analyzing performance in dbt">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#getting-model-timing-local-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting model timing: Local development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-model-timing-dbt-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting model timing: dbt Cloud
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-model-timing-snowflake" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting model timing: Snowflake
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting model timing: Snowflake">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      Query history
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#account-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Account usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#solutions-how-to-tackle-dbt-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      Solutions: How to tackle dbt performance issues
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Solutions: How to tackle dbt performance issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-job-level-adjust-frequency-and-break-up-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Job Level: Adjust frequency and break up runs
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-model-level-materialization-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Model-level: Materialization matters
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-query-level-optimizing-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Query-level: Optimizing queries
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Query-level: Optimizing queries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#write-or-read" class="md-nav__link">
+    <span class="md-ellipsis">
+      Write or read?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#snowflake-query-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      Snowflake query profile
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bigquery-query-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      BigQuery query plan
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Caching notes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-development-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      Local development tips
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="dbt-performance-evaluation-and-tuning">dbt performance evaluation and tuning<a class="headerlink" href="#dbt-performance-evaluation-and-tuning" title="Permanent link">&para;</a></h1>
+<h2 id="considerations-when-does-performance-matter">Considerations: When does performance matter?<a class="headerlink" href="#considerations-when-does-performance-matter" title="Permanent link">&para;</a></h2>
+<p>In most settings, what is considered acceptable performance is relative to business needs and constraints. It's not atypical to deem the performance acceptable as long as there are no scheduling conflicts and models can run within a timeframe dictated by the frequency of the models running. In other words, if you need to run models every hour then the entire job cannot take longer than an hour to run. In general, compute costs are not so high to necessarily be worth optimizing the underlying queries but may be high enough to optimize frequency or data size.</p>
+<h3 id="costs">Costs<a class="headerlink" href="#costs" title="Permanent link">&para;</a></h3>
+<p>Although compute time is relatively cheap, it's sometimes possible with larger datasets that need to be frequently refreshed to optimize performance to save enough costs to be worth the time to optimize. In Snowflake you can easily monitor costs in the Admin/Usage section of the Snowflake UI, where you can see credits used by warehouse and role.
+Snowflake also provides several tables with meta information that can be used to derive exact costs for each query - an approach to this, with a ready-use-query can be found in the Select.dev blog post <a href="https://select.dev/posts/cost-per-query">"Calculating cost per query in Snowflake"</a></p>
+<p>Typically, unless model performance is obviously very poor you are better off adjusting the frequency of runs (end users almost always over-state their desire for data freshness) or reducing data set size either by limiting what you provide or by using <a href="#2-materialization-matters">incremental models</a>.</p>
+<p>In other words, very often the questions you should be asking are not in the category of SQL performance tuning but rather "do we need this data to be this fresh?" and "do we need all this data?".</p>
+<h3 id="scheduling-conflicts">Scheduling conflicts<a class="headerlink" href="#scheduling-conflicts" title="Permanent link">&para;</a></h3>
+<p>Often performance issues show up in scheduling. If you are running jobs once a day it is extremely unlikely you will run into any scheduling conflicts. However, if a much higher frequency is required, it's possible for jobs to take longer than that time between runs. In this case a common first approach is to break up model runs so that things that don't need to run as frequently can run separately from models that require more frequent updating. A typical way of doing this is to either use dbt run --select or dbt tags <a href="https://docs.getdbt.com/reference/resource-configs/tags">dbt tags </a> to select models in groups.
+This is not to say performance tuning of individual queries is never worth it but that the big macro gains come more from running models less frequently and/or with less data, e.g. using filtering or <a href="#2-materialization-matters">incremental models</a>.</p>
+<h3 id="the-tradeoffs">The tradeoffs<a class="headerlink" href="#the-tradeoffs" title="Permanent link">&para;</a></h3>
+<p>It is extremely important to balance time spent in optimizing model performance with compute costs and other concerns. If it takes you a day to optimize a model to run only a few seconds faster and save a few pennies per run, it's not likely worth the effort. Similarly, the use of incremental materialization can certainly reduce build time but introduce complexity and require a degree of monitoring to ensure integrity. See also <a href="#2-materialization-matters">Materialization Matters</a> below.</p>
+<h2 id="analyzing-performance-in-dbt">Analyzing performance in dbt<a class="headerlink" href="#analyzing-performance-in-dbt" title="Permanent link">&para;</a></h2>
+<p>With every dbt run or build several artifacts are generated in the target/ directory, including the run_results.json file. This includes detailed information on run execution and many people parse this to create dashboards to report on dbt performance and help with optimization and cost monitoring. There is an important caveat here: simply knowing how long a model took to run is important to uncover which models might need optimization, but cannot tell you anything about why they are performing poorly.</p>
+<h3 id="getting-model-timing-local-development">Getting model timing: Local development<a class="headerlink" href="#getting-model-timing-local-development" title="Permanent link">&para;</a></h3>
+<p>Every time you run a model dbt outputs timing, information which you can easily use to identify non-performance models. The output will look like:
+<div class="highlight"><pre><span></span><code>14:16:39.438935 [info ] [Thread-4  ]: 136 of 160 OK created sql table model dbt_aerishan.JobControl_Published_CertEligActions  [SUCCESS 1 in 43.00s]
+</code></pre></div>
+This is extremely useful during development to understand potential problems with your model's performance.</p>
+<h3 id="getting-model-timing-dbt-cloud">Getting model timing: dbt Cloud<a class="headerlink" href="#getting-model-timing-dbt-cloud" title="Permanent link">&para;</a></h3>
+<p>dbt Cloud has a nicer interface for finding which models in a project are running longest. Visit the Deploy &gt; Runs section of dbt Cloud. You'll see a full list of jobs and how long each took. To drill down to the model timing level click on a run name. You can expand the "Invoke dbt build" section under "Run Summary" to get a detailed summary of your run and timing for each model and test. There is also a "Debug logs" section for even more detail, including the exact queries run and an option to download the logs for easier viewing. Of course this is also where you go to find model and test errors and warnings!</p>
+<p><img alt="dbt Model Run Summary" src="../../images/dbt_run_summary.png" /></p>
+<p>For a quick visual reference of which models take up the most time in a run, click on the "Model Timing" tab. If you hover over a model you will be shown the specific timing.</p>
+<p><img alt="dbt Model Timing Graph" src="../../images/dbt_model_timing.png" /></p>
+<h3 id="getting-model-timing-snowflake">Getting model timing: Snowflake<a class="headerlink" href="#getting-model-timing-snowflake" title="Permanent link">&para;</a></h3>
+<p>Snowflake has quite a lot of performance data readily available through its <code>information_schema.QUERY_HISTORY()</code> table function and several views in the Account Usage schema. This is great not only for finding expensive queries regardless of source and of course for all sorts of analytics on Snowflake usage, such as credits.</p>
+<h4 id="query-history">Query history<a class="headerlink" href="#query-history" title="Permanent link">&para;</a></h4>
+<p>The <a href="https://docs.snowflake.com/en/sql-reference/functions/query_history">Query History</a> gives you real time data while the Account Usage is delayed. So Query History is great for analyzing your own queries in development and for current query performance in production.</p>
+<p>Example Query: Get top time-consuming queries for the dbt Cloud production loads
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span>
+<span class="w">    </span><span class="n">query_text</span><span class="p">,</span><span class="w"> </span><span class="n">query_type</span><span class="p">,</span><span class="w"> </span><span class="n">database_name</span><span class="p">,</span><span class="w"> </span><span class="k">schema_name</span><span class="p">,</span>
+<span class="w">    </span><span class="n">user_name</span><span class="p">,</span><span class="w"> </span><span class="n">total_elapsed_time</span>
+<span class="w">    </span><span class="k">FROM</span>
+<span class="w">        </span><span class="c1">-- query_history() is a table function</span>
+<span class="w">        </span><span class="k">table</span><span class="w"> </span><span class="p">(</span><span class="n">information_schema</span><span class="p">.</span><span class="n">query_history</span><span class="p">())</span>
+<span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">user_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;DBT_CLOUD_SVC_USER_PRD&#39;</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">total_elapsed_time</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span>
+</code></pre></div></p>
+<p>As you might have guessed this also lets you search for a model on query text, so you can find specific dbt models or classes of models:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="k">WHERE</span><span class="w"> </span><span class="n">query_text</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;%stg_%&#39;</span>
+</code></pre></div></p>
+<h4 id="account-usage">Account usage<a class="headerlink" href="#account-usage" title="Permanent link">&para;</a></h4>
+<p>The <a href="https://docs.snowflake.com/en/sql-reference/account-usage">Account Usage schema</a> (snowflake.account_usage) has multiple views that are of interest for monitoring not just query performance and credit usage but warehouse and database usage and more. This data is delayed 45 minutes but has a much longer history.</p>
+<p>Example Query: Find the queries with highest total execution time this month for the dbt cloud production loads.
+<div class="highlight"><pre><span></span><code><span class="k">SELECT</span><span class="w"> </span><span class="n">query_text</span><span class="p">,</span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">execution_time</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">60000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total_exec_time_mins</span><span class="p">,</span>
+<span class="w">    </span><span class="k">SUM</span><span class="p">(</span><span class="n">credits_used_cloud_services</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">total_credits_used</span>
+<span class="k">from</span><span class="w"> </span><span class="n">snowflake</span><span class="p">.</span><span class="n">account_usage</span><span class="p">.</span><span class="n">query_history</span>
+<span class="k">WHERE</span>
+<span class="w">    </span><span class="n">start_time</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">date_trunc</span><span class="p">(</span><span class="k">month</span><span class="p">,</span><span class="w"> </span><span class="k">current_date</span><span class="p">)</span>
+<span class="w">    </span><span class="k">AND</span><span class="w"> </span><span class="n">user_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;DBT_CLOUD_SVC_USER_PRD&#39;</span>
+<span class="k">GROUP</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">total_exec_time_mins</span><span class="w"> </span><span class="k">DESC</span>
+<span class="k">LIMIT</span><span class="w"> </span><span class="mi">20</span>
+</code></pre></div></p>
+<p>Example Query: Get Credits used by Warehouse this month
+<div class="highlight"><pre><span></span><code><span class="k">select</span><span class="w"> </span><span class="n">warehouse_name</span><span class="p">,</span>
+<span class="w">       </span><span class="k">sum</span><span class="p">(</span><span class="n">credits_used</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">total_credits_used</span>
+<span class="k">from</span><span class="w"> </span><span class="n">warehouse_metering_history</span>
+<span class="k">where</span><span class="w"> </span><span class="n">start_time</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">date_trunc</span><span class="p">(</span><span class="k">month</span><span class="p">,</span><span class="w"> </span><span class="k">current_date</span><span class="p">)</span>
+<span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="mi">1</span>
+<span class="k">order</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k">desc</span><span class="p">;</span>
+</code></pre></div></p>
+<h2 id="solutions-how-to-tackle-dbt-performance-issues">Solutions: How to tackle dbt performance issues<a class="headerlink" href="#solutions-how-to-tackle-dbt-performance-issues" title="Permanent link">&para;</a></h2>
+<p>Now that you've identified which models might need optimization, it's time to figure out how to get them to run faster. These options are roughly in order of bang-for-buck in most situations.</p>
+<h3 id="1-job-level-adjust-frequency-and-break-up-runs">1. Job Level: Adjust frequency and break up runs<a class="headerlink" href="#1-job-level-adjust-frequency-and-break-up-runs" title="Permanent link">&para;</a></h3>
+<p>It's common for end-users to say they want the freshest data (who doesn't?) but in practice require a much lower frequency of refreshing. To gain an understanding of the real-world needs it's helpful to see the frequency with which end-users actually view reporting and to consider the time scales involved. If someone only cares about monthly results, for example, you can <em>in theory</em> have a 30 day frequency for model runs.
+It's also quite common to have parts of the data be relatively static, and only need to be refreshed occasionally whereas other parts of the data might change much more often.
+An easy way to break up model runs is by using dbt tags.
+<div class="highlight"><pre><span></span><code><span class="nt">models</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">foo_model</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">+tags</span><span class="p">:</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;daily&quot;</span>
+<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;staging&quot;</span>
+<span class="w">    </span><span class="nt">bar_model</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">+tags</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;hourly&quot;</span>
+<span class="w">    </span><span class="nt">baz_)_model</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">+tags</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;weekly&quot;</span>
+</code></pre></div></p>
+<p>In this case you can run certain models with:
+<code>dbt run --select tag:daily</code>
+Of course this works in dbt Cloud as well!</p>
+<p>For more information refer to the <a href="https://docs.getdbt.com/reference/resource-configs/tags">dbt tags documentation</a>.</p>
+<h3 id="2-model-level-materialization-matters">2. Model-level: Materialization matters<a class="headerlink" href="#2-model-level-materialization-matters" title="Permanent link">&para;</a></h3>
+<p>For a good comparison of materialization options and their trade-offs see the <a href="https://docs.getdbt.com/guides/best-practices/materializations/2-available-materializations">Materialization Best Practices</a> section of the dbt docs.</p>
+<p><strong>Views</strong>: Are a trade-off between build performance and read/reporting performance. In cases where you are using a BI tool, you should almost always use table materializations unless data storage size is an issue or refresh frequency is so high that cost or scheduling conflicts become a problem. In cases where performance at time of reporting is not an issue (say, you are generating an aggregated report on a monthly basis) then views can be a great way to cut run time. Another case where views can be a good option is with staging data of relatively small size, where your queries are relatively light-weight and you want to ensure fresh data without having to configure separate runs for those models.</p>
+<p><strong>Incremental Models</strong>:
+For very large data sets, it can be essential to use <a href="https://docs.getdbt.com/docs/build/incremental-models">incremental models</a>. For this to work, you need some means of filtering records from the source table, typically using a timestamp. You then add a conditional block into your model to only select new records unless you're doing a full refresh. It's worth noting that incremental models can be tricky to get right and you will often want to implement some additional data integrity testing to ensure data is fresh and complete. For a more detailed discussion of Incremental Models, see <a href="https://docs.getdbt.com/guides/best-practices/materializations/4-incremental-models">Incremental models in-depth</a></p>
+<p>An example in our current projects is the CalHR Ecos model <a href="https://github.com/cagov/caldata-mdsa-calhr-ecos/blob/main/transform/models/stage/ecos/certification/stg_CertEligibles.sql">stg_CertEligibles</a>. This query takes over three minutes to run and no wonder - it generates 858 million rows! This is clearly a case where we should ask if we need all of that data or can it be filtered in some way and if the answer is yes, then we should consider using an incremental materialization.</p>
+<h3 id="4-query-level-optimizing-queries">4. Query-level: Optimizing queries<a class="headerlink" href="#4-query-level-optimizing-queries" title="Permanent link">&para;</a></h3>
+<p>So many books have been written on this subject! The good news is that most tools we use provide excellent resources for analyzing query performance.</p>
+<h4 id="write-or-read">Write or read?<a class="headerlink" href="#write-or-read" title="Permanent link">&para;</a></h4>
+<p>Because models are often created using a CREATE TABLE... SELECT statement you need to separate out read from write performance to understand if the issue is that your original query is slow or you are simply moving a lot of data and it takes time. It's worth saying that the chances are good that if you are moving a lot of data you are also querying a lot of data and in fact both read and write may be very time consuming but this is not a given -- if you are doing lots of joins on big data sets along with aggregations that output a small number of rows, then probably your model performance is read-bound. If this is the case the first question you should probably ask is can you break up that model into smaller chunks using staging and intermediate models.</p>
+<p>A good way to get a sense of read vs write performance is to do one or more of:
+1. Simply know the number of rows generated by the model (for some database dbt will output this in the output above). If you are creating tables with millions of rows you should probably consider an incremental model or reassess if you can filter and narrow your data somehow.
+2. Use your database's query profiler, if available, to separate out what part of the execution is taking the most amount of time. In Snowflake for example, you can use the query profile to easily determine whether a query is rebound or write down and also determine where exactly other performance issues may lie. A CREATE TABLE with a simple select, for example, will show that the majority of time is spent in the CreateTableAsSelect node and only a fraction of the time in the Result node.
+Be careful if you are comparing queries across runs - most databases use caching and this will of course affect your results (see Caching Notes below).
+3. Switch the materialization to view. Typically a view will take a fraction of the time to generate, and if that's the case you know your model is slow in writes.
+4. Run the query separately in the database without the CREATE TABLE part. When you do this you can typically assess the execution plan</p>
+<h4 id="snowflake-query-profile">Snowflake query profile<a class="headerlink" href="#snowflake-query-profile" title="Permanent link">&para;</a></h4>
+<p>You can easily pull up the query profile for any query that has been run in Snowflake either from a worksheet or from the query history page. This includes queries run from dbt Cloud! This profile is essential in understanding the elements of your query that are most costly in terms of time, and which might be improved through optimization. Refer to the <a href="https://docs.snowflake.com/en/user-guide/ui-query-profile">Analyzing Queries Using Query Profile</a> page in the Snowflake Documentation for complete information including common problems and their solutions.</p>
+<h4 id="bigquery-query-plan">BigQuery query plan<a class="headerlink" href="#bigquery-query-plan" title="Permanent link">&para;</a></h4>
+<p>Big Query offers similar query execution profiling in the Google Cloud Console. See <a href="https://cloud.google.com/bigquery/docs/query-plan-explanation">Query plan and timeline</a> as well as Big Query's <a href="https://cloud.google.com/bigquery/docs/best-practices-performance-overview">Introduction to optimizing query performance</a></p>
+<h4 id="caching-notes">Caching notes<a class="headerlink" href="#caching-notes" title="Permanent link">&para;</a></h4>
+<p>Most databases use some type of caching which needs to be turned off to properly test performance. Snowflake uses both a results cache and a disk cache, but only one can be turned off with a session variable:
+<div class="highlight"><pre><span></span><code>alter session set use_cached_result = false;
+</code></pre></div>
+See this in-depth discussion for more details: <a href="https://medium.com/snowflake/deep-dive-on-caching-in-snowflake-201a9ce56b43">Deep Dive on Snowflake Caching</a>
+A general workaround (other than to shutdown and restart the warehouse) is to use slightly different result sets which do the same operations and return the same number of rows.</p>
+<h2 id="local-development-tips">Local development tips<a class="headerlink" href="#local-development-tips" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Use Tags or dbt run --select to limit what you are building</li>
+<li>Use --select state:modified+ result:error+ to limit runs</li>
+<li>You can also include limits on data when working with a development target, e.g.
+<code>{% if target.name = 'dev' %}
+    LIMIT 500
+{% endif %}</code></li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>

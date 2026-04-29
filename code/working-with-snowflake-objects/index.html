@@ -1,0 +1,1889 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../azdevops-project-management/">
+      
+      
+        <link rel="next" href="../../infra/cloud-infrastructure/">
+      
+      
+      <link rel="icon" href="../../images/odi-circle_logomark-blue.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Working with Snowflake notebooks and Streamlit - CalData Data Services and Engineering Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#working-with-snowflake-code-artifacts" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="CalData Data Services and Engineering Infrastructure" class="md-header__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            CalData Data Services and Engineering Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Working with Snowflake notebooks and Streamlit
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="CalData Data Services and Engineering Infrastructure" class="md-nav__button md-logo" aria-label="CalData Data Services and Engineering Infrastructure" data-md-component="logo">
+      
+  <img src="../../images/odi-square_logomark-blue.svg" alt="logo">
+
+    </a>
+    CalData Data Services and Engineering Infrastructure
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cagov/data-infrastructure" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cagov/data-infrastructure
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Introduction
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code development
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Code development
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Local environment setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codespaces/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Codespaces
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code-review/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Review
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../writing-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Writing Documentation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../terraform-local-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform Setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../github-project-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub Project Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../azdevops-project-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Azure DevOps Project Management
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Working with Snowflake notebooks and Streamlit
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Working with Snowflake notebooks and Streamlit
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#store-notebooks-and-dashboards-in-the-analytics-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Store notebooks and dashboards in the ANALYTICS layer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-extra-small-warehouses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use extra-small warehouses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-version-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use version control
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use version control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connecting-a-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting a repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-snowflake-notebook-or-dashboard-into-a-git-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting a Snowflake notebook or dashboard into a git repository
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting a Snowflake notebook or dashboard into a git repository">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-new-notebookdashboard-in-snowflake-based-on-an-existing-file-in-a-git-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a new notebook/dashboard in Snowflake based on an existing file in a Git repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-an-existing-notebookdashboard-in-snowflake-to-a-git-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding an existing notebook/dashboard in Snowflake to a Git repository
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devprod-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dev/Prod promotion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dev/Prod promotion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#propose-a-new-notebookdashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Propose a new notebook/dashboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-the-new-notebookdashboard-to-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      Merge the new notebook/dashboard to main
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propose-changes-to-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Propose changes to the dashboard
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-manipulate-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to manipulate data
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project infrastructure
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Project infrastructure
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infra/cloud-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud infrastructure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infra/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project architecture
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../infra/snowflake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Snowflake overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Project setup
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Project setup
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/snowflake-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Snowflake setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/repo-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    git/Github setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/terraform-project-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Terraform setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/sentinel-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Sentinel setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/dbt-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt Cloud setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/fivetran-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Fivetran setup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/snowflake-service-accounts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Adding service accounts
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/project-teardown/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Project teardown
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    dbt
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            dbt
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt/dbt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt/dbt-performance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt performance
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dbt_docs_snowflake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt Cloud Snowflake project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Data
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Data
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data/footprints/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Building footprints
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Learning
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Learning
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    MDSA glossary
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Security guidelines
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/naming-conventions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Naming conventions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/git/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    git
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/dbt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    dbt
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../learning/cloud-data-warehouses/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Cloud data warehouses
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#store-notebooks-and-dashboards-in-the-analytics-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Store notebooks and dashboards in the ANALYTICS layer
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-extra-small-warehouses" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use extra-small warehouses
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#use-version-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use version control
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Use version control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connecting-a-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting a repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-a-snowflake-notebook-or-dashboard-into-a-git-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting a Snowflake notebook or dashboard into a git repository
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Getting a Snowflake notebook or dashboard into a git repository">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-new-notebookdashboard-in-snowflake-based-on-an-existing-file-in-a-git-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Creating a new notebook/dashboard in Snowflake based on an existing file in a Git repository
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-an-existing-notebookdashboard-in-snowflake-to-a-git-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adding an existing notebook/dashboard in Snowflake to a Git repository
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devprod-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Dev/Prod promotion
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dev/Prod promotion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#propose-a-new-notebookdashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Propose a new notebook/dashboard
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-the-new-notebookdashboard-to-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      Merge the new notebook/dashboard to main
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#propose-changes-to-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      Propose changes to the dashboard
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-manipulate-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      Where to manipulate data
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="working-with-snowflake-code-artifacts">Working with Snowflake Code Artifacts<a class="headerlink" href="#working-with-snowflake-code-artifacts" title="Permanent link">&para;</a></h1>
+<p>Snowflake has a few first-class code objects which are stored in databases:</p>
+<ul>
+<li><strong>Notebooks</strong>: notebook files (<code>.ipynb</code>) allow for mixing SQL statements,
+    Python code, narrative prose, and visualizations. They can be useful for exploratory
+    data analysis, and as a means for sharing data driven documents.</li>
+<li><strong>Streamlit dashboards</strong>: Streamlit dashboards allow for interactive data visualizations
+    which can be shared with the organization.</li>
+</ul>
+<p>A downside of these objects is that it is more difficult to track, version,
+and maintain high code quality for them.
+This document includes some recommendations and best practices for working with
+notebooks and Streamlit dashboards within Snowflake.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The DOE team's thinking about whether/when to use these objects is still a moving target.
+These recommendations are weakly-held, and subject to change.</p>
+</div>
+<h2 id="store-notebooks-and-dashboards-in-the-analytics-layer">Store notebooks and dashboards in the <code>ANALYTICS</code> layer<a class="headerlink" href="#store-notebooks-and-dashboards-in-the-analytics-layer" title="Permanent link">&para;</a></h2>
+<p>Since notebooks and dashboards are most frequently used as reporting products,
+they are most appropriate for the <code>ANALYTICS</code>/marts layer. This means:</p>
+<ol>
+<li>Create them in the <code>ANALYTICS_{env}</code> database.</li>
+<li>Create them using the <code>REPORTER_{env}</code> role.</li>
+<li>Use the <code>REPORTING_XS_{env}</code> warehouse for queries.</li>
+</ol>
+<p>Using the <code>REPORTER</code> role means that the dashboard will not be able
+to access data from the <code>RAW</code> or <code>TRANSFORM</code> layers,
+nor will it be able to edit data in the <code>ANALYTICS</code> layer.
+This is a useful security feature, and consistent with our RBAC
+design.</p>
+<p>One consequence of this recommendation is that every table/view used
+by the notebook or dashboard should <em>also</em> be in the <code>ANALYTICS</code> layer.
+In development it may be useful to use the <code>TRANSFORMER</code> role,
+but "production" dashboards should endeavor to use <code>REPORTER_PRD</code>.
+Getting the appropriate data in <code>ANALYTICS</code> for consumption may take some extra work,
+we recommend using the guidelines <a href="#use-version-control">here</a> to assess when it is appropriate.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Streamlit dashboards execute using the role of their owner.
+Malicious users with edit permissions on the dashboard may be able to use them for
+<a href="https://en.wikipedia.org/wiki/Privilege_escalation">privilege escalation</a>
+if the dashboard is owned by a powerful role.
+Even for users with good intentions, it may be possible to accidentally cause problems.
+Using the <code>REPORTER_{env}</code> role is for Streamlit dashboards is an application of the
+<a href="https://en.wikipedia.org/wiki/Principle_of_least_privilege">principle of least privilege</a>.
+For more discussion of Streamlit dashboard security, see
+<a href="https://docs.snowflake.com/en/developer-guide/streamlit/owners-rights#owner-s-rights-and-app-security">these docs</a>.</p>
+</div>
+<h2 id="use-extra-small-warehouses">Use extra-small warehouses<a class="headerlink" href="#use-extra-small-warehouses" title="Permanent link">&para;</a></h2>
+<p>Notebooks and Streamlit dashboards involve two separate Snowflake warehouses, the one powering their
+<a href="https://docs.snowflake.com/en/user-guide/warehouses-overview#label-default-warehouse">Python kernel</a>,
+and the one powering their SQL queries.
+The Python kernel is active as long as the notebook/dashboard is active, while the query warehouse may
+auto-suspend when no queries are being executed.
+As such, it's not unusual for the warehouse cost of running and developing the notebook/dashboard
+to be more than  that of the warehouse cost of its queries.</p>
+<p>To save on compute and avoid surprise cost overruns,
+always use the default (extra-small) <code>SYSTEM$STREAMLIT_NOTEBOOK_WH</code> for the kernel,
+and select an extra small warehouse for queries.
+If more expensive queries are needed, consider pre-building tables in the <code>ANALYTICS</code> database
+and making sure appropriate filters are used to cut down on data scans.</p>
+<h2 id="use-version-control">Use version control<a class="headerlink" href="#use-version-control" title="Permanent link">&para;</a></h2>
+<p>Use of version control with notebooks and Streamlit dashboards is still important.
+We recommend ensuring that any object be in version control and fully reproducible if any of the following are true:</p>
+<ol>
+<li>It is shared outside of the immediate DOE team.</li>
+<li>It is used for any recommendation, publication, or data product.</li>
+<li>It is used operationally (i.e., someone looks in on it regularly).</li>
+</ol>
+<h3 id="connecting-a-repository">Connecting a repository<a class="headerlink" href="#connecting-a-repository" title="Permanent link">&para;</a></h3>
+<p><em>Note: this only needs to be done once per Snowflake environment and GitHub repository.
+Specific roles and permission grants are provisional, and it would be nice to clean it up a bit</em></p>
+<ol>
+<li>Create a scoped fine-grained personal access token for repository access.
+    This fine-grained token only needs <em>Read-only</em> access to the relevant repository.
+    It's worthwhile to keep the token scope minimal, as everyone with access to the
+    git repository in Snowflake will be using this token.</li>
+<li>Create development and production versions of the repository in Snowflake. The following SQL
+    script can be used to set up the repos. Depending on the situation, some
+    parts of it may not be necessary, or the repository may need to be created in
+    a different set of databases/schemas, so read through with some care.
+    <div class="highlight"><pre><span></span><code><span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">accountadmin</span><span class="p">;</span>
+
+<span class="cm">/* First, we create secrets for the GitHub authentication</span>
+<span class="cm">   as well as the API integration so we can talk to GitHub</span>
+<span class="cm">   We can use a fine-grained token that only has read access</span>
+<span class="cm">   to a single repository for safety. Still not ideal that it&#39;s a user</span>
+<span class="cm">   token rather than an OAuth app or similar, but that seems to</span>
+<span class="cm">   be the only way to do it.</span>
+<span class="cm">*/</span>
+<span class="k">create</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="n">secret</span><span class="w"> </span><span class="n">analytics_prd</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="n">gh_token</span>
+<span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span>
+<span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;GitHub username&gt;&#39;</span>
+<span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;token here&gt;&#39;</span><span class="p">;</span>
+
+<span class="k">create</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="n">secret</span><span class="w"> </span><span class="n">analytics_dev</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="n">gh_token</span>
+<span class="k">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">password</span>
+<span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;GitHub username&gt;&#39;</span>
+<span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&lt;token here&gt;&#39;</span><span class="p">;</span>
+
+<span class="k">create</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="n">api</span><span class="w"> </span><span class="n">integration</span><span class="w"> </span><span class="n">cagov_github</span>
+<span class="n">api_provider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">git_https_api</span>
+<span class="n">api_allowed_prefixes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;https://github.com/cagov&#39;</span><span class="p">)</span>
+<span class="n">allowed_authentication_secrets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;analytics_dev.public.gh_token&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;analytics_prd.public.gh_token&#39;</span><span class="p">)</span>
+<span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+
+<span class="c1">-- Grant usage on the secret and API integration to the transformer roles</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">usage</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">integration</span><span class="w"> </span><span class="n">cagov_github</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_dev</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">usage</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">secret</span><span class="w"> </span><span class="n">analytics_dev</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="n">gh_token</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_dev</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">usage</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">integration</span><span class="w"> </span><span class="n">cagov_github</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_prd</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">usage</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">secret</span><span class="w"> </span><span class="n">analytics_prd</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="n">gh_token</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_prd</span><span class="p">;</span>
+
+<span class="c1">-- Grant the ability to create GitHub repos and Streamlit apps on PUBLIC to the transformer roles.</span>
+<span class="c1">-- These are things we can move to our default terraform configuration.</span>
+<span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">sysadmin</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">schema</span><span class="w"> </span><span class="n">analytics_dev</span><span class="p">.</span><span class="k">public</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_dev</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">schema</span><span class="w"> </span><span class="n">analytics_prd</span><span class="p">.</span><span class="k">public</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_prd</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">streamlit</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">schema</span><span class="w"> </span><span class="n">analytics_dev</span><span class="p">.</span><span class="k">public</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_dev</span><span class="p">;</span>
+<span class="k">grant</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">streamlit</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="k">schema</span><span class="w"> </span><span class="n">analytics_prd</span><span class="p">.</span><span class="k">public</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_prd</span><span class="p">;</span>
+
+
+<span class="c1">-- Create the Git reepositories in dev and prod</span>
+<span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_dev</span><span class="p">;</span>
+<span class="k">create</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="n">analytics_dev</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="ss">&quot;&lt;repo-name&gt;&quot;</span>
+<span class="n">origin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/cagov/&lt;repo-name&gt;&#39;</span>
+<span class="n">api_integration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;CAGOV_GITHUB&#39;</span>
+<span class="n">git_credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;analytics_dev.public.gh_token&#39;</span><span class="p">;</span>
+
+<span class="n">use</span><span class="w"> </span><span class="k">role</span><span class="w"> </span><span class="n">transformer_prd</span><span class="p">;</span>
+<span class="k">create</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">replace</span><span class="w"> </span><span class="n">git</span><span class="w"> </span><span class="n">repository</span><span class="w"> </span><span class="n">analytics_prd</span><span class="p">.</span><span class="k">public</span><span class="p">.</span><span class="ss">&quot;&lt;repo-name&gt;&quot;</span>
+<span class="n">origin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;https://github.com/cagov/&lt;repo-name&gt;&#39;</span>
+<span class="n">api_integration</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;CAGOV_GITHUB&#39;</span>
+<span class="n">git_credentials</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;analytics_prd.public.gh_token&#39;</span><span class="p">;</span>
+</code></pre></div></li>
+</ol>
+<p>This repository can now be used with notebooks and Streamlit dashboards.</p>
+<h3 id="getting-a-snowflake-notebook-or-dashboard-into-a-git-repository">Getting a Snowflake notebook or dashboard into a git repository<a class="headerlink" href="#getting-a-snowflake-notebook-or-dashboard-into-a-git-repository" title="Permanent link">&para;</a></h3>
+<p>There are two different scenarios we want to address here:</p>
+<ol>
+<li>Creating a new notebook or dashboard in Snowflake based on an existing file in a Git repository</li>
+<li>Adding an existing notebook or dashboard in Snowflake to a Git repository</li>
+</ol>
+<p>In both cases, you should have a <code>REPORTER_{env}</code> role selected in the
+Snowflake role switcher in the bottom left.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Somewhat annoyingly, it's difficult-to-impossible to change the name of notebooks and dashboards
+after they are created in Snowflake, as well as their paths in a Git repository.
+When choosing file names, we recommend the following:</p>
+<ul>
+<li>Use simple, descriptive file names describing what the notebook/dashboard does.</li>
+<li>Do not use Snowflake unique identifiers for file names: these will not be stable between branches.</li>
+<li>Avoid any references to things like "prod" or "final" or "use this one" in the name:
+    these will quickly become incorrect with a branching git-based workflow.</li>
+</ul>
+</div>
+<p>As a prerequisite to this, you should create a GitHub
+<a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens">personal access token</a>.
+allowing you to make commits within the Snowflake UI under your name.
+We recommend creating a <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token">fine-grained token</a>,
+with "Read and Write" access to "Contents" for the relevant repositories.
+Creating this token will likely need approval from a GitHub organization admin.</p>
+<h4 id="creating-a-new-notebookdashboard-in-snowflake-based-on-an-existing-file-in-a-git-repository">Creating a new notebook/dashboard in Snowflake based on an existing file in a Git repository<a class="headerlink" href="#creating-a-new-notebookdashboard-in-snowflake-based-on-an-existing-file-in-a-git-repository" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Create a new branch for the object in your git repository
+    (the Snowflake UI doesn't have a way to create branches):
+    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>&lt;new-branch-name&gt;
+</code></pre></div></li>
+<li>In the upper left of the notebook/Streamlit page click the "down" caret
+    and choose "Create from repository"</li>
+<li>Give the notebook/Streamlit a descriptive name. <strong>Warning: dashboards and notebooks cannot
+    have their name changed after the fact. Be sure to choose wisely, otherwise
+    you may need to re-create it in a new branch</strong></li>
+<li>In "File location in the repository", find the Git repository in Snowflake,
+    select the branch you created above,
+    and navigate to the path you want for the notebook/Streamlit in the repository.
+    For instance, we might have a <code>notebooks</code> or <code>streamlit</code> subdirectory.</li>
+<li>Choose the database location for the object (e.g., <code>ANALYTICS_DEV.PUBLIC</code>)</li>
+<li>Choose the warehouse for the object (e.g., <code>REPORTING_XS_DEV</code>).</li>
+</ol>
+<h4 id="adding-an-existing-notebookdashboard-in-snowflake-to-a-git-repository">Adding an existing notebook/dashboard in Snowflake to a Git repository<a class="headerlink" href="#adding-an-existing-notebookdashboard-in-snowflake-to-a-git-repository" title="Permanent link">&para;</a></h4>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>We currently do not recommend adding an existing Streamlit dashboard to a Git repository.
+This is because the dashboard name is a unique identifier that becomes
+the folder name in the repository. At the time of this writing, it is impossible to change this,
+which means that the folder name is both non-descriptive and doesn't work
+with a standard git-based branching workflow.</p>
+<p>For whatever reason, Snowflake notebooks to not have this defect: as long
+as you give the notebook a descriptive name upon creating it, the folder
+name in the git repository will match it.</p>
+</div>
+<ol>
+<li>In the left side panel for the notebook/Streamlit, click the "Connect Git Repository" button</li>
+<li>In "File location in the repository", find the Git repository in Snowflake,
+    select the branch you created above,
+    and navigate to the path you want for the notebook/Streamlit in the repository.
+    For instance, we might have a <code>notebooks</code> or <code>streamlit</code> subdirectory.</li>
+<li>Add a commit message and push the commit adding the object to GitHub.
+    If this is your first commit in Snowflake you will need to input your
+    personal access token.</li>
+</ol>
+<h3 id="devprod-promotion">Dev/Prod promotion<a class="headerlink" href="#devprod-promotion" title="Permanent link">&para;</a></h3>
+<p>A large part of the benefit of getting notebooks and dashboards into version control
+is that you can use a standard git-based branching workflow for proposing changes.
+The following is a recipe for such a workflow.
+We describe the workflow for a dashboard for brevity, but it should be similar for notebooks:</p>
+<h4 id="propose-a-new-notebookdashboard">Propose a new notebook/dashboard<a class="headerlink" href="#propose-a-new-notebookdashboard" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Create a new branch for the dashboard:
+   <code>git switch -c feature-new-dashboard</code></li>
+<li>Enable the <code>REPORTER_DEV</code> role in Snowflake.</li>
+<li>The next step is a little different for notebooks and dashboards.<ol>
+<li><strong>If creating a dashboard:</strong>
+    Create a folder and file for the dashboard in the repository.
+    <em>This is important because Snowflake makes it very difficult/impossible to change
+    the name after the fact. Creating one with the right name at the outset gives you
+    the most control, and avoids files with inscrutible timestamps or unique IDs in them!</em>
+    <div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>streamlit/my_new_dashboard
+touch<span class="w"> </span>streamlit/my_new_dashboard/my_new_dashboard.py
+git<span class="w"> </span>commit<span class="w"> </span>streamlit/my_new_dashboard/my_new_dashboard.py<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Added new file&quot;</span>
+git<span class="w"> </span>push<span class="w"> </span>&lt;remote-name&gt;<span class="w"> </span>feature-new-dashboard
+</code></pre></div>
+    Connect to the blank dashboard using the "Creating a new..." workflow above.</li>
+<li><strong>If creating a notebook</strong>:
+    Create the new notebook in Snowflake, and add it to the git repository using the
+    "Adding an existing..." workflow above.
+    <em>Be sure to choose a good name for the notebook, as it will become the folder
+    name and cannot be changed after the fact.</em></li>
+</ol>
+</li>
+<li>Develop the dashboard, making regular descriptive commits.</li>
+<li>When ready, create a pull request in GitHub, proposing the new dashboard
+    be merged to <code>main</code>!</li>
+</ol>
+<h4 id="merge-the-new-notebookdashboard-to-main">Merge the new notebook/dashboard to <code>main</code><a class="headerlink" href="#merge-the-new-notebookdashboard-to-main" title="Permanent link">&para;</a></h4>
+<ol>
+<li>Review the dashboard code with coworkers,
+    making any changes that come out of code review.</li>
+<li>When satisfied, merge the pull request to <code>main</code>.
+    <em>Snowflake seemingly cannot change the branch of a dashboard after it is created.
+    Therefore you will need to recreate a production version based on the one in <code>main</code>.</em></li>
+<li>Enable the <code>REPORTER_PRD</code> role in Snowflake.</li>
+<li>Create a new dashboard in <code>ANALYTICS_PRD</code>  based on the version in <code>main</code>,
+    following the "Creating a new..." workflow.
+    This version is now your production dashboard!</li>
+<li>Delete the old development dashboard in Snowflake to prevent clutter.</li>
+</ol>
+<h4 id="propose-changes-to-the-dashboard">Propose changes to the dashboard<a class="headerlink" href="#propose-changes-to-the-dashboard" title="Permanent link">&para;</a></h4>
+<p>Now that the dashboard is in <code>main</code>, you can propose new changes using a standard
+git-based workflow.</p>
+<ol>
+<li>Check out a new branch from <code>main</code>:
+    <div class="highlight"><pre><span></span><code>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>new-feature
+</code></pre></div></li>
+<li>Create dashboard using the "Creating a new..." workflow above.</li>
+<li>Develop the dashboard, making regular descriptive commits.</li>
+<li>Propose your changes in a pull request to <code>main</code>.</li>
+<li>Once it is merged to main, you don't need to recreate the dashboard anymore,
+    as the production version is already pointed at <code>main</code>.
+    Instead, navigate to the git repository in Snowflake and click "Fetch",
+    which should bring in the new changes. The next time the dashboard
+    launches, it should be based on the latest version.</li>
+<li>Delete the development dashboard in Snowflake to prevent clutter.</li>
+</ol>
+<h2 id="where-to-manipulate-data">Where to manipulate data<a class="headerlink" href="#where-to-manipulate-data" title="Permanent link">&para;</a></h2>
+<p>When developing notebooks or dashboards, the analyst often has to choose
+how much data manipulation should be done in Python,
+and how much should be done using SQL and dbt.
+In general, we prefer to transform data and build data models using dbt,
+rather than doing it within notebooks or dashboards.
+This is for a few reasons:</p>
+<ol>
+<li>dbt has a stronger version-control story than Snowflake notebooks or dashboards.</li>
+<li>It's easier to test and exercise code for dbt models.</li>
+<li>It's easier to reuse the data models developed in dbt for multiple applications.</li>
+<li>In general, executing a Snowflake SQL query is higher-performance than bringing data into
+    a Python session and manipulating it there.</li>
+</ol>
+<p>That said, if you are doing highly dynamic things in a dashboard,
+such as on-the-fly filtering or aggregation of data based on user interactions,
+then it may make sense to do some of the transformation in the Python session.
+There are no hard-and-fast rules here, and specific applications will have different tradeoffs!
+But when in doubt, we recommend you prefer doing transformations in the dbt layer.
+For more information about our default dbt project architecture,
+see <a href="../../infra/architecture/">here</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy"], "search": "../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+    
+  </body>
+</html>
