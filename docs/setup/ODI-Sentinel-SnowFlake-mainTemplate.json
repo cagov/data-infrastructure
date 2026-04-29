@@ -2658,7 +2658,7 @@
                 },
                 "request": {
                   "apiEndpoint": "[[concat('https://',parameters('accountId'),'.snowflakecomputing.com','/api/v2/statements?retry=true')]",
-                  "httpMethod": "",
+                  "httpMethod": "POST",
                   "queryWindowInMin": 240,
                   "queryWindowDelayInMin": 120,
                   "queryTimeFormat": "yyyy-MM-ddTHH:mm:ssZ",
