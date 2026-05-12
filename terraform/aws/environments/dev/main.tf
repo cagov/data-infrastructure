@@ -62,14 +62,19 @@ module "infra" {
   enable_rds = true
   bastion_authorized_keys = [
     "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCfK0wv8JVqrD9Y3VabRAOgqdIj9nZ1hqzmaiJNCW8Tfy0DRM6U6AomsPX25DaZm+TIwpMj7ymasaZ7G+dvEKeisCaKwMDqpZrv4S8PplpcV4fCbmtT7Q5CNHdhspkjyOf7Ee/rYNowicDUsDBxYTDNuucXJKwCgu7hMR43IPfYifhq9JqOrHtSZ1smQ3+8Hec0TybtztgJ5BC7xKYpphUodwNwPTK8gF6p5Dyroe+WkzyIHgmOy2d/wY7D/K/FOV2YinxIvRoo2L0DHExNnAPBzGFYfE4ZfNusbLPulvMHByNalCAwN14qJEZ88MY7COmOxzpFGE/aCJPIG/wAzvC1EE76GEGARjWgasI7ISopRHgLVajsEjHpH/gVrPckET6DGd+6J4amrbvsXaF1/+5NcZrW8CocMaMIgjrtweBbVUU8GrsF3WtL5SnGmr4d54e9EsnuagRVFHGA3ij6ie3U84T8fatqOQ6gOBHW+a6kxvgL4jQ+jiB0e8DjZD43sLWNeNofkvEx38ahqkYz136Q5H8yf0YGfr7xCCgZkrh0zZb9GBlakEHqiJIIRde33ab3LIQPkn+C0VDQFRZ6n2sCwN/G6qt+BVfHwUzGZo4JHTGDyDqqBBdGAipcAFwLZgnkNqfSaymO+V2SZEyBJ1i/ME4SHiB7wV+Cw4D14IwqfQ== fivetran user key",
-    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDWI/uDNjGkZqM9PC8znGUDrBQPQwlRi2TxKaoUh2MsZcnvH5YEfqCQg/ZwMN3Ce2uhgzm9ALAQaEBKkhpaDiDw7FUt1K04gD1AbBMGtZqcd0AXiFNFEMddlERjZCh5lR9XESe3gln2e6SHJ/WKgORCdp6p7LWjWs9hoowxMeLP18CJYsbwSRYxe7cVRrxAhhRfNgiD2YjXbkpvif/At5kW7Ef1iVVv4nxsYCfjNQiZC0+np/roXLDfn1peSm6Kpy3CZgfuCDlxmcZGL8pvYfiXJ5wyUey7CTDyP0uhalwYr+272YEP6aP/Td1dQhu6f82wgsfhYMnMe08u+bmBivGJqIsKr0OkLXIvcOFY+WsIXsrQ87b1Yzem9ojmRoRv6I6Tf8LAc18dpk1WZ0wg5O5PtEKC+aSQ9haBjB3lGwOKwo3+pgZvuEzU3RbchWwPHxi4l02uklhVOHkEm8ek3UzL4UI6AAW8SOqbGQlsmlPqrn3yaY+CVBBz3Fnh5864VcU= estuary"
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDWI/uDNjGkZqM9PC8znGUDrBQPQwlRi2TxKaoUh2MsZcnvH5YEfqCQg/ZwMN3Ce2uhgzm9ALAQaEBKkhpaDiDw7FUt1K04gD1AbBMGtZqcd0AXiFNFEMddlERjZCh5lR9XESe3gln2e6SHJ/WKgORCdp6p7LWjWs9hoowxMeLP18CJYsbwSRYxe7cVRrxAhhRfNgiD2YjXbkpvif/At5kW7Ef1iVVv4nxsYCfjNQiZC0+np/roXLDfn1peSm6Kpy3CZgfuCDlxmcZGL8pvYfiXJ5wyUey7CTDyP0uhalwYr+272YEP6aP/Td1dQhu6f82wgsfhYMnMe08u+bmBivGJqIsKr0OkLXIvcOFY+WsIXsrQ87b1Yzem9ojmRoRv6I6Tf8LAc18dpk1WZ0wg5O5PtEKC+aSQ9haBjB3lGwOKwo3+pgZvuEzU3RbchWwPHxi4l02uklhVOHkEm8ek3UzL4UI6AAW8SOqbGQlsmlPqrn3yaY+CVBBz3Fnh5864VcU= estuary",
+    # Using an ed25519 key for Databricks SSH tunnel access. This is also secure and fully supported by EC2. Key types can be mixed. This is shorter than the RSA keys
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFzBbjW+5F9TWEtc52FhAxcS5SaFocfKQiT/cKJGEH/q databricks rds tunnel"
+
   ]
   bastion_allowed_ssh_cidrs = [
     # Fivetran GCP us-east-4 (default processing region)
     "35.234.176.144/29",
     # Estuary IP ranges
     "34.213.10.188/32",
-    "52.34.175.198/32"
+    "52.34.175.198/32",
+      # Azure Databricks NAT Gateway egress IP
+    "48.221.48.2/32"
   ]
   privatelink_allowed_principals = [
     "arn:aws:iam::024848475617:root",  # Snowflake
