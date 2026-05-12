@@ -56,7 +56,9 @@ resource "azurerm_mssql_server" "main" {
   azuread_administrator {
     login_username              = data.azuread_user.admin.user_principal_name
     object_id                   = data.azuread_user.admin.object_id
-    azuread_authentication_only = true # Azure AD authentication only (no SQL passwords)
+    # Allow SQL authentication in addition to Azure AD: some data loaders
+    # (including OpenFlow) don't support AD authentication, only SQL.
+    azuread_authentication_only = false
   }
 
   minimum_tls_version           = "1.2"
@@ -72,7 +74,7 @@ resource "azurerm_mssql_database" "main" {
   sku_name                    = "GP_S_Gen5_1" # General Purpose Serverless, supports CDC
   min_capacity                = 0.5
   auto_pause_delay_in_minutes = 60
-  max_size_gb                 = 2
+  max_size_gb                 = 8
   zone_redundant              = false
 
   short_term_retention_policy {
