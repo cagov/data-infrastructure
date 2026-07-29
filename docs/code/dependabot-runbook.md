@@ -54,8 +54,8 @@ some work on our default CI/CD setup.
 1. Check out a new branch with a date slug in the branch name to disambiguate it
     from other version upgrade PRs.
     ```bash
-    git checkout main
-    git pull upstream main
+    git switch main
+    git pull <remote-name> main
     git switch -c security-bump-<YYYY>-<MM>-<DD>
     ```
 1. Regenerate the `uv` lockfile with
