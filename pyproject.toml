@@ -74,3 +74,6 @@ show_error_codes = true
 warn_redundant_casts = true
 warn_unused_ignores = false
 warn_unreachable = true
+
+[tool.uv]
+exclude-newer = "1 week"
