@@ -44,13 +44,13 @@ exclude-newer = "1 week"
 
 There are two valid paths for responding to Dependabot alerts:
 
+1. You can create your own pull request that updates dependencies.
 1. You can merge the auto-generated pull request
-2. You can create your own pull request that updates dependencies.
 
-Right now, we recommend the latter approach, as the former requires
+Right now, we recommend the former approach, as the latter requires
 some work on our default CI/CD setup.
 
-### Creating your own pull request
+### Option 1: Creating your own pull request
 
 1. Check out a new branch with a date slug in the branch name to distinguish it
     from other version upgrade PRs.
@@ -78,7 +78,7 @@ some work on our default CI/CD setup.
 1. Once your pull request is merged, the existing Dependabot PRs should detect it
     and auto-close.
 
-### Merging Dependabot PRs
+### Option 2: Merging Dependabot PRs
 
 This workflow currently does not function smoothly because, by default,
 Dependabot *does not* have access to repository secrets, and therefore
@@ -87,8 +87,8 @@ CI/CD that does things like connect to Snowflake will not work.
 A long term fix to this could be the following:
 
 1. Set up GitHub deploy environments for dev and prod.
-2. Set up OIDC for GitHub actions to connect to, e.g., Snowflake from the deploy environment.
-2. Allow for maintainer approval for PRs coming from services like Dependabot
+1. Set up OIDC for GitHub actions to connect to, e.g., Snowflake from the deploy environment.
+1. Allow for maintainer approval for PRs coming from services like Dependabot
 
 Once those are configured, maintainers can click "Allow"
 on Dependabot security bump PRs, and then CI would run on the Dependabot
