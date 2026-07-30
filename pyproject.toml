@@ -10,6 +10,7 @@ dependencies = [
     "awscliv2>=2.3.1",
     "dbt-core~=1.9",
     "dbt-snowflake~=1.9",
+    "dlt[mssql,snowflake,sql-database]>=1.29.1",
     "mkdocs-material~=9.6.14",
 ]
 
