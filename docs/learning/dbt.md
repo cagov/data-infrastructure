@@ -16,7 +16,7 @@ It has a number of features that makes it valuable for data stacks:
 dbt provides a series of [free courses](https://courses.getdbt.com/collections)
 for learning how to use the project:
 
-* [dbt Fundamentals](https://courses.getdbt.com/courses/fundamentals)
-* [Jinja, Macros, and Packages](https://courses.getdbt.com/courses/jinja-macros-packages)
-* [Advanced Materializations](https://courses.getdbt.com/courses/advanced-materializations)
-* [Refactoring SQL for Modularity](https://courses.getdbt.com/courses/refactoring-sql-for-modularity)
+* [dbt Fundamentals](https://learn.getdbt.com/courses/dbt-fundamentals)
+* [Jinja, Macros, and Packages](https://learn.getdbt.com/courses/jinja-macros-packages)
+* [Advanced Materializations](https://learn.getdbt.com/courses/advanced-materializations)
+* [Refactoring SQL for Modularity](https://learn.getdbt.com/courses/refactoring-sql-for-modularity)
