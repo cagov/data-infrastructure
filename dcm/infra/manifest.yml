@@ -1,0 +1,30 @@
+manifest_version: 2
+type: DCM_PROJECT
+
+default_target: DEV
+
+targets:
+  DEV:
+    account_identifier: VSB79059.HJB86910
+    project_name: DCM_INFRA.PROJECTS.INFRA_DEV
+    project_owner: ACCOUNTADMIN
+    templating_config: DEV
+  PRD:
+    account_identifier: VSB79059.HJB86910
+    project_name: DCM_INFRA.PROJECTS.INFRA_PRD
+    project_owner: ACCOUNTADMIN
+    templating_config: PRD
+
+templating:
+  defaults:
+    project: TEST
+    env: DEV
+    raw_name: RAW
+    transform_name: TRANSFORM
+    analytics_name: ANALYTICS
+
+  configurations:
+    DEV:
+      env: DEV
+    PRD:
+      env: PRD
