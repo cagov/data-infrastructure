@@ -108,6 +108,8 @@ sources:
             description: Date of the clustering activity
           - name: NUM_BYTES_RECLUSTERED
             description: Number of bytes reclustered
+          - name: VERSION
+            description: Version of the Automatic Clustering service that produced the row
           - name: NUM_ROWS_RECLUSTERED
             description: Number of rows reclustered
       - name: storage_daily_history
@@ -211,6 +213,14 @@ sources:
             description: Average number of database bytes used, including time travel
           - name: AVERAGE_FAILSAFE_BYTES
             description: Number of fail safe bytes used
+          - name: AVERAGE_ARCHIVE_STORAGE_COOL_BYTES
+            description: Average number of bytes in cool archive storage
+          - name: AVERAGE_ARCHIVE_STORAGE_COLD_BYTES
+            description: Average number of bytes in cold archive storage
+          - name: AVERAGE_ARCHIVE_STORAGE_COOL_FAILSAFE_BYTES
+            description: Average number of bytes in fail-safe for cool archive storage
+          - name: AVERAGE_ARCHIVE_STORAGE_COLD_FAILSAFE_BYTES
+            description: Average number of bytes in fail-safe for cold archive storage
       - name: pipe_usage_history
         description: Usage history of pipes.
         columns:
@@ -234,6 +244,8 @@ sources:
             description: ID of the pipe
           - name: PIPE_NAME
             description: Name of the pipe
+          - name: BYTES_BILLED
+            description: Number of bytes billed for the pipe usage
 
 models:
   - name: stg_warehouse_metering_history
@@ -352,8 +364,20 @@ models:
         data_tests:
           - not_null
 
-  - name: stg_metering_daily_history
-    description: Metering information of cloud usage on a daily basis.
+  - name: stg_cortex_usage_daily_history
+    description: |
+      Cortex usage on a daily basis, derived from `metering_daily_history` filtered to
+      the `AI_SERVICES` service type.
+
+      Superseded by `stg_metering_daily_history_by_service_type`, which breaks out every
+      service type and reveals that Cortex is also billed under `AI_FUNCTIONS`,
+      `CORTEX_SEARCH`, `BATCH_CORTEX_SEARCH`, `AI_INFERENCE` and the `SNOWFLAKE_COCO_*`
+      types, none of which this model captures.
+
+      It is kept rather than dropped because it is an archive that reaches back further
+      than the source view retains, making it the only surviving record of which portion
+      of a day's credits was Cortex for dates that have since aged out. Nothing downstream
+      reads it; it exists for historical analysis.
     columns:
       - name: ORGANIZATION_NAME
         description: Organization name
@@ -382,12 +406,17 @@ models:
         data_tests:
           - not_null
 
-  - name: stg_cortex_usage_daily_history
+  - name: stg_metering_daily_history
     description: |
-      Cortex usage on a daily basis.
-      This is derived from the `metering_daily_history` table, as the
-      `ORGANIZATION_USAGE` schema doesn't include a dedicated table
-      for Cortex usage.
+      Metering information of cloud usage on a daily basis, aggregated across all
+      service types.
+
+      For a breakdown by service type see `stg_metering_daily_history_by_service_type`.
+      The two are separate models rather than one, because this table's rows predate the
+      `service_type` column and combining them would leave a single table holding two
+      different grains. This one is still the only source of credits for usage older than
+      that model's earliest date. Nothing downstream reads it; it exists for historical
+      analysis.
     columns:
       - name: ORGANIZATION_NAME
         description: Organization name
@@ -415,6 +444,60 @@ models:
         description: Credits billed for usage
         data_tests:
           - not_null
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - ORGANIZATION_NAME
+            - ACCOUNT_NAME
+            - USAGE_DATE
+
+  - name: stg_metering_daily_history_by_service_type
+    description: |
+      Metering information of cloud usage on a daily basis, broken down by service type.
+
+      Sibling of `stg_metering_daily_history`. Because it was added after that model had
+      already been accumulating, it only reaches back as far as the source view's one year
+      retention window, and that date is where `snowflake_costs_by_date` begins. The older
+      model is kept as an archive of the credits from before then, aggregated across
+      service types.
+    columns:
+      - name: ORGANIZATION_NAME
+        description: Organization name
+      - name: ACCOUNT_NAME
+        description: Name of the account
+      - name: USAGE_DATE
+        description: The date on which the usage occurred
+      - name: SERVICE_TYPE
+        description: |
+          The Snowflake service that consumed the credits, e.g. `WAREHOUSE_METERING`,
+          `AI_SERVICES`, `AI_FUNCTIONS`, `SNOWPARK_CONTAINER_SERVICES`.
+      - name: CREDITS_USED_COMPUTE
+        description: Credits used for compute services
+        data_tests:
+          - not_null
+      - name: CREDITS_USED_CLOUD_SERVICES
+        description: Credits used for cloud services
+        data_tests:
+          - not_null
+      - name: CREDITS_ADJUSTMENT_CLOUD_SERVICES
+        description: Adjustments made to cloud service credits
+        data_tests:
+          - not_null
+      - name: CREDITS_USED
+        description: Credits used
+        data_tests:
+          - not_null
+      - name: CREDITS_BILLED
+        description: Credits billed for usage
+        data_tests:
+          - not_null
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - ORGANIZATION_NAME
+            - ACCOUNT_NAME
+            - USAGE_DATE
+            - SERVICE_TYPE
 
   - name: stg_materialized_view_refresh_history
     description: Materialized view refresh history.

@@ -66,9 +66,32 @@ models:
       - name: credits_used
         description: The total credits used by warehouses
 
-  - name: int_cortex_usage_daily_history
+  - name: int_credits_by_service_type
     description: |
-      Credits used by Cortex AI services, aggregated to account and usage date.
+      All compute and cloud services credits, aggregated to account, usage date and
+      service type.
+
+      This is the whole of `metering_daily_history` with nothing filtered out, which is
+      what makes `snowflake_costs_by_date` complete by construction: service types
+      Snowflake introduces later are counted automatically, under the `other` usage type,
+      rather than having to be added to a list. Storage is the one exclusion, because
+      `metering_daily_history` covers compute and cloud services only.
+
+      History starts where `stg_metering_daily_history_by_service_type` starts, which is
+      the source view's retention boundary at the time that model was first built.
+      Credits from before then survive in `stg_metering_daily_history` and
+      `stg_cortex_usage_daily_history`, but only aggregated across service types, so they
+      are deliberately left out rather than mixed in as an undifferentiated bucket. Those
+      two staging models are kept as archives for historical analysis.
+
+      Cortex usage is spread over a surprising number of service types: `AI_SERVICES`,
+      `AI_FUNCTIONS`, `AI_INFERENCE`, `CORTEX_SEARCH`, `BATCH_CORTEX_SEARCH` and the
+      three `SNOWFLAKE_COCO_*` types. It was previously derived from `AI_SERVICES` alone,
+      which undercounted it by roughly a third.
+
+      The per-feature models above overlap with this one and are deliberately not part of
+      the mart's credit union; they exist for drill-down, since they carry the warehouse,
+      pipe and table names this model does not.
     columns:
       - name: organization_name
         description: Organization name
@@ -76,5 +99,21 @@ models:
         description: Account name
       - name: usage_date
         description: The date on which the usage occurred.
+      - name: service_type
+        description: The Snowflake service type the credits were billed under.
+      - name: usage_type
+        description: |
+          A friendlier grouping of `service_type`. One of `'warehouse'`, `'cortex'`,
+          `'serverless'`, `'automatic clustering'`, `'materialized view'`, `'pipe'`,
+          `'snowpipe streaming'`, `'query acceleration'`, `'search optimization'`,
+          `'replication'`, `'observability'`, `'openflow'`, `'container services'`,
+          `'trust center'`, `'copy files'`, or `'other'`.
       - name: credits_used
-        description: The total credits used by Cortex
+        description: The total credits used for the service type and date.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - organization_name
+            - account_name
+            - usage_date
+            - service_type
