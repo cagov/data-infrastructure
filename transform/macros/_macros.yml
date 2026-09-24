@@ -54,6 +54,16 @@ macros:
 
       The macro will always raise an error if validation issues are found, making it suitable
       for use in CI/CD pipelines to enforce schema documentation standards.
+      Usage:
+      -- Full run (validate everything):
+        dbt run-operation validate_all_schemas  # Show all results (successes and failures)
+      -- Slim CI (only validate models that were actually built in this run):
+        dbt run-operation validate_all_schemas --args '{"slim_ci": true}'
+      -- Treat undocumented columns as warnings only:
+        dbt run-operation validate_all_schemas --args '{"undocumented_columns_as_errors": false}'
+      -- Show only failures:
+        dbt run-operation validate_all_schemas --args '{"errors_only": true}' # Show only failures
+
     arguments:
       - name: errors_only
         type: boolean
@@ -66,3 +76,9 @@ macros:
           If true, treats undocumented columns as validation errors. If false,
           undocumented columns are reported as warnings but don't cause failure.
           Defaults to true.
+      - name: slim_ci
+        type: boolean
+        description: |
+          If true, skips TABLE_NOT_FOUND errors — models that weren't built in this run won't cause failures.
+          Only validates tables that actually exist in the database.
+          Defaults to false.
