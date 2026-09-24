@@ -94,11 +94,13 @@
   -- Process all the collected column data
   {%- set table_columns = {} -%}
   {%- for row in all_columns_data -%}
-    {%- set table_key = row.table_name -%}
+    {%- set table_key = row.database ~ '.' ~ row.schema ~ '.' ~ row.table_name | upper -%}
     {%- if table_key not in table_columns -%}
       {%- do table_columns.update({table_key: {'columns': []}}) -%}
     {%- endif -%}
-    {%- do table_columns[table_key]['columns'].append(row.column_name) -%}
+    {%- if row.column_name not in table_columns[table_key]['columns'] -%}
+      {%- do table_columns[table_key]['columns'].append(row.column_name) -%}
+    {%- endif -%}
   {%- endfor -%}
 
   {{ return(table_columns) }}
@@ -113,7 +115,7 @@
 {%- macro _validate_single_table_schema(node, table_columns_info, resource_type) -%}
 
   -- Get actual columns from the pre-fetched data
-  {%- set table_key = node.name.upper() -%}
+  {%- set table_key = node.database.upper() ~ '.' ~ node.schema.upper() ~ '.' ~ node.name.upper() -%}
   {%- if table_key in table_columns_info -%}
     {%- set actual_columns = table_columns_info[table_key]['columns'] -%}
   {%- else -%}
@@ -127,9 +129,11 @@
       'table_schema': node.schema,
       'table_database': node.database,
       'resource_type': resource_type,
+      'materialized': node.config.materialized if resource_type == 'model' else None,
       'validation_issues': ['TABLE_NOT_FOUND'],
       'documented_but_missing_columns': [],
-      'undocumented_columns': []
+      'undocumented_columns': [],
+      'file_path': node.path
     } -%}
     {{ return(result) }}
   {%- endif -%}
@@ -173,9 +177,11 @@
     'table_schema': node.schema,
     'table_database': node.database,
     'resource_type': resource_type,
+    'materialized': node.config.materialized if resource_type == 'model' else None,
     'validation_issues': validation_issues,
     'documented_but_missing_columns': documented_but_missing_columns,
-    'undocumented_columns': undocumented_columns
+    'undocumented_columns': undocumented_columns,
+    'file_path': node.path
   } -%}
 
   {{ return(result) }}
@@ -188,29 +194,48 @@
   across all models and sources in the project.
 
   Usage:
+    -- Full run (validate everything):
     dbt run-operation validate_all_schemas  # Show all results (successes and failures)
-    dbt run-operation validate_all_schemas --args '{"errors_only": true}'  # Show only failures
-    dbt run-operation validate_all_schemas --args '{"undocumented_columns_as_errors": false}'  # Treat undocumented columns as warnings
+
+    -- Slim CI (only validate models that were actually built in this run):
+    dbt run-operation validate_all_schemas --args '{"slim_ci": true}'
+
+    -- Treat undocumented columns as warnings only:
+    dbt run-operation validate_all_schemas --args '{"undocumented_columns_as_errors": false}'
+
+    -- Show only failures:
+    dbt run-operation validate_all_schemas --args '{"errors_only": true}' # Show only failures
 
   Args:
     errors_only (bool): If true, only shows tables with validation errors. Default: false
-    undocumented_columns_as_errors (bool): If true, treats undocumented columns as validation errors.
-                                          If false, undocumented columns are reported but don't cause failure. Default: true
+    undocumented_columns_as_errors (bool): If true, treats undocumented columns as errors.
+                                           Default: true
+    slim_ci (bool): If true, skips TABLE_NOT_FOUND errors — models that weren't built
+                    in this run won't cause failures. Only validates tables that actually
+                    exist in the database. Default: false
 
   Note: This macro uses the dbt graph and should only be used in run-operations,
   not in models or analyses. The macro will always raise an error if validation issues are found.
 */
 
-{%- macro validate_all_schemas(errors_only=false, undocumented_columns_as_errors=true) -%}
+{%- macro validate_all_schemas(errors_only=false, undocumented_columns_as_errors=true, slim_ci=false) -%}
 
   {%- if not graph or not graph.nodes -%}
     {{ exceptions.raise_compiler_error("Error: This macro requires access to the dbt graph. Use 'dbt run-operation validate_all_schemas' instead of calling it from a model or analysis.") }}
   {%- endif -%}
 
-  -- Define error issues based on the flag once at the top
-  {%- set error_issues = ['DOCUMENTED_BUT_MISSING_COLUMNS', 'TABLE_NOT_FOUND'] -%}
+  -- In slim CI mode, TABLE_NOT_FOUND is skipped — only models that were
+  -- actually built in this run will be validated against their documentation.
+  {%- set error_issues = ['DOCUMENTED_BUT_MISSING_COLUMNS'] -%}
+  {%- if not slim_ci -%}
+    {%- do error_issues.append('TABLE_NOT_FOUND') -%}
+  {%- endif -%}
   {%- if undocumented_columns_as_errors -%}
     {%- do error_issues.append('UNDOCUMENTED_COLUMNS') -%}
+  {%- endif -%}
+
+  {%- if slim_ci -%}
+    {{ log('ℹ️  Slim CI mode: TABLE_NOT_FOUND errors will be skipped. Only built tables are validated.', info=True) }}
   {%- endif -%}
 
   -- Get all table column information in a single query
@@ -236,62 +261,78 @@
   -- Process all validation results
   {%- for result in validation_results -%}
     {%- set resource_type = result.resource_type -%}
+    {%- set resource_name = result.table_database ~ '.' ~ result.table_schema ~ '.' ~ result.table_name | upper -%}
 
-    -- Check if this table has any error issues
-    {%- set has_errors = false -%}
-    {%- for issue in result.validation_issues -%}
-      {%- if issue in error_issues -%}
-        {%- if not has_errors -%}
-          {%- do failed_tables_list.append(result.table_name) -%}
-          {%- set has_errors = true -%}
-        {%- endif -%}
+    -- In slim CI mode, silently skip tables that weren't built
+    {%- if slim_ci and result.validation_issues == ['TABLE_NOT_FOUND'] -%}
+      {%- if not errors_only -%}
+        {{ log('⏭️  ' ~ resource_type | title ~ ' ' ~ resource_name ~ ': Skipped (not built in this run)', info=True) }}
       {%- endif -%}
-    {%- endfor -%}
 
-    -- Log the result based on errors_only flag
-    {%- if result.validation_issues | length == 0 -%}
-      {%- if not errors_only -%}
-        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation', info=True) }}
-      {%- endif -%}
-    {%- elif 'TABLE_NOT_FOUND' in result.validation_issues -%}
-      {%- if resource_type == 'model' -%}
-        {{ log('❌ Model ' ~ result.table_name ~ ': Model not found in database (may not be built yet)', info=True) }}
-      {%- else -%}
-        {{ log('❌ Source ' ~ result.table_name ~ ': Source not found in database', info=True) }}
-      {%- endif -%}
-    {%- elif result.validation_issues == ['UNDOCUMENTED_COLUMNS'] and not undocumented_columns_as_errors -%}
-      {%- if not errors_only -%}
-        {{ log('✅ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ': Schema matches documentation', info=True) }}
-        {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
-      {%- endif -%}
     {%- else -%}
-      {{ log('❌ ' ~ resource_type | title ~ ' ' ~ result.table_name ~ ':', info=True) }}
-      {%- if 'DOCUMENTED_BUT_MISSING_COLUMNS' in result.validation_issues -%}
-        {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
-      {%- endif -%}
-      {%- if 'UNDOCUMENTED_COLUMNS' in result.validation_issues -%}
-        {%- if undocumented_columns_as_errors -%}
-          {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
+
+      -- Check if this table has any error issues
+      {%- set has_errors = false -%}
+      {%- for issue in result.validation_issues -%}
+        {%- if issue in error_issues -%}
+          {%- if not has_errors -%}
+            {% if result.materialized != 'ephemeral' %}
+              {%- do failed_tables_list.append(result.table_name) -%}
+              {%- set has_errors = true -%}
+            {% endif %}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+
+      -- Log the result
+      {%- if result.validation_issues | length == 0 -%}
+        {%- if not errors_only -%}
+          {{ log('✅ ' ~ resource_type | title ~ ' ' ~ resource_name ~ ': Schema matches documentation', info=True) }}
+        {%- endif -%}
+      {%- elif 'TABLE_NOT_FOUND' in result.validation_issues -%}
+        {%- if resource_type == 'model' and result.materialized == 'ephemeral' -%}
+          {{ log('⏭️  Model ' ~ resource_name ~ ': Skipped schema validation (ephemeral model)', info=True) }}
+        {%- elif resource_type == 'model' -%}
+          {{ log('❌ Model ' ~ resource_name ~ ': Model not found in database (may not be built yet)', info=True) }}
         {%- else -%}
+          {{ log('❌ Source ' ~ resource_name ~ ': Source not found in database', info=True) }}
+        {%- endif -%}
+      {%- elif result.validation_issues == ['UNDOCUMENTED_COLUMNS'] and not undocumented_columns_as_errors -%}
+        {%- if not errors_only -%}
+          {{ log('✅ ' ~ resource_type | title ~ ' ' ~ resource_name ~ ': Schema matches documentation', info=True) }}
           {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
         {%- endif -%}
+      {%- else -%}
+        {{ log('❌ ' ~ resource_type | title ~ ' ' ~ resource_name ~ ':', info=True) }}
+        {%- if 'DOCUMENTED_BUT_MISSING_COLUMNS' in result.validation_issues -%}
+          {{ log('   • Documented but missing columns: ' ~ result.documented_but_missing_columns | join(', '), info=True) }}
+        {%- endif -%}
+        {%- if 'UNDOCUMENTED_COLUMNS' in result.validation_issues -%}
+          {%- if undocumented_columns_as_errors -%}
+            {{ log('   • Undocumented columns: ' ~ result.undocumented_columns | join(', '), info=True) }}
+          {%- else -%}
+            {{ log('   ⚠️  Undocumented columns (not treated as errors): ' ~ result.undocumented_columns | join(', '), info=True) }}
+          {%- endif -%}
+        {%- endif -%}
+        {{ log('   ' ~ result.file_path, info=True) }}
       {%- endif -%}
+
     {%- endif -%}
   {%- endfor -%}
 
   {%- set total_tables = validation_results | length -%}
   {%- set models_count = validation_results | selectattr('resource_type', '==', 'model') | list | length -%}
   {%- set sources_count = validation_results | selectattr('resource_type', '==', 'source') | list | length -%}
-
-  -- Calculate counts using the failed_tables_list built during the first loop
   {%- set failed_tables_count = failed_tables_list | length -%}
   {%- set matching_tables_count = total_tables - failed_tables_count -%}
 
-  -- Show summary unless errors_only is true and there are no errors
   {%- if not errors_only or failed_tables_list | length > 0 -%}
     {{ log('', info=True) }}
     {{ log('📊 Schema Validation Summary:', info=True) }}
     {{ log('   Total tables validated: ' ~ total_tables ~ ' (' ~ models_count ~ ' models, ' ~ sources_count ~ ' sources)', info=True) }}
+    {%- if slim_ci -%}
+      {{ log('   Mode: Slim CI (TABLE_NOT_FOUND skipped)', info=True) }}
+    {%- endif -%}
     {%- if not errors_only -%}
       {{ log('   Tables with matching schemas: ' ~ matching_tables_count, info=True) }}
       {{ log('   Tables with schema issues: ' ~ failed_tables_count, info=True) }}
@@ -300,7 +341,7 @@
     {%- endif -%}
   {%- endif -%}
 
-  -- Handle validation errors - always fail if errors are found
+  -- Always raise if errors found
   {%- if failed_tables_list | length > 0 -%}
     {{ exceptions.raise_compiler_error('Schema validation failed! ' ~ failed_tables_list | length ~ ' tables have validation errors.') }}
   {%- elif errors_only -%}
