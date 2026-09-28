@@ -1,7 +1,7 @@
 /*
-Snowflake credits consumed across the organization, by account, date and service type.
+Snowflake credits consumed across the organization, by account, date and usage type.
 
-There are exactly two members, and between them they cover everything Snowflake bills
+There are exactly two sources, and between them they cover everything Snowflake bills
 in credits:
 
   * `int_credits_by_service_type` — all compute and cloud services credits, taken whole
@@ -13,19 +13,17 @@ model per feature, which meant coverage depended on remembering to add a model w
 Snowflake introduced a new billable service, and query acceleration, search optimization
 and replication were all missed that way.
 
-Both members are floored at the first date for which a service type breakdown exists.
-Storage on its own reaches back further, but including that tail would show storage-only
-days with no compute alongside them, which reads as a collapse in spend rather than as
-absent data. Credits from before the floor are still held, aggregated across service
-types, in `stg_metering_daily_history` and `stg_cortex_usage_daily_history`.
+Credits are rolled up to `usage_type`, a handful of friendly categories. The underlying
+Snowflake `service_type` is finer grained and often cryptic, so it is left in
+`int_credits_by_service_type` for anyone who needs to drill in.
+
+Both sources are floored at the first date for which a service type breakdown exists.
 */
 
 with credits_by_service_type as (
     select
-        organization_name,
         account_name,
         usage_date,
-        service_type,
         usage_type,
         credits_used
     from {{ ref('int_credits_by_service_type') }}
@@ -41,10 +39,8 @@ first_date_with_service_type as (
 
 storage_daily_history as (
     select
-        storage.organization_name,
         storage.account_name,
         storage.usage_date,
-        'STORAGE' as service_type,
         'storage' as usage_type,
         storage.credits_used
     from {{ ref('int_storage_daily_history') }} as storage
@@ -52,12 +48,22 @@ storage_daily_history as (
         on storage.usage_date >= earliest.usage_date
 ),
 
--- Combine the data in long form to allow for easy
--- aggregations and visualizations.
 combined as (
     select * from credits_by_service_type
     union all
     select * from storage_daily_history
+),
+
+-- Roll the several service types that share a usage type back up into one row, so the
+-- grain is one row per account, date and usage type.
+costs_by_date as (
+    select
+        account_name,
+        usage_date,
+        usage_type,
+        sum(credits_used) as credits_used
+    from combined
+    group by all
 )
 
-select * from combined
+select * from costs_by_date

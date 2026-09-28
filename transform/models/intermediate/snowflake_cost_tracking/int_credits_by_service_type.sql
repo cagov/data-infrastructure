@@ -1,24 +1,7 @@
 /*
 Compute and cloud services credits, aggregated to account, usage date and service type.
 
-This is the whole of `metering_daily_history` with nothing filtered out, which is what
-makes `snowflake_costs_by_date` complete: service types Snowflake introduces later are
-counted automatically, landing under the `other` usage type until someone gives them a
-friendlier name. Storage is the one thing not covered, because `metering_daily_history`
-measures compute and cloud services only.
-
-History starts where `stg_metering_daily_history_by_service_type` starts, which is the
-source view's retention boundary at the time that model was first built. Credits from
-before then survive in `stg_metering_daily_history` and `stg_cortex_usage_daily_history`,
-but only aggregated across service types, so they are deliberately left out of this
-model rather than mixed in as an undifferentiated bucket. Those two staging models are
-kept as archives for historical analysis.
-
-The service type names below were taken from the data rather than from Snowflake's
-documentation, which lists names this account does not use (`CORTEX_CODE_CLI`,
-`CORTEX_CODE_SNOWSIGHT`) and omits several it does (`AI_FUNCTIONS`, `AI_INFERENCE`,
-`SNOWFLAKE_COCO_*`, `CORTEX_SEARCH`). Re-check the `other` bucket periodically: a new
-service type showing up there is the signal that this mapping needs extending.
+Grouping of service types is provisional, Snowflake seems to update these fairly frequently.
 */
 
 with source as (

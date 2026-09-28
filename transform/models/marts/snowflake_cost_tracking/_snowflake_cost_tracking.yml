@@ -5,8 +5,11 @@ models:
     description: |
       Snowflake credits consumed across the organization, by account and date.
 
-      Data are in long form, where `usage_type` indicates which type of usage is measured
-      in credits and `service_type` gives the underlying Snowflake service type.
+      Data are in long form, one row per account, usage date and usage type, where
+      `usage_type` indicates which type of usage is measured in credits.
+
+      For the underlying Snowflake `service_type` behind each of these categories, which
+      is finer grained and often cryptic, see `int_credits_by_service_type`.
 
       Coverage is complete by construction: all compute and cloud services credits come
       from `metering_daily_history` with nothing filtered out, and storage, which that
@@ -23,16 +26,10 @@ models:
       average bytes rather than reporting a billed credit figure, because storage is
       invoiced in currency rather than credits.
     columns:
-      - name: organization_name
-        description: Organization name
       - name: account_name
         description: Account name
       - name: usage_date
         description: Date on which the usage occurred
-      - name: service_type
-        description: |
-          The Snowflake service type the credits were billed under, e.g.
-          `'WAREHOUSE_METERING'`, `'AI_SERVICES'`, `'QUERY_ACCELERATION'`.
       - name: usage_type
         description: |
           A friendlier grouping of `service_type`:
@@ -51,3 +48,9 @@ models:
           * `'warehouse'`
       - name: credits_used
         description: The credits used for the usage type and date.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - account_name
+            - usage_date
+            - usage_type
