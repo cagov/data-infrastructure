@@ -3,17 +3,28 @@ version: 2
 models:
   - name: snowflake_costs_by_date
     description: |
-      Snowflake costs by date for the following:
+      Snowflake credits consumed across the organization, by account and date.
 
-        * Automatic clustering
-        * Materialized view refreshes
-        * Pipe usage
-        * Storage
-        * Warehouse usage
-        * Cortex (GenAI) usage
+      Data are in long form, one row per account, usage date and usage type, where
+      `usage_type` indicates which type of usage is measured in credits.
 
-      Data are in long form, where `usage_type` indicates which
-      type of usage is measured in credits.
+      For the underlying Snowflake `service_type` behind each of these categories, which
+      is finer grained and often cryptic, see `int_credits_by_service_type`.
+
+      Coverage is complete by construction: all compute and cloud services credits come
+      from `metering_daily_history` with nothing filtered out, and storage, which that
+      view does not cover, comes from `storage_daily_history`. Service types Snowflake
+      introduces later are therefore counted automatically, under the `other` usage type.
+
+      History starts at the first date for which a service type breakdown exists. Older
+      credits are still held, aggregated across service types, in the
+      `stg_metering_daily_history` and `stg_cortex_usage_daily_history` archives, and the
+      per-feature `int_*` models still hold warehouse, pipe, automatic clustering and
+      materialized view credits for that earlier window.
+
+      Note that storage credits are notional: `storage_daily_history` derives them from
+      average bytes rather than reporting a billed credit figure, because storage is
+      invoiced in currency rather than credits.
     columns:
       - name: account_name
         description: Account name
@@ -21,13 +32,25 @@ models:
         description: Date on which the usage occurred
       - name: usage_type
         description: |
-          One of the following usage types:
+          A friendlier grouping of `service_type`:
 
           * `'automatic clustering'`
+          * `'cortex'`
           * `'materialized view'`
+          * `'other'` — a service type we have not given a friendly name yet
           * `'pipe'`
+          * `'query acceleration'`
+          * `'replication'`
+          * `'search optimization'`
+          * `'serverless'`
+          * `'snowpipe streaming'`
           * `'storage'`
           * `'warehouse'`
-          * `'cortex'`
       - name: credits_used
         description: The credits used for the usage type and date.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - account_name
+            - usage_date
+            - usage_type

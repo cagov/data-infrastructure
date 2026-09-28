@@ -58,6 +58,11 @@ models:
         # Otherwise we risk losing data beyond the 1 year retention window
         +full_refresh: false
 
+        # Because we never full refresh, this is the only way a newly added column can
+        # ever reach an existing staging table. Without it dbt's default (`ignore`)
+        # would silently drop the column from the incremental build.
+        +on_schema_change: append_new_columns
+
     intermediate:
       +database: "{{ env_var('DBT_TRANSFORM_DB', 'TRANSFORM_DEV') }}"
       state_entities:

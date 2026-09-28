@@ -1,79 +1,69 @@
 /*
-TODO: this does not yet account for credits consumed by:
+Snowflake credits consumed across the organization, by account, date and usage type.
 
-  * Query acceleration
-  * Search optimization
-  * Replication/failover groups
+There are exactly two sources, and between them they cover everything Snowflake bills
+in credits:
+
+  * `int_credits_by_service_type` — all compute and cloud services credits, taken whole
+    from `metering_daily_history` with nothing filtered out.
+  * `int_storage_daily_history` — storage, which `metering_daily_history` does not cover.
+
+Keeping the union this small is deliberate. Earlier versions assembled the mart from one
+model per feature, which meant coverage depended on remembering to add a model whenever
+Snowflake introduced a new billable service, and query acceleration, search optimization
+and replication were all missed that way.
+
+Credits are rolled up to `usage_type`, a handful of friendly categories. The underlying
+Snowflake `service_type` is finer grained and often cryptic, so it is left in
+`int_credits_by_service_type` for anyone who needs to drill in.
+
+Both sources are floored at the first date for which a service type breakdown exists.
 */
 
-with automatic_clustering_history as (
+with credits_by_service_type as (
     select
         account_name,
         usage_date,
-        'automatic clustering' as usage_type,
+        usage_type,
         credits_used
-    from {{ ref('int_automatic_clustering_history') }}
+    from {{ ref('int_credits_by_service_type') }}
 ),
 
-materialized_view_refresh_history as (
-    select
-        account_name,
-        usage_date,
-        'materialized view' as usage_type,
-        credits_used
-    from {{ ref('int_materialized_view_refresh_history') }}
-),
-
-pipe_usage_history as (
-    select
-        account_name,
-        usage_date,
-        'pipe' as usage_type,
-        credits_used
-    from {{ ref('int_pipe_usage_history') }}
+-- The earliest date with a service type breakdown. This is fixed rather than moving:
+-- the staging model behind it is incremental and accumulates, so its earliest date
+-- stays put once the model has been built.
+first_date_with_service_type as (
+    select min(usage_date) as usage_date
+    from credits_by_service_type
 ),
 
 storage_daily_history as (
     select
-        account_name,
-        usage_date,
+        storage.account_name,
+        storage.usage_date,
         'storage' as usage_type,
-        credits_used
-    from {{ ref('int_storage_daily_history') }}
+        storage.credits_used
+    from {{ ref('int_storage_daily_history') }} as storage
+    inner join first_date_with_service_type as earliest
+        on storage.usage_date >= earliest.usage_date
 ),
 
-warehouse_metering_history as (
-    select
-        account_name,
-        usage_date,
-        'warehouse' as usage_type,
-        credits_used
-    from {{ ref('int_warehouse_metering_history') }}
-),
-
-cortex_usage_daily_history as (
-    select
-        account_name,
-        usage_date,
-        'cortex' as usage_type,
-        credits_used
-    from {{ ref('int_cortex_usage_daily_history') }}
-),
-
--- Combine the data in long form to allow for easy
--- aggregations and visualizations.
 combined as (
-    select * from automatic_clustering_history
-    union all
-    select * from materialized_view_refresh_history
-    union all
-    select * from pipe_usage_history
+    select * from credits_by_service_type
     union all
     select * from storage_daily_history
-    union all
-    select * from warehouse_metering_history
-    union all
-    select * from cortex_usage_daily_history
+),
+
+-- Roll the several service types that share a usage type back up into one row, so the
+-- grain is one row per account, date and usage type.
+costs_by_date as (
+    select
+        account_name,
+        usage_date,
+        usage_type,
+        sum(credits_used) as credits_used
+    from combined
+    group by all
 )
 
-select * from combined
+select * from costs_by_date
