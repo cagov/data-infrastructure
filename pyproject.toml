@@ -11,7 +11,7 @@ dependencies = [
     "dbt-core~=1.9",
     "dbt-snowflake~=1.9",
     "dlt[mssql,snowflake,sql-database]>=1.29.0",
-    "mkdocs-material~=9.6.14",
+    "mkdocs-material>=9.6.14,<9.8.0",
 ]
 
 [dependency-groups]
