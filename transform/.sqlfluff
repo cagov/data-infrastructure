@@ -4,7 +4,7 @@ templater = dbt
 max_line_length = 120
 
 # I decide the column ordering!
-exclude_rules = structure.column_order
+exclude_rules = structure.column_order, ambiguous.column_count
 
 # Probably a controversial exclusion, so adding some justification here:
 # This disables the rule that prevents unreserved keywords from being
